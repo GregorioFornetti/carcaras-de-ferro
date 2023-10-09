@@ -10,16 +10,16 @@ Duas partes compõem esse projeto
 
 Uma descrição geral do diretório do servidor está abaixo
 
-├── ecosystem.config.cjs
-├── package.json
-├── package-lock.json
-└── src
-    ├── **app.config.js**
-    ├── index.js
-    └── rooms
-        ├── **MyRoom.js**
-        └── schema
-            └── **MyRoomState.js**
+├── ecosystem.config.cjs     
+├── package.json     
+├── package-lock.json    
+└── src     
+    ├── **app.config.js**    
+    ├── index.js    
+    └── rooms    
+        ├── **MyRoom.js**     
+        └── schema     
+            └── **MyRoomState.js**      
 
 **app.config.js**: Configuração geral das salas e lógica do servidor Express.
 **MyRoom.js**: Definição da sala e lógica do multiplayer.
