@@ -1,3 +1,8 @@
+/* Definição do estado da sala 
+ Todas as variaveis que serão compartilhadas entre os clientes devem ser definidas aqui
+ É definido dois estados: o estado do jogador e o estado da sala
+ O estado da sala nada mais é do que uma coleção de estados de jogadores
+*/
 import * as schema from "@colyseus/schema";
 
 export class Player extends schema.Schema {
@@ -5,10 +10,10 @@ export class Player extends schema.Schema {
 }
 
 schema.defineTypes(Player, {
-    left: "boolean",
-    right: "boolean",
-    up: "boolean",
-    down: "boolean"
+    estadoesquerda: "boolean",
+    estadodireita: "boolean",
+    estadocima: "boolean",
+    estadobaixo: "boolean"
 });
 
 
