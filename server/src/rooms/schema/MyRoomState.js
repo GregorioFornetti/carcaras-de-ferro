@@ -5,11 +5,11 @@
 */
 import * as schema from "@colyseus/schema";
 
-export class Player extends schema.Schema {
+export class PlayerSchema extends schema.Schema {
 
 }
 
-schema.defineTypes(Player, {
+schema.defineTypes(PlayerSchema, {
     estadoesquerda: "boolean",
     estadodireita: "boolean",
     estadocima: "boolean",
@@ -17,13 +17,26 @@ schema.defineTypes(Player, {
 });
 
 
+export class EnemySchema extends schema.Schema {
+
+}
+
+schema.defineTypes(EnemySchema, {
+    x: "number",
+    y: "number",
+    color: "number"
+});
+
+
 export class MyRoomState extends schema.Schema {
     constructor() {
         super();
         this.players = new schema.MapSchema();
+        this.enemies = new schema.MapSchema();
     }
 }
 
 schema.defineTypes(MyRoomState, {
-    players: { map: Player },
+    players: { map: PlayerSchema },
+    enemies: { map: EnemySchema }
 })

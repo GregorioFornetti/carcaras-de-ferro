@@ -4,13 +4,18 @@
 */
 import { Room } from "@colyseus/core";
 import { MyRoomState } from "./schema/MyRoomState.js";
-import { Player } from "./schema/MyRoomState.js";
+import { PlayerSchema } from "./schema/MyRoomState.js";
+import { SpawnEnemyTeste } from "../enemies/EnemyTeste.js";
 
 export class MyRoom extends Room {
     maxClients = 4;
 
     onCreate (options) {
         this.setState(new MyRoomState());
+
+        this.currentEnemies = []
+
+        this.setSimulationInterval((deltaTime) => this.update(deltaTime));  // Gera o game loop - https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
 
         /* 
         controla o que deve acontecer quando um jogador enviar um input
@@ -27,6 +32,8 @@ export class MyRoom extends Room {
             player.estadocima = data.up
             player.estadobaixo = data.down
         });
+
+        this.currentEnemies = this.currentEnemies.concat(SpawnEnemyTeste(this.state.enemies))
     }
 
     /* Define o que será feito quando um jogador conectar na sala 
@@ -35,7 +42,7 @@ export class MyRoom extends Room {
         console.log(client.sessionId, "joined!");
 
         // Cria uma instância do jogador, definido em MyRoomState.js
-        const player = new Player();
+        const player = new PlayerSchema();
 
         // Coloca o jogador na coleção de jogadores da sala
         this.state.players.set(client.sessionId, player);
@@ -53,5 +60,15 @@ export class MyRoom extends Room {
     */
     onDispose() {
         console.log("room", this.roomId, "disposing...");
+    }
+
+    // Game loop - essa função será chamada a cada tick ()
+    update(deltaTime) {
+        this.currentEnemies = this.currentEnemies.filter(enemy => !enemy.dead)
+        
+        console.log(this.currentEnemies)
+        for (let enemy of this.currentEnemies) {
+            enemy.update(deltaTime)
+        }
     }
 }
