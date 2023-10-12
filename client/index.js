@@ -17,6 +17,7 @@ export class GameScene extends Phaser.Scene {
             down: false,
         };
         this.cursorKeys = null;
+        this.enemiesEntities = {};
     }
 
     // Carrega os assets a serem utilizados no jogo
@@ -64,6 +65,19 @@ export class GameScene extends Phaser.Scene {
             console.log(`Jogador ${sessionId} conectado!`);
             this.playerEntities[sessionId] = player;
         });
+
+        this.room.state.enemies.onAdd((enemy, id) => {
+            this.enemiesEntities[id] = this.add.rectangle(enemy.x, enemy.y, 32, 32, 0x000000);
+
+            enemy.onChange(() => {
+                console.log(enemy.color)
+                this.enemiesEntities[id].fillColor = enemy.color * 256 * 256;
+            })
+        })
+
+        this.room.state.enemies.onRemove((enemy, id) => {
+            this.enemiesEntities[id].destroy();
+        })
 
         // loga no console a tecla pressionada por outro jogador. Exemplo
         this.room.onStateChange((state) => {
