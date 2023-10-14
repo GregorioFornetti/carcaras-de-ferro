@@ -35,6 +35,9 @@ export class MyRoom extends Room {
         });
 
         this.currentEnemies = this.currentEnemies.concat(SpawnEnemyRedSquare(this.state))
+        setTimeout(() => {
+            this.currentEnemies = this.currentEnemies.concat(SpawnEnemyRedSquare(this.state))
+        }, 5000);
         this.currentEnemies = this.currentEnemies.concat(SpawnEnemyBlueSquare(this.state))
     }
 
@@ -68,7 +71,6 @@ export class MyRoom extends Room {
     update(deltaTime) {
         this.currentEnemies = this.currentEnemies.filter(enemy => !enemy.dead)
         
-        console.log(this.currentEnemies)
         for (let enemy of this.currentEnemies) {
             enemy.update(deltaTime)
         }

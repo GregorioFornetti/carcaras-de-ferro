@@ -4,6 +4,10 @@ Cada Cena possui um método create() que é chamado quando a cena é criada e um
 A Cena foi modificada para se conectar a sala do Colyseus e enviar os inputs(inputPayload) do jogador para o servidor.
 Nenhum estado do jogo é mantido na Cena, apenas os inputs do jogador são enviados para o servidor que "aceita" esses inputs e atualiza o estado do jogo de todos os jogadores conectados.
 */
+
+import { EnemyRedSquareOnAdd, EnemyRedSquareOnRemove } from "./enemies/EnemyRedSquare.js";
+import { EnemyBlueSquareOnAdd, EnemyBlueSquareOnRemove } from "./enemies/EnemyBlueSquare.js";
+
 export class GameScene extends Phaser.Scene {
     constructor() {
         super();
@@ -66,17 +70,11 @@ export class GameScene extends Phaser.Scene {
             this.playerEntities[sessionId] = player;
         });
 
-        this.room.state.enemies.onAdd((enemy, id) => {
-            this.enemiesEntities[id] = this.add.rectangle(enemy.x, enemy.y, 32, 32, 0x000000);
-
-            enemy.onChange(() => {
-                this.enemiesEntities[id].fillColor = enemy.color * 256 * 256;
-            })
-        })
-
-        this.room.state.enemies.onRemove((enemy, id) => {
-            this.enemiesEntities[id].destroy();
-        })
+        // Configure os INIMIGOS aqui
+        this.room.state.enemiesRedSquare.onAdd(EnemyRedSquareOnAdd.bind(this))
+        this.room.state.enemiesRedSquare.onRemove(EnemyRedSquareOnRemove.bind(this))
+        this.room.state.enemiesBlueSquare.onAdd(EnemyBlueSquareOnAdd.bind(this))
+        this.room.state.enemiesBlueSquare.onRemove(EnemyBlueSquareOnRemove.bind(this))
 
         // loga no console a tecla pressionada por outro jogador. Exemplo
         this.room.onStateChange((state) => {

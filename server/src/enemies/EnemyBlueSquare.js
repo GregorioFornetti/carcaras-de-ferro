@@ -1,4 +1,5 @@
-import { Enemy } from "./Enemy";
+import { Enemy } from './Enemy.js';
+import * as schema from "@colyseus/schema";
 
 
 export class EnemyBlueSquareSchema extends schema.Schema {
@@ -36,6 +37,7 @@ export function SpawnEnemyBlueSquare(roomState) {
 export class EnemyBlueSquare extends Enemy {
 
     constructor(roomState) {
+        super()
         this.init(roomState.enemiesBlueSquare, EnemyBlueSquareSchema)
 
         this.enemyAttributes.color = 0;

@@ -4,8 +4,8 @@
  O estado da sala nada mais é do que uma coleção de estados de jogadores
 */
 import * as schema from "@colyseus/schema";
-import { EnemyRedSquareSchema } from "../../enemies/EnemyRedSquare";
-import { EnemyBlueSquareSchema } from "../../enemies/EnemyBlueSquare";
+import { EnemyRedSquareSchema } from "../../enemies/EnemyRedSquare.js";
+import { EnemyBlueSquareSchema } from "../../enemies/EnemyBlueSquare.js";
 
 export class PlayerSchema extends schema.Schema {
 
@@ -23,7 +23,8 @@ export class MyRoomState extends schema.Schema {
     constructor() {
         super();
         this.players = new schema.MapSchema();
-        this.enemies = new schema.MapSchema();
+        this.enemiesRedSquare = new schema.MapSchema();
+        this.enemiesBlueSquare = new schema.MapSchema();
     }
 }
 

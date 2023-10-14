@@ -4,10 +4,6 @@ let enemyId = 0;  // Provavelmente vai precisar mudar isso no futuro... Pode ser
 
 export class Enemy {
 
-    constructor(roomState) {
-        throw new Error('You have to implement the method constructor!');
-    }
-
     init(enemies, EnemySchema) {
         this.enemyAttributes = new EnemySchema();
         this.enemies = enemies;
@@ -25,6 +21,8 @@ export class Enemy {
             return
         }
         
+        console.log('REMOVENDO INIMIGOS')
+        console.log(this.id)
         this.enemies.delete(this.id);
         this.dead = true
     }
