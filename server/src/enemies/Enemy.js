@@ -21,9 +21,7 @@ export class Enemy {
             return
         }
         
-        console.log('REMOVENDO INIMIGOS')
-        console.log(this.id)
-        this.enemies.delete(this.id);
+        this.enemies.delete(this.id.toString());
         this.dead = true
     }
 }

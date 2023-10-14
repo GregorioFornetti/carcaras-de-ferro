@@ -35,9 +35,6 @@ export class MyRoom extends Room {
         });
 
         this.currentEnemies = this.currentEnemies.concat(SpawnEnemyRedSquare(this.state))
-        setTimeout(() => {
-            this.currentEnemies = this.currentEnemies.concat(SpawnEnemyRedSquare(this.state))
-        }, 5000);
         this.currentEnemies = this.currentEnemies.concat(SpawnEnemyBlueSquare(this.state))
     }
 
