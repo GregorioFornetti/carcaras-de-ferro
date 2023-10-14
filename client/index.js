@@ -70,7 +70,6 @@ export class GameScene extends Phaser.Scene {
             this.enemiesEntities[id] = this.add.rectangle(enemy.x, enemy.y, 32, 32, 0x000000);
 
             enemy.onChange(() => {
-                console.log(enemy.color)
                 this.enemiesEntities[id].fillColor = enemy.color * 256 * 256;
             })
         })

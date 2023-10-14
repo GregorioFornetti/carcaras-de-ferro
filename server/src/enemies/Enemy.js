@@ -1,10 +1,14 @@
-import { EnemySchema } from '../rooms/schema/MyRoomState.js';
 
-let enemyId = 0;
+
+let enemyId = 0;  // Provavelmente vai precisar mudar isso no futuro... Pode ser gerado por room ?
 
 export class Enemy {
 
-    constructor(enemies) {
+    constructor(roomState) {
+        throw new Error('You have to implement the method constructor!');
+    }
+
+    init(enemies, EnemySchema) {
         this.enemyAttributes = new EnemySchema();
         this.enemies = enemies;
         this.id = enemyId++;
