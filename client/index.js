@@ -120,8 +120,8 @@ export class GameScene extends Phaser.Scene {
 // Configurações do Phaser gerais
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 640,
+    height: 800,
     backgroundColor: '#b6d53c',
     parent: 'phaser-example',
     physics: { default: "arcade" },
