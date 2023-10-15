@@ -48,7 +48,7 @@ export class EnemyBlueSquare extends Enemy {
 
     constructor(roomState) {
         super()
-        this.init(roomState.enemiesBlueSquare, EnemyBlueSquareSchema)
+        this.init(roomState.enemiesBlueSquareSchema, EnemyBlueSquareSchema)
 
         this.enemyAttributes.color = 0;
 

@@ -27,7 +27,7 @@ export class MyRoom extends Room {
         */
         this.onMessage(0, (client, data) => {
             // get reference to the player who sent the message
-            const player = this.state.players.get(client.sessionId);
+            const player = this.state.playersSchema.get(client.sessionId);
 
             console.log(`Input recebido do player ${client.sessionId}: left: ${data.left}, right: ${data.right}, up: ${data.up}, down: ${data.down}`)
 
@@ -51,7 +51,7 @@ export class MyRoom extends Room {
         const player = new PlayerSchema();
 
         // Coloca o jogador na coleção de jogadores da sala
-        this.state.players.set(client.sessionId, player);
+        this.state.playersSchema.set(client.sessionId, player);
     }
 
     /* Define o que será feito quando um jogador desconectar da sala
@@ -59,7 +59,7 @@ export class MyRoom extends Room {
     onLeave (client, consented) {
         console.log(client.sessionId, "left!");
 
-        this.state.players.delete(client.sessionId);
+        this.state.playersSchema.delete(client.sessionId);
     }
 
     /* Define o que será feito quando a sala for encerrada
