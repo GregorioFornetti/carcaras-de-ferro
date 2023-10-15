@@ -49,7 +49,7 @@ export class GameScene extends Phaser.Scene {
           Nesse caso, quando um jogador desconectar, 
           o objeto que representa ele no jogo é deletado
         */
-        this.room.state.players.onRemove((player, sessionId) => {
+        this.room.state.playersSchema.onRemove((player, sessionId) => {
             const entity = this.playerEntities[sessionId];
             if (entity) {
                 // loga no console a desconexão do jogador
@@ -64,21 +64,21 @@ export class GameScene extends Phaser.Scene {
            Nesse caso, quando um jogador conectar, ele é adicionado em uma estrutura local "playerEntities"
            que é uma referência a uma entidade atualizada pelo servidor
         */ 
-        this.room.state.players.onAdd((player, sessionId) => {        
+        this.room.state.playersSchema.onAdd((player, sessionId) => {        
             // listening for server updates
             console.log(`Jogador ${sessionId} conectado!`);
             this.playerEntities[sessionId] = player;
         });
 
         // Configure os INIMIGOS aqui
-        this.room.state.enemiesRedSquare.onAdd(EnemyRedSquareOnAdd.bind(this))
-        this.room.state.enemiesRedSquare.onRemove(EnemyRedSquareOnRemove.bind(this))
-        this.room.state.enemiesBlueSquare.onAdd(EnemyBlueSquareOnAdd.bind(this))
-        this.room.state.enemiesBlueSquare.onRemove(EnemyBlueSquareOnRemove.bind(this))
+        this.room.state.enemiesRedSquareSchema.onAdd(EnemyRedSquareOnAdd.bind(this))
+        this.room.state.enemiesRedSquareSchema.onRemove(EnemyRedSquareOnRemove.bind(this))
+        this.room.state.enemiesBlueSquareSchema.onAdd(EnemyBlueSquareOnAdd.bind(this))
+        this.room.state.enemiesBlueSquareSchema.onRemove(EnemyBlueSquareOnRemove.bind(this))
 
         // loga no console a tecla pressionada por outro jogador. Exemplo
         this.room.onStateChange((state) => {
-            let estadoTecla = state.players.toJSON();
+            let estadoTecla = state.playersSchema.toJSON();
             for (let i in estadoTecla) {
                 if (estadoTecla[i].estadoesquerda == true) {
                     console.log(`O jogador ${i} está no estado esquerda`);
