@@ -1,3 +1,13 @@
+/*
+    Exemplo de definição de inimigo
+    Cria uma classe que herda a classe Enemy que define sua inicialização, update e destruição
+    A inicialização basicmanete coloca o inimigo no jogo, enquanto o update realmente define o comportamento do inimigo
+    Para gerar um inimigo, siga os passos:
+    1) Crie uma classe que herda Schaema.Schema. Esse é o estado sincronizado do inimigo
+    2) Defina os atributos com schema.defineTypes
+    3) Crie a classe do inimigo que herda Enemy e implemente seu comportamento com update
+    4) Pode ser necessário criar uma função SpawnEnemyX que cria uma instância do inimigo "Schema"
+*/
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
 

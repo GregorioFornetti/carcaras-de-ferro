@@ -22,16 +22,16 @@ schema.defineTypes(PlayerSchema, {
 export class MyRoomState extends schema.Schema {
     constructor() {
         super();
-        this.players = new schema.MapSchema();
-        this.enemiesRedSquare = new schema.MapSchema();
-        this.enemiesBlueSquare = new schema.MapSchema();
+        this.playersSchema = new schema.MapSchema();
+        this.enemiesRedSquareSchema = new schema.MapSchema();
+        this.enemiesBlueSquareSchema = new schema.MapSchema();
     }
 }
 
 schema.defineTypes(MyRoomState, {
-    players: { map: PlayerSchema },
+    playersSchema: { map: PlayerSchema },
 
-    enemiesRedSquare: { map: EnemyRedSquareSchema },
-    enemiesBlueSquare: { map: EnemyBlueSquareSchema }
+    enemiesRedSquareSchema: { map: EnemyRedSquareSchema },
+    enemiesBlueSquareSchema: { map: EnemyBlueSquareSchema }
     // Adicione os schemas dos inimigos aqui
 })

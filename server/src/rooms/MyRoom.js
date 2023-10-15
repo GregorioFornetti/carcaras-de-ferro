@@ -16,10 +16,13 @@ export class MyRoom extends Room {
 
         this.currentEnemies = []
 
-        this.setSimulationInterval((deltaTime) => this.update(deltaTime));  // Gera o game loop - https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
-
-        /* 
-        controla o que deve acontecer quando um jogador enviar um input
+        // Gera o game loop, atualização de estado automatica a cada deltaTime
+        // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
+        this.setSimulationInterval((deltaTime) => this.update(deltaTime));  
+        
+        /*
+        EXEMPLO:  
+        Controla o que deve acontecer quando um jogador enviar um input
         A mensagem pode ter um nome, nesse caso, o nome é "0"
         */
         this.onMessage(0, (client, data) => {
@@ -34,6 +37,7 @@ export class MyRoom extends Room {
             player.estadobaixo = data.down
         });
 
+        // EXEMPLO: Spawn de 4 inimigos quadrados vermelhos e 4 azuis
         this.currentEnemies = this.currentEnemies.concat(SpawnEnemyRedSquare(this.state))
         this.currentEnemies = this.currentEnemies.concat(SpawnEnemyBlueSquare(this.state))
     }
