@@ -1,0 +1,7 @@
+TAMANHO DO MAPA
+Largura: 28 blocos
+Altura: 200 blocos
+
+TAMANHO DE CADA BLOCO
+Largura: 16px
+Altura: 16px
