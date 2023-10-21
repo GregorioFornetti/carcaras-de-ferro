@@ -4,13 +4,12 @@
 */
 import { Room } from "@colyseus/core";
 import { MyRoomState } from "./schema/MyRoomState.js";
-import { PlayerSchema } from "./schema/MyRoomState.js";
-import { SpawnEnemyRedSquare } from "../enemies/EnemyRedSquare.js";
-import { SpawnEnemyBlueSquare } from "../enemies/EnemyBlueSquare.js";
 
 export class MyRoom extends Room {
     maxClients = 4;
 
+    // Define o que será feito quando a sala for criada
+    // Aqui será definido os callbacks de eventos da sala
     onCreate (options) {
         this.setState(new MyRoomState());
 
@@ -18,28 +17,14 @@ export class MyRoom extends Room {
 
         // Gera o game loop, atualização de estado automatica a cada deltaTime
         // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
-        this.setSimulationInterval((deltaTime) => this.update(deltaTime));  
+        this.setSimulationInterval((deltaTime) => this.update(deltaTime));
         
-        /*
-        EXEMPLO:  
-        Controla o que deve acontecer quando um jogador enviar um input
-        A mensagem pode ter um nome, nesse caso, o nome é "0"
-        */
-        this.onMessage(0, (client, data) => {
-            // get reference to the player who sent the message
-            const player = this.state.playersSchema.get(client.sessionId);
-
-            console.log(`Input recebido do player ${client.sessionId}: left: ${data.left}, right: ${data.right}, up: ${data.up}, down: ${data.down}`)
-
-            player.estadoesquerda = data.left
-            player.estadodireita = data.right
-            player.estadocima = data.up
-            player.estadobaixo = data.down
+        // Define o que fazer quando recebe uma mensagem "0". Apenas loga no console
+        this.onMessage(0, (client, message) => {
+            // remover
+            console.log("Received message from", client.sessionId, ":", message);
         });
-
-        // EXEMPLO: Spawn de 4 inimigos quadrados vermelhos e 4 azuis
-        this.currentEnemies = this.currentEnemies.concat(SpawnEnemyRedSquare(this.state))
-        this.currentEnemies = this.currentEnemies.concat(SpawnEnemyBlueSquare(this.state))
+        
     }
 
     /* Define o que será feito quando um jogador conectar na sala 
@@ -47,19 +32,12 @@ export class MyRoom extends Room {
     onJoin (client, options) {
         console.log(client.sessionId, "joined!");
 
-        // Cria uma instância do jogador, definido em MyRoomState.js
-        const player = new PlayerSchema();
-
-        // Coloca o jogador na coleção de jogadores da sala
-        this.state.playersSchema.set(client.sessionId, player);
     }
 
     /* Define o que será feito quando um jogador desconectar da sala
     */
     onLeave (client, consented) {
         console.log(client.sessionId, "left!");
-
-        this.state.playersSchema.delete(client.sessionId);
     }
 
     /* Define o que será feito quando a sala for encerrada
@@ -70,10 +48,13 @@ export class MyRoom extends Room {
 
     // Game loop - essa função será chamada a cada tick ()
     update(deltaTime) {
-        this.currentEnemies = this.currentEnemies.filter(enemy => !enemy.dead)
+        if (this.currentEnemies.length != 0) {
+            this.currentEnemies = this.currentEnemies.filter(enemy => !enemy.dead)
         
-        for (let enemy of this.currentEnemies) {
-            enemy.update(deltaTime)
+            // Loop de atualização automática dos inimigos
+            for (let enemy of this.currentEnemies) {
+                enemy.update(deltaTime)
+            }   
         }
     }
 }

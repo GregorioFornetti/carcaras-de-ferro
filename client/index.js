@@ -5,13 +5,10 @@ A Cena foi modificada para se conectar a sala do Colyseus e enviar os inputs(inp
 Nenhum estado do jogo é mantido na Cena, apenas os inputs do jogador são enviados para o servidor que "aceita" esses inputs e atualiza o estado do jogo de todos os jogadores conectados.
 */
 
-import { EnemyRedSquareOnAdd, EnemyRedSquareOnRemove } from "./enemies/EnemyRedSquare.js";
-import { EnemyBlueSquareOnAdd, EnemyBlueSquareOnRemove } from "./enemies/EnemyBlueSquare.js";
-
 export class GameScene extends Phaser.Scene {
     constructor() {
         super();
-        this.client = new Colyseus.Client("ws://localhost:2567");
+        this.client = new Colyseus.Client("ws://localhost:8080");
         this.room = null;
         this.playerEntities = {};
         this.inputPayload = {
@@ -45,58 +42,8 @@ export class GameScene extends Phaser.Scene {
             console.error(e);
         }
 
-        /*Define o que deve acontecer quando a "coleção" tiver um elemento deletado
-          Nesse caso, quando um jogador desconectar, 
-          o objeto que representa ele no jogo é deletado
-        */
-        this.room.state.playersSchema.onRemove((player, sessionId) => {
-            const entity = this.playerEntities[sessionId];
-            if (entity) {
-                // loga no console a desconexão do jogador
-                console.log(`Jogador ${sessionId} desconectado!`);
-
-                // limpando referência local
-                delete this.playerEntities[sessionId];
-            }
-        });
-
-        /* Define o que fazer quando um elemento for adicionado na "coleção"
-           Nesse caso, quando um jogador conectar, ele é adicionado em uma estrutura local "playerEntities"
-           que é uma referência a uma entidade atualizada pelo servidor
-        */ 
-        this.room.state.playersSchema.onAdd((player, sessionId) => {        
-            // listening for server updates
-            console.log(`Jogador ${sessionId} conectado!`);
-            this.playerEntities[sessionId] = player;
-        });
-
-        // Configure os INIMIGOS aqui
-        this.room.state.enemiesRedSquareSchema.onAdd(EnemyRedSquareOnAdd.bind(this))
-        this.room.state.enemiesRedSquareSchema.onRemove(EnemyRedSquareOnRemove.bind(this))
-        this.room.state.enemiesBlueSquareSchema.onAdd(EnemyBlueSquareOnAdd.bind(this))
-        this.room.state.enemiesBlueSquareSchema.onRemove(EnemyBlueSquareOnRemove.bind(this))
-
-        // loga no console a tecla pressionada por outro jogador. Exemplo
-        this.room.onStateChange((state) => {
-            let estadoTecla = state.playersSchema.toJSON();
-            for (let i in estadoTecla) {
-                if (estadoTecla[i].estadoesquerda == true) {
-                    console.log(`O jogador ${i} está no estado esquerda`);
-                }
-                else if (estadoTecla[i].estadodireita == true) {
-                    console.log(`O jogador ${i} está no estado direita`);
-                }
-                else if (estadoTecla[i].estadobaixo == true) {
-                    console.log(`O jogador ${i} está no estado baixo`);
-                }
-                else if (estadoTecla[i].estadocima == true) {
-                    console.log(`O jogador ${i} está no estado cima`);
-                }
-                else {
-                    console.log(`O jogador ${i} está no estado inicial`);
-                }
-            }
-        });
+        // Adicione as mudanças aqui
+ 
     }
 
     update(time, delta) {
@@ -105,12 +52,11 @@ export class GameScene extends Phaser.Scene {
             return; 
         }
   
-        // envia o input para o servidor
+        // envia o input para o servidor com o nome "0"
         this.inputPayload.left = this.cursorKeys.left.isDown;
         this.inputPayload.right = this.cursorKeys.right.isDown;
         this.inputPayload.up = this.cursorKeys.up.isDown;
         this.inputPayload.down = this.cursorKeys.down.isDown;
-        this.inputPayload.space = this.cursorKeys.space.isDown;
         if (this.inputPayload.left || this.inputPayload.right || this.inputPayload.up || this.inputPayload.down) {
             this.room.send(0, this.inputPayload);
         }
