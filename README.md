@@ -24,3 +24,23 @@ Uma descrição geral do diretório do servidor está abaixo
 **app.config.js**: Configuração geral das salas e lógica do servidor Express.
 **MyRoom.js**: Definição da sala e lógica do multiplayer.
 **MyRoomState.js**: Definição das variáveis que compõem o estado do jogo multiplayer.
+
+## Execução
+
+Recomenda-se instalar o nodemon, para recargar automatica do código servidor após uma mudança no arquivo fonte:
+
+```bash
+npm install -g nodemon
+```
+
+Para executar o programa para desenvolvimento, após install o nodemon, execute:
+
+```bash
+npm test
+```
+
+Para executar o programa diretamente:
+
+```bash
+npm start
+```
