@@ -27,7 +27,7 @@ Uma descrição geral do diretório do servidor está abaixo
 
 ## Execução
 
-Recomenda-se instalar o nodemon, para recargar automatica do código servidor após uma mudança no arquivo fonte:
+Recomenda-se instalar o nodemon, para recarga automatica do código servidor após uma mudança no arquivo fonte:
 
 ```bash
 npm install -g nodemon
