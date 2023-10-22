@@ -49,4 +49,6 @@ npm start
 
 ### Frontend
 
-Coloque no ar o arquivo `client/index.html`. Isso pode ser feito usando extensões do próprio VSCode, como a [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
+Ao colocar o servidor no ar, ele também hospedará o frontend na [porta 8080](http://localhost:8080/). Sempre que alterar algo no frontend será necessário dar F5 para verificar as alterações.
+
+Caso prefira, é possivel colocar no ar o frontend usando a extensão [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer). É preciso colocar no ar apenas o arquivo `client/index.html`. Usando essa extensão, não é necessário dar F5 toda hora, ele fará isso automaticamente sempre que algo for alterado no código do frontend.
