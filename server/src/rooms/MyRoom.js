@@ -5,8 +5,8 @@
 import { Room } from "@colyseus/core";
 import { MyRoomState } from "./schema/MyRoomState.js";
 import { PlayerSchema } from "./schema/MyRoomState.js";
-import { SpawnEnemyRedSquare } from "../enemies/EnemyRedSquare.js";
-import { SpawnEnemyBlueSquare } from "../enemies/EnemyBlueSquare.js";
+import { EnemyRedSquare } from "../enemies/EnemyRedSquare.js";
+import { EnemyBlueSquare } from "../enemies/EnemyBlueSquare.js";
 
 export class MyRoom extends Room {
     maxClients = 4;
@@ -38,8 +38,8 @@ export class MyRoom extends Room {
         });
 
         // EXEMPLO: Spawn de 4 inimigos quadrados vermelhos e 4 azuis
-        this.currentEnemies = this.currentEnemies.concat(SpawnEnemyRedSquare(this.state))
-        this.currentEnemies = this.currentEnemies.concat(SpawnEnemyBlueSquare(this.state))
+        this.currentEnemies = this.currentEnemies.concat(EnemyRedSquare.spawn(this.state))
+        this.currentEnemies = this.currentEnemies.concat(EnemyBlueSquare.spawn(this.state))
     }
 
     /* Define o que será feito quando um jogador conectar na sala 

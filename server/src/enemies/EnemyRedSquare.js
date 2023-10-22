@@ -22,29 +22,27 @@ schema.defineTypes(EnemyRedSquareSchema, {
     color: "number"
 });
 
-
-export function SpawnEnemyRedSquare(enemies) {
-    const enemy1 = new EnemyRedSquare(enemies);
-    enemy1.enemyAttributes.x = 100;
-    enemy1.enemyAttributes.y = 100;
-
-    const enemy2 = new EnemyRedSquare(enemies);
-    enemy2.enemyAttributes.x = 100;
-    enemy2.enemyAttributes.y = 200;
-
-    const enemy3 = new EnemyRedSquare(enemies);
-    enemy3.enemyAttributes.x = 200;
-    enemy3.enemyAttributes.y = 100;
-
-    const enemy4 = new EnemyRedSquare(enemies);
-    enemy4.enemyAttributes.x = 200;
-    enemy4.enemyAttributes.y = 200;
-
-    return [enemy1, enemy2, enemy3, enemy4];
-}
-
-
 export class EnemyRedSquare extends Enemy {
+
+    static spawn(roomState) {
+        const enemy1 = new EnemyRedSquare(roomState);
+        enemy1.enemyAttributes.x = 100;
+        enemy1.enemyAttributes.y = 100;
+
+        const enemy2 = new EnemyRedSquare(roomState);
+        enemy2.enemyAttributes.x = 100;
+        enemy2.enemyAttributes.y = 200;
+
+        const enemy3 = new EnemyRedSquare(roomState);
+        enemy3.enemyAttributes.x = 200;
+        enemy3.enemyAttributes.y = 100;
+
+        const enemy4 = new EnemyRedSquare(roomState);
+        enemy4.enemyAttributes.x = 200;
+        enemy4.enemyAttributes.y = 200;
+
+        return [enemy1, enemy2, enemy3, enemy4];
+    }
 
     constructor(roomState) {
         super()
