@@ -11,19 +11,37 @@ let enemyId = 0;  // Provavelmente vai precisar mudar isso no futuro... Pode ser
 
 export class Enemy {
 
+    static spawn(enemiesState) {
+        /*
+            Deve ser chamada para criar um novo conjunto de inimigos na sala.
+            Retorna um conjunto de inimigos (em um array), já devidamente inicializados.
+        */
+        throw new Error('You have to implement the method spawn!');
+    }
+
     init(enemiesState, EnemySchema) {
-        this.enemyAttributes = new EnemySchema();
-        this.enemiesState = enemiesState;
-        this.id = enemyId++;
+        /*
+            Função de inicialização do inimigo. Deve ser chamada no construtor da classe filha.
+        */
+
+        this.enemyAttributes = new EnemySchema();  // Atributos do inimigo atual
+        this.enemiesState = enemiesState;  // Coleção de inimigos desse tipo na sala atualmente
+        this.id = enemyId++;  // Id único do inimigo, pode ser útil no futuro em colisões
         this.enemiesState.set(this.id, this.enemyAttributes);
         this.dead = false;
     }
 
     update(deltaTime) {
+        /*
+            Função que será chamada no gameloop do servidor. Principal função para movimentação dos inimigos.
+        */
         throw new Error('You have to implement the method update!');
     }
 
     destroy() {
+        /*
+            Função que remove o inimigo da coleção de inimigos da sala
+        */
         if (this.dead) {
             return
         }

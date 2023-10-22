@@ -27,6 +27,8 @@ Uma descrição geral do diretório do servidor está abaixo
 
 ## Execução
 
+### Backend
+
 Recomenda-se instalar o nodemon, para recarga automatica do código servidor após uma mudança no arquivo fonte:
 
 ```bash
@@ -44,3 +46,7 @@ Para executar o programa diretamente:
 ```bash
 npm start
 ```
+
+### Frontend
+
+Coloque no ar o arquivo `client/index.html`. Isso pode ser feito usando extensões do próprio VSCode, como a [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
