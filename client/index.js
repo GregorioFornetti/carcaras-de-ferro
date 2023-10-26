@@ -19,13 +19,18 @@ export class GameScene extends Phaser.Scene {
         };
         this.cursorKeys = null;
         this.enemiesEntities = {};
+        this.map = null;
+        this.tileset = null;
     }
 
     // Carrega os assets a serem utilizados no jogo
     // Aqui serão carregadas as imagens, sons, etc.
     preload() {
         this.cursorKeys = this.input.keyboard.createCursorKeys();
-        
+        // Carregando o mapa (png e json)
+        this.load.image('base_tiles', './Artes/Mapas/Stub/tsx/tiles_packed.png')
+        this.load.tilemapTiledJSON('myMap', './Artes/Mapas/Stub/export/map.json');
+    
     }
 
     /* Cria os objetos do jogo, além de efetivamente conectar na sala do Colyseus
@@ -44,7 +49,13 @@ export class GameScene extends Phaser.Scene {
         }
 
         // Adicione as mudanças aqui
- 
+
+        //Adiciona o mapa
+        //this.add.image(0, 0, 'base_tiles')
+        this.map = this.add.tilemap('myMap');
+        this.tileset = this.map.addTilesetImage('tiles_packed', 'base_tiles');
+        this.map.createStaticLayer('Ground', this.tileset);
+        this.map.createStaticLayer('Objects', this.tileset);
     }
 
     update(time, delta) {
