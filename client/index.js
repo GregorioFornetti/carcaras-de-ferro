@@ -25,6 +25,7 @@ export class GameScene extends Phaser.Scene {
     // Aqui serão carregadas as imagens, sons, etc.
     preload() {
         this.cursorKeys = this.input.keyboard.createCursorKeys();
+        
     }
 
     /* Cria os objetos do jogo, além de efetivamente conectar na sala do Colyseus

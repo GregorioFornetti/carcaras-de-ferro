@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "parcel": "^2.10.1",
+    "parcel-bundler": "^1.12.5",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "colyseus.js": "^0.15.0-preview.7",
+    "phaser": "^3.60.0"
+  },
+  "scripts": {
+    "start": "parcel serve index.html"
+  }
+}
