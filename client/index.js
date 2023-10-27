@@ -19,8 +19,8 @@ export class GameScene extends Phaser.Scene {
         };
         this.cursorKeys = null;
         this.enemiesEntities = {};
-        this.map = null;
-        this.tileset = null;
+        /* this.map = null;
+        this.tileset = null; */
     }
 
     // Carrega os assets a serem utilizados no jogo
@@ -52,10 +52,10 @@ export class GameScene extends Phaser.Scene {
 
         //Adiciona o mapa
         //this.add.image(0, 0, 'base_tiles')
-        this.map = this.add.tilemap('myMap');
-        this.tileset = this.map.addTilesetImage('tiles_packed', 'base_tiles');
-        this.map.createStaticLayer('Ground', this.tileset);
-        this.map.createStaticLayer('Objects', this.tileset);
+        const map = this.make.tilemap({ key: 'myMap'});
+        const tileset = map.addTilesetImage('tiles_packed', 'base_tiles');
+        map.createLayer('Ground', tileset);
+        map.createLayer('Objects', tileset);
     }
 
     update(time, delta) {
