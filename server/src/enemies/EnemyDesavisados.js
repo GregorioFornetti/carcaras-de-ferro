@@ -23,20 +23,24 @@ schema.defineTypes(EnemyDesavisadosSchema, {
 
 export class EnemyDesavisados extends Enemy {
 
+    velocity;
+    mapHeight;
+    mapWidth;
+
     static spawn(roomState) {
         const enemy1 = new EnemyDesavisados(roomState);
         enemy1.enemyAttributes.x = 0;
-        enemy1.enemyAttributes.y = (Math.random() * mapHeight);
+        enemy1.enemyAttributes.y = (Math.random() * 600);
 
         const enemy2 = new EnemyDesavisados(roomState);
         /* Pega o intervalo próximo do y do enemy1 para o enemy2 ficar próximo dele */
-        const minY = enemy1.enemyAttributes.y - 100;
+        let minY = enemy1.enemyAttributes.y - 100;
         if (minY < 0) {
             minY = 0; 
         }
-        const maxY = enemy1.enemyAttributes.y + 100;
-        if (maxY > mapHeight) {
-            maxY = mapHeight;
+        let maxY = enemy1.enemyAttributes.y + 100;
+        if (maxY > 600) {
+            maxY = 600;
         }
         enemy2.enemyAttributes.x = 0;
         enemy2.enemyAttributes.y = (Math.random() * (maxY - minY) + minY);
@@ -47,7 +51,7 @@ export class EnemyDesavisados extends Enemy {
 
     constructor(roomState) {
         super()
-        this.init(roomState.enemiesDesavisados, EnemyDesavisadosSchema)
+        this.init(roomState.enemiesDesavisadoSchema, EnemyDesavisadosSchema)
         
         this.velocity = 2;
         this.mapWidth = 800;
@@ -56,9 +60,9 @@ export class EnemyDesavisados extends Enemy {
 
     update(deltaTime) {
 
-        this.enemyAttributes.x += this.velocity;
+        this.enemyAttributes.x += 2;
 
-        if (this.enemyAttributes.x > this.mapWidth) {
+        if (this.enemyAttributes.x > 800) {
             this.destroy();
         }
     }

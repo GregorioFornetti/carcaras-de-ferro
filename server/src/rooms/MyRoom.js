@@ -65,6 +65,7 @@ export class MyRoom extends Room {
             this.currentEnemies = this.currentEnemies.concat(EnemyDesavisados.spawn(this.state));
             this.tempoSpawn = 5;
         }
+        
 
     }
 }
