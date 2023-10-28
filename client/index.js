@@ -83,7 +83,7 @@ export class GameScene extends Phaser.Scene {
         }
 
         //testando o scroll
-        this.bg.tilePositionY -= 1;
+        //this.bg.tilePositionY -= 1;
     }
 }
 
