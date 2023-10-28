@@ -19,15 +19,21 @@ export class GameScene extends Phaser.Scene {
         };
         this.cursorKeys = null;
         this.enemiesEntities = {};
+        //this.background = { ratioY: 0, sprite: Phaser.GameObjects.TileSprite };
+        this.bg = null;
     }
 
     // Carrega os assets a serem utilizados no jogo
     // Aqui serão carregadas as imagens, sons, etc.
     preload() {
         this.cursorKeys = this.input.keyboard.createCursorKeys();
-        // Carregando o mapa (png e json)
-        this.load.image('base_tiles', './Artes/Mapas/Stub/tsx/tiles_packed.png')
-        this.load.tilemapTiledJSON('myMap', './Artes/Mapas/Stub/export/map.json');
+
+        // Carregando o mapa (json)
+        /*this.load.image('base_tiles', './Artes/Mapas/Stub/tsx/tiles_packed.png')
+        this.load.tilemapTiledJSON('myMap', './Artes/Mapas/Stub/export/map.json'); */
+
+        // Carrega mapa em png
+        this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     
     }
 
@@ -48,11 +54,17 @@ export class GameScene extends Phaser.Scene {
 
         // Adicione as mudanças aqui
 
-        //Adiciona o mapa
-        const map = this.make.tilemap({ key: 'myMap'});
+        /**** Adiciona o mapa (tilemap)
+        /*const map = this.make.tilemap({ key: 'myMap'});
         const tileset = map.addTilesetImage('tiles_packed', 'base_tiles');
         map.createLayer('Ground', tileset);
-        map.createLayer('Objects', tileset);        
+        map.createLayer('Objects', tileset); */
+        
+        const width = this.game.config.width;
+        const height = this.game.config.height;
+        
+        this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
+        
     }
 
     update(time, delta) {
@@ -69,6 +81,9 @@ export class GameScene extends Phaser.Scene {
         if (this.inputPayload.left || this.inputPayload.right || this.inputPayload.up || this.inputPayload.down) {
             this.room.send(0, this.inputPayload);
         }
+
+        //testando o scroll
+        this.bg.tilePositionY -= 1;
     }
 }
 
