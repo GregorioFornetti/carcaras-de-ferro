@@ -4,9 +4,11 @@
 */
 import { Room } from "@colyseus/core";
 import { MyRoomState } from "./schema/MyRoomState.js";
+import { EnemyDesavisados } from "../enemies/EnemyDesavisados.js";
 
 export class MyRoom extends Room {
     maxClients = 4;
+    tempoSpawn = 5; //segundos
 
     // Define o que será feito quando a sala for criada
     // Aqui será definido os callbacks de eventos da sala
@@ -56,5 +58,13 @@ export class MyRoom extends Room {
                 enemy.update(deltaTime)
             }   
         }
+        
+        if (this.tempoSpawn > 0) {
+            this.tempoSpawn -= deltaTime/1000;
+        } else {
+            this.currentEnemies = this.currentEnemies.concat(EnemyDesavisados.spawn(this.state));
+            this.tempoSpawn = 5;
+        }
+
     }
 }
