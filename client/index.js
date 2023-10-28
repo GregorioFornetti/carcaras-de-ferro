@@ -19,8 +19,6 @@ export class GameScene extends Phaser.Scene {
         };
         this.cursorKeys = null;
         this.enemiesEntities = {};
-        /* this.map = null;
-        this.tileset = null; */
     }
 
     // Carrega os assets a serem utilizados no jogo
@@ -51,10 +49,10 @@ export class GameScene extends Phaser.Scene {
         // Adicione as mudanças aqui
 
         //Adiciona o mapa
-        /* const map = this.make.tilemap({ key: 'myMap'});
+        const map = this.make.tilemap({ key: 'myMap'});
         const tileset = map.addTilesetImage('tiles_packed', 'base_tiles');
         map.createLayer('Ground', tileset);
-        map.createLayer('Objects', tileset); */
+        map.createLayer('Objects', tileset);        
     }
 
     update(time, delta) {
@@ -77,7 +75,7 @@ export class GameScene extends Phaser.Scene {
 // Configurações do Phaser gerais
 const config = {
     type: Phaser.AUTO,
-    width: window.innerWidth * 0.3, //ajusta largura da cena para 30% do interior da janela do browser
+    width: 448, // Largura do TileMap
     height: window.innerHeight * 0.8, //ajusta altura da cena para 80% do interior da janela do browser
     backgroundColor: '#b6d53c',
     parent: 'phaser-example',
