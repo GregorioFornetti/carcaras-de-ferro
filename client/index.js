@@ -5,6 +5,8 @@ A Cena foi modificada para se conectar a sala do Colyseus e enviar os inputs(inp
 Nenhum estado do jogo é mantido na Cena, apenas os inputs do jogador são enviados para o servidor que "aceita" esses inputs e atualiza o estado do jogo de todos os jogadores conectados.
 */
 
+import { EnemyDesavisadosOnAdd, EnemyDesavisadosOnRemove } from "./enemies/EnemyDesavisados";
+
 export class GameScene extends Phaser.Scene {
     constructor() {
         super();
@@ -44,6 +46,8 @@ export class GameScene extends Phaser.Scene {
         }
 
         // Adicione as mudanças aqui
+        this.room.state.EnemyDesavisadosSchema.onAdd(EnemyDesavisadosOnAdd.bind(this));
+        this.room.state.EnemyDesavisadosSchema.onRemove(EnemyDesavisadosOnRemove.bind(this));
  
     }
 
