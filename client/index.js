@@ -25,6 +25,7 @@ export class GameScene extends Phaser.Scene {
     // Aqui serão carregadas as imagens, sons, etc.
     preload() {
         this.cursorKeys = this.input.keyboard.createCursorKeys();
+        this.load.image('ship_0012', './../Artes/Assets/Ships/ship_0012.png');
     }
 
     /* Cria os objetos do jogo, além de efetivamente conectar na sala do Colyseus
