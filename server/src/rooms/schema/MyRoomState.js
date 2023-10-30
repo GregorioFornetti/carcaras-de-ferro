@@ -4,6 +4,7 @@
  O estado da sala nada mais é do que uma coleção de estados de jogadores
 */
 import * as schema from "@colyseus/schema";
+import { EnemySolitarioSchema } from "../../enemies/EnemySolitario.js";
 
 
 export class MyRoomState extends schema.Schema {
@@ -11,11 +12,16 @@ export class MyRoomState extends schema.Schema {
         super();
         // Adicione os objetos aqui
         this.playersSchema = new schema.MapSchema();
+        
+        this.enemiesSolitarioSchema = new schema.MapSchema();
     }
 }
 
 schema.defineTypes(MyRoomState, {
     // Defina o tipo dos objetos do estado aqui
     playersSchema: { map: schema.MapSchema },
+    
+    
+    enemiesSolitarioSchema: { map: EnemySolitarioSchema }
     
 })

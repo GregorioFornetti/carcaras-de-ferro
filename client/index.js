@@ -5,6 +5,9 @@ A Cena foi modificada para se conectar a sala do Colyseus e enviar os inputs(inp
 Nenhum estado do jogo é mantido na Cena, apenas os inputs do jogador são enviados para o servidor que "aceita" esses inputs e atualiza o estado do jogo de todos os jogadores conectados.
 */
 
+
+import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
+
 export class GameScene extends Phaser.Scene {
     constructor() {
         super();
@@ -41,7 +44,15 @@ export class GameScene extends Phaser.Scene {
         } catch (e) {
             console.error(e);
         }
-
+		
+		
+		
+		
+		
+		this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
+		this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
+		
+		
         // Adicione as mudanças aqui
  
     }

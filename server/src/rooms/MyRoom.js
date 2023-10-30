@@ -4,6 +4,7 @@
 */
 import { Room } from "@colyseus/core";
 import { MyRoomState } from "./schema/MyRoomState.js";
+import { EnemySolitario } from "../enemies/EnemySolitario.js";
 
 export class MyRoom extends Room {
     maxClients = 4;
@@ -14,6 +15,13 @@ export class MyRoom extends Room {
         this.setState(new MyRoomState());
 
         this.currentEnemies = []
+        
+        
+        
+        this.timerSolitario = 3;
+        
+        
+        
 
         // Gera o game loop, atualização de estado automatica a cada deltaTime
         // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
@@ -25,6 +33,9 @@ export class MyRoom extends Room {
             console.log("Received message from", client.sessionId, ":", message);
         });
         
+        
+        //MUDAR ISSO DEPOIS
+        this.currentEnemies = this.currentEnemies.concat(EnemySolitario.spawn(this.state));
     }
 
     /* Define o que será feito quando um jogador conectar na sala 
@@ -55,6 +66,13 @@ export class MyRoom extends Room {
             for (let enemy of this.currentEnemies) {
                 enemy.update(deltaTime)
             }   
+        }
+        
+        if (this.timerSolitario > 0) {
+        	this.timerSolitario -= deltaTime / 1000;
+        } else {
+        	this.currentEnemies = this.currentEnemies.concat(EnemySolitario.spawn(this.state));
+        	this.timerSolitario = 3;
         }
     }
 }
