@@ -2,9 +2,11 @@ import * as schema from "@colyseus/schema";
 
 export class BackgroundSchema extends schema.Schema {
     constructor() {
-        this.positionY = 1;
+        super();
+        this.scrollY = 0;
     }
 }
+
 schema.defineTypes(BackgroundSchema, {
-    positionY: "number",
+    scrollY: "number",
 });

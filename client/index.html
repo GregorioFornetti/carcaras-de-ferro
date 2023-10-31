@@ -10,6 +10,7 @@
     <div class="jogo">
         <div id="phaser-example"></div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js" type="module"></script>
     <script src="https://unpkg.com/colyseus.js@^0.15.4/dist/colyseus.js" type="module"></script>
     <script src="index.js" type="module"></script>
@@ -23,12 +24,16 @@
             display: flex;
             justify-content: center;
             align-items: center; 
-            background-color: #000000; /* Cor de fundo da página */
+            background-color: black; /* Cor de fundo da página */
         }
         .jogo {
-            border: 10px solid grey;
-            
+            border: 5px solid white;
+            padding-bottom: 0;
         }
+        #phaser-example {
+            line-height: 0; /* Para retirar o pseudo-padding do fim do canvas */
+        }
+
     </style>
 </body>
 </html>
