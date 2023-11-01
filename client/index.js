@@ -83,7 +83,7 @@ export class GameScene extends Phaser.Scene {
         }
 
         //testando o scroll
-        //this.bg.tilePositionY -= 1;
+        this.bg.tilePositionY -= 1;
     }
 }
 
@@ -91,11 +91,14 @@ export class GameScene extends Phaser.Scene {
 const config = {
     type: Phaser.AUTO,
     width: 448, // Largura do TileMap
-    height: window.innerHeight * 0.8, //ajusta altura da cena para 80% do interior da janela do browser
+    height: 512, //ajusta altura da cena para 80% do interior da janela do browser
     backgroundColor: '#b6d53c',
     parent: 'phaser-example',
     physics: { default: "arcade" },
     pixelArt: true,
+    scale: {
+        mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
+    },
     scene: [ GameScene ],
 };
 
