@@ -1,10 +1,9 @@
 
 export function EnemyDesavisadosOnAdd(enemy, id) {
-    this.enemiesEntities[id] = this.physics.add.image(enemy.x, enemy.y, 'ship_0012');
+    this.enemiesEntities[id] = this.add.rectangle(enemy.x, enemy.y, 32, 32, 0x808080);
 
     enemy.onChange(() => {
         this.enemiesEntities[id].x = enemy.x;
-        this.enemiesEntities[id].y = enemy.y;
     })
 }
 

@@ -5,7 +5,8 @@ A Cena foi modificada para se conectar a sala do Colyseus e enviar os inputs(inp
 Nenhum estado do jogo é mantido na Cena, apenas os inputs do jogador são enviados para o servidor que "aceita" esses inputs e atualiza o estado do jogo de todos os jogadores conectados.
 */
 
-import { EnemyDesavisadosOnAdd, EnemyDesavisadosOnRemove } from "./enemies/EnemyDesavisados";
+//import Phaser from "phaser";
+import { EnemyDesavisadosOnAdd, EnemyDesavisadosOnRemove } from "./enemies/EnemyDesavisados.js";
 
 export class GameScene extends Phaser.Scene {
     constructor() {
@@ -19,7 +20,7 @@ export class GameScene extends Phaser.Scene {
             up: false,
             down: false,
         };
-        this.cursorKeys = null;
+        this.cursorKeys = null;    
         this.enemiesEntities = {};
     }
 
@@ -27,7 +28,7 @@ export class GameScene extends Phaser.Scene {
     // Aqui serão carregadas as imagens, sons, etc.
     preload() {
         this.cursorKeys = this.input.keyboard.createCursorKeys();
-        this.load.image('ship_0012', './../Artes/Assets/Ships/ship_0012.png');
+        //this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png');
     }
 
     /* Cria os objetos do jogo, além de efetivamente conectar na sala do Colyseus
@@ -46,8 +47,8 @@ export class GameScene extends Phaser.Scene {
         }
 
         // Adicione as mudanças aqui
-        this.room.state.EnemyDesavisadosSchema.onAdd(EnemyDesavisadosOnAdd.bind(this));
-        this.room.state.EnemyDesavisadosSchema.onRemove(EnemyDesavisadosOnRemove.bind(this));
+        this.room.state.enemyDesavisadosSchema.onAdd(EnemyDesavisadosOnAdd.bind(this));
+        this.room.state.enemyDesavisadosSchema.onRemove(EnemyDesavisadosOnRemove.bind(this));
  
     }
 
