@@ -16,7 +16,8 @@ export class MyRoom extends Room {
 
         this.currentEnemies = []
 
-        this.timerDesavisado = 5; //segundos
+        //define o tempo de spawn dos Desavisados
+        this.timerDesavisado = 5; 
 
         // Gera o game loop, atualização de estado automatica a cada deltaTime
         // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166

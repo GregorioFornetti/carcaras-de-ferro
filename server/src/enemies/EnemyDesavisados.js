@@ -29,12 +29,10 @@ export class EnemyDesavisados extends Enemy {
         enemy1.enemyAttributes.y = (Math.random() * 600);
 
         const enemy2 = new EnemyDesavisados(roomState);
-        /* Pega o intervalo próximo do y do enemy1 para o enemy2 ficar próximo dele */
-        let minY = enemy1.enemyAttributes.y - 100;
-        if (minY < 0) {
-            minY = 0; 
-        }
-        let maxY = enemy1.enemyAttributes.y + 100;
+        //define a distancia minima entre os Desavisados
+        let minY = enemy1.enemyAttributes.y + 40;
+        //define a distancia maxima entre os Desavisados
+        let maxY = enemy1.enemyAttributes.y + 120; 
         if (maxY > 600) {
             maxY = 600;
         }
