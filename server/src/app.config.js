@@ -30,6 +30,7 @@ export default config.default({
         */
         app.get("/colyseus", monitor());
         app.use('/', express.static("./../client"));
+        app.use('/Artes', express.static("./../Artes"));
 
     },
 });
