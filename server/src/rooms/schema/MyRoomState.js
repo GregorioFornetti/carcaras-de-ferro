@@ -12,7 +12,7 @@ export class MyRoomState extends schema.Schema {
         super();
         // Adicione os objetos aqui
         this.playersSchema = new schema.MapSchema();
-        this.enemiesDesavisadoSchema = new schema.MapSchema();
+        this.enemiesDesavisadosSchema = new schema.MapSchema();
     }
 }
 

@@ -47,9 +47,10 @@ export class EnemyDesavisados extends Enemy {
 
     constructor(roomState) {
         super()
-        this.init(roomState.enemiesDesavisadoSchema, EnemyDesavisadosSchema)
+        this.init(roomState.enemiesDesavisadosSchema, EnemyDesavisadosSchema)
         
-        this.speed = 50;
+        //define a velocidade dos Desavisados
+        this.speed = 300;
     }
 
     update(deltaTime) {

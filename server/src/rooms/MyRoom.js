@@ -16,7 +16,7 @@ export class MyRoom extends Room {
 
         this.currentEnemies = []
 
-        this.tempoSpawn = 5; //segundos
+        this.timerDesavisado = 5; //segundos
 
         // Gera o game loop, atualização de estado automatica a cada deltaTime
         // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
@@ -27,6 +27,8 @@ export class MyRoom extends Room {
             // remover
             console.log("Received message from", client.sessionId, ":", message);
         });
+
+        //this.currentEnemies = this.currentEnemies.concat(EnemyDesavisados.spawn(this.state));
         
     }
 
@@ -60,11 +62,11 @@ export class MyRoom extends Room {
             }   
         }
         
-        if (this.tempoSpawn > 0) {
-            this.tempoSpawn -= deltaTime/1000;
+        if (this.timerDesavisado > 0) {
+            this.timerDesavisado -= deltaTime/1000;
         } else {
             this.currentEnemies = this.currentEnemies.concat(EnemyDesavisados.spawn(this.state));
-            this.tempoSpawn = 5;
+            this.timerDesavisado = 5;
         }
         
 
