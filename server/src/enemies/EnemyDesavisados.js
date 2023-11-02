@@ -23,13 +23,9 @@ schema.defineTypes(EnemyDesavisadosSchema, {
 
 export class EnemyDesavisados extends Enemy {
 
-    velocity;
-    mapHeight;
-    mapWidth;
-
     static spawn(roomState) {
         const enemy1 = new EnemyDesavisados(roomState);
-        enemy1.enemyAttributes.x = 0;
+        enemy1.enemyAttributes.x = -16;
         enemy1.enemyAttributes.y = (Math.random() * 600);
 
         const enemy2 = new EnemyDesavisados(roomState);
@@ -42,7 +38,7 @@ export class EnemyDesavisados extends Enemy {
         if (maxY > 600) {
             maxY = 600;
         }
-        enemy2.enemyAttributes.x = 0;
+        enemy2.enemyAttributes.x = -16;
         enemy2.enemyAttributes.y = (Math.random() * (maxY - minY) + minY);
 
 
@@ -53,14 +49,12 @@ export class EnemyDesavisados extends Enemy {
         super()
         this.init(roomState.enemiesDesavisadoSchema, EnemyDesavisadosSchema)
         
-        this.velocity = 2;
-        this.mapWidth = 800;
-        this.mapHeight = 600;
+        this.speed = 50;
     }
 
     update(deltaTime) {
 
-        this.enemyAttributes.x += 2;
+        this.enemyAttributes.x += this.speed * (deltaTime / 1000);
 
         if (this.enemyAttributes.x > 800) {
             this.destroy();

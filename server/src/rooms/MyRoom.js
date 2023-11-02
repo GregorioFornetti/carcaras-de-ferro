@@ -8,7 +8,6 @@ import { EnemyDesavisados } from "../enemies/EnemyDesavisados.js";
 
 export class MyRoom extends Room {
     maxClients = 4;
-    tempoSpawn = 5; //segundos
 
     // Define o que será feito quando a sala for criada
     // Aqui será definido os callbacks de eventos da sala
@@ -16,6 +15,8 @@ export class MyRoom extends Room {
         this.setState(new MyRoomState());
 
         this.currentEnemies = []
+
+        this.tempoSpawn = 5; //segundos
 
         // Gera o game loop, atualização de estado automatica a cada deltaTime
         // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
