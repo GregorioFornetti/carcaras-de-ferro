@@ -47,8 +47,8 @@ export class GameScene extends Phaser.Scene {
         }
 
         // Adicione as mudanças aqui
-        this.room.state.enemyDesavisadosSchema.onAdd(EnemyDesavisadosOnAdd.bind(this));
-        this.room.state.enemyDesavisadosSchema.onRemove(EnemyDesavisadosOnRemove.bind(this));
+        this.room.state.enemiesDesavisadosSchema.onAdd(EnemyDesavisadosOnAdd.bind(this));
+        this.room.state.enemiesDesavisadosSchema.onRemove(EnemyDesavisadosOnRemove.bind(this));
  
     }
 
