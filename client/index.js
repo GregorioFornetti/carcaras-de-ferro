@@ -7,6 +7,7 @@ Nenhum estado do jogo é mantido na Cena, apenas os inputs do jogador são envia
 
 //import Phaser from "phaser";
 import { EnemyDesavisadosOnAdd, EnemyDesavisadosOnRemove } from "./enemies/EnemyDesavisados.js";
+import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js";
 
 export class GameScene extends Phaser.Scene {
     constructor() {
@@ -72,8 +73,8 @@ export class GameScene extends Phaser.Scene {
 // Configurações do Phaser gerais
 const config = {
     type: Phaser.AUTO,
-    width: 640,
-    height: 800,
+    width: GAME_WIDTH,
+    height: GAME_HEIGHT,
     backgroundColor: '#b6d53c',
     parent: 'phaser-example',
     physics: { default: "arcade" },

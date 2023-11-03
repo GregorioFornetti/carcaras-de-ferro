@@ -10,6 +10,7 @@
 */
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
+import {GAME_WIDTH, GAME_HEIGHT} from '../../constants.js';
 
 
 export class EnemyDesavisadosSchema extends schema.Schema {
@@ -55,7 +56,7 @@ export class EnemyDesavisados extends Enemy {
 
         this.enemyAttributes.x += this.speed * (deltaTime / 1000);
 
-        if (this.enemyAttributes.x > 800) {
+        if (this.enemyAttributes.x > GAME_WIDTH) {
             this.destroy();
         }
     }
