@@ -5,6 +5,8 @@
 import { Room } from "@colyseus/core";
 import { MyRoomState } from "./schema/MyRoomState.js";
 import { EnemySolitario } from "../enemies/EnemySolitario.js";
+import { EnemyPatrulheiros } from "../enemies/EnemyPatrulheiros.js";
+import { EnemyCombatente } from "../enemies/EnemyCombatente.js";
 
 export class MyRoom extends Room {
     maxClients = 4;
@@ -19,6 +21,7 @@ export class MyRoom extends Room {
         
         
         this.timerSolitario = 3;
+        this.timerPatrulheiros = 8;
         
         
         
@@ -35,7 +38,7 @@ export class MyRoom extends Room {
         
         
         //MUDAR ISSO DEPOIS
-        this.currentEnemies = this.currentEnemies.concat(EnemySolitario.spawn(this.state));
+        //this.currentEnemies = this.currentEnemies.concat(EnemyPatrulheiros.spawn(this.state));
     }
 
     /* Define o que será feito quando um jogador conectar na sala 
@@ -71,8 +74,16 @@ export class MyRoom extends Room {
         if (this.timerSolitario > 0) {
         	this.timerSolitario -= deltaTime / 1000;
         } else {
-        	this.currentEnemies = this.currentEnemies.concat(EnemySolitario.spawn(this.state));
+        	//this.currentEnemies = this.currentEnemies.concat(EnemySolitario.spawn(this.state));
+        	this.currentEnemies = this.currentEnemies.concat(EnemyCombatente.spawn(this.state));
         	this.timerSolitario = 3;
+        }
+        
+        if (this.timerPatrulheiros > 0) {
+        	this.timerPatrulheiros -= deltaTime / 1000;
+        } else {
+        	//this.currentEnemies = this.currentEnemies.concat(EnemyPatrulheiros.spawn(this.state));
+        	this.timerPatrulheiros = 8;
         }
     }
 }

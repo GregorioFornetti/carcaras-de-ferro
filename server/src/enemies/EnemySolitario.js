@@ -8,31 +8,35 @@ export class EnemySolitarioSchema extends schema.Schema {
 schema.defineTypes(EnemySolitarioSchema, {
 	x: "number",
 	y: "number",
-	//color: "number"
 });
+
+const MAPHEIGHT = 800;
+const MAPWIDTH = 640;
 
 export class EnemySolitario extends Enemy {
 
 	static spawn(roomState) {	
 		const enemy = new EnemySolitario(roomState);
-		enemy.enemyAttributes.y = -16;
-		enemy.enemyAttributes.x = Math.floor(Math.random() * 608)+16;
+		//console.log (this.game);
+		enemy.enemyAttributes.y = -EnemySolitario.HEIGHT/2;
+		enemy.enemyAttributes.x = Math.floor(Math.random() * (MAPWIDTH - EnemySolitario.WIDTH)) + EnemySolitario.WIDTH/2;
 		
 		return enemy;
 	}
 	
+	static get HEIGHT () {return 32;}
+	static get WIDTH () {return 32;}
+	
 	constructor(roomState) {
 		super();
 		this.init(roomState.enemiesSolitarioSchema, EnemySolitarioSchema);
-		
-		//this.enemyAttributes.color = 0;
+		this.speed = 50;
 	}
 	
 	update(deltaTime) {
-		this.enemyAttributes.y += 25 * (deltaTime / 1000);
+		this.enemyAttributes.y += this.speed * (deltaTime / 1000);
 		
-		if (this.enemyAttributes.y > 816)
+		if (this.enemyAttributes.y > MAPHEIGHT + EnemySolitario.HEIGHT / 2)
 			this.destroy();
-		
-	}	
+	}
 }

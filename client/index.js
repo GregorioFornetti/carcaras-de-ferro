@@ -5,8 +5,9 @@ A Cena foi modificada para se conectar a sala do Colyseus e enviar os inputs(inp
 Nenhum estado do jogo é mantido na Cena, apenas os inputs do jogador são enviados para o servidor que "aceita" esses inputs e atualiza o estado do jogo de todos os jogadores conectados.
 */
 
-
 import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
+import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
+import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
 
 export class GameScene extends Phaser.Scene {
     constructor() {
@@ -22,12 +23,16 @@ export class GameScene extends Phaser.Scene {
         };
         this.cursorKeys = null;
         this.enemiesEntities = {};
+        this.bg = null;
     }
 
     // Carrega os assets a serem utilizados no jogo
     // Aqui serão carregadas as imagens, sons, etc.
     preload() {
         this.cursorKeys = this.input.keyboard.createCursorKeys();
+        this.load.image('ship_0022', './Artes/Assets/Ships/ship_0022.png');
+        this.load.image('ship_0023', './Artes/Assets/Ships/ship_0023.png');
+        this.load.image('ship_0015', './Artes/Assets/Ships/ship_0015.png');
     }
 
     /* Cria os objetos do jogo, além de efetivamente conectar na sala do Colyseus
@@ -44,17 +49,17 @@ export class GameScene extends Phaser.Scene {
         } catch (e) {
             console.error(e);
         }
-		
-		
-		
-		
+
 		
 		this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
 		this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
 		
+		this.room.state.enemiesPatrulheirosSchema.onAdd(EnemyPatrulheirosOnAdd.bind(this))
+		this.room.state.enemiesPatrulheirosSchema.onRemove(EnemyPatrulheirosOnRemove.bind(this))
 		
+		this.room.state.enemiesCombatenteSchema.onAdd(EnemyCombatenteOnAdd.bind(this))
+		this.room.state.enemiesCombatenteSchema.onRemove(EnemyCombatenteOnRemove.bind(this))
         // Adicione as mudanças aqui
- 
     }
 
     update(time, delta) {

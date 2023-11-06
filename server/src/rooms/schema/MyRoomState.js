@@ -5,6 +5,8 @@
 */
 import * as schema from "@colyseus/schema";
 import { EnemySolitarioSchema } from "../../enemies/EnemySolitario.js";
+import { EnemyPatrulheirosSchema } from "../../enemies/EnemyPatrulheiros.js";
+import { EnemyCombatenteSchema } from "../../enemies/EnemyCombatente.js";
 
 
 export class MyRoomState extends schema.Schema {
@@ -14,6 +16,8 @@ export class MyRoomState extends schema.Schema {
         this.playersSchema = new schema.MapSchema();
         
         this.enemiesSolitarioSchema = new schema.MapSchema();
+        this.enemiesPatrulheirosSchema = new schema.MapSchema();
+        this.enemiesCombatenteSchema = new schema.MapSchema();
     }
 }
 
@@ -22,6 +26,7 @@ schema.defineTypes(MyRoomState, {
     playersSchema: { map: schema.MapSchema },
     
     
-    enemiesSolitarioSchema: { map: EnemySolitarioSchema }
-    
+    enemiesSolitarioSchema: { map: EnemySolitarioSchema },
+    enemiesPatrulheirosSchema: { map: EnemyPatrulheirosSchema },
+    enemiesCombatenteSchema: { map: EnemyCombatenteSchema }
 })
