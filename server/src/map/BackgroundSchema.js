@@ -6,7 +6,6 @@ export class BackgroundSchema extends schema.Schema {
         this.scrollY = 0;
     }
 }
-
 schema.defineTypes(BackgroundSchema, {
-    scrollY: "number",
+  scrollY: "number",
 });

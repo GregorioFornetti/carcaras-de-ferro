@@ -70,8 +70,10 @@ export class GameScene extends Phaser.Scene {
             this.room.send(0, this.inputPayload);
         }
 
-        //testando o scroll
-        //this.bg.tilePositionY -= 3;
+        //** Scroll do Mapa **
+        //const receivedBackgroundSchema = this.room.state.bgSchema.scrollY;
+        //this.bg.tilePositionY -= 
+
     }
 }
 

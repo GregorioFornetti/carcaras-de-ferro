@@ -4,17 +4,19 @@
 */
 import { Room } from "@colyseus/core";
 import { MyRoomState } from "./schema/MyRoomState.js";
+import { BackgroundSchema } from "../map/BackgroundSchema.js";
 
 export class MyRoom extends Room {
     maxClients = 4;
-
+    x = 1;
     // Define o que será feito quando a sala for criada
     // Aqui será definido os callbacks de eventos da sala
     onCreate (options) {
         this.setState(new MyRoomState());
 
         this.currentEnemies = []
-
+        this.velocidadeMapa = 0;
+        
         // Gera o game loop, atualização de estado automatica a cada deltaTime
         // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
         this.setSimulationInterval((deltaTime) => this.update(deltaTime));
@@ -56,5 +58,10 @@ export class MyRoom extends Room {
                 enemy.update(deltaTime)
             }   
         }
+
+        //** Movimentação do Mapa */
+        this.velocidadeMapa = 1;
+        this.state.bgSchema.scrollY = this.velocidadeMapa;
+
     }
 }

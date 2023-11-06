@@ -4,17 +4,19 @@
  O estado da sala nada mais é do que uma coleção de estados de jogadores
 */
 import * as schema from "@colyseus/schema";
-//import { BackgroundSchema } from "../map/BackgroundSchema";
+import { BackgroundSchema } from "../../map/BackgroundSchema.js";
 
 export class MyRoomState extends schema.Schema {
     constructor() {
         super();
         // Adicione os objetos aqui
         this.playersSchema = new schema.MapSchema();
+        this.bgSchema = new BackgroundSchema();
     }
 }
 
 schema.defineTypes(MyRoomState, {
     // Defina o tipo dos objetos do estado aqui
     playersSchema: { map: schema.MapSchema },
+    bgSchema: BackgroundSchema,
 })
