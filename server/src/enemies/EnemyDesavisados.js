@@ -28,6 +28,7 @@ export class EnemyDesavisados extends Enemy {
         //define as distancias minima e maxima entre os Desavisados
         const minDistY = 40;
         const maxDistY = 120;
+        const maxDistX = 50;
 
         const enemy1 = new EnemyDesavisados(roomState);
         const enemy2 = new EnemyDesavisados(roomState);
@@ -44,15 +45,15 @@ export class EnemyDesavisados extends Enemy {
          //calcula coordenada x do spawn
          if (Math.random() >= 0.5) {
             //spawn na esquerda
-            enemy1.enemyAttributes.x = -16;
-            enemy2.enemyAttributes.x = -16;
+            enemy1.enemyAttributes.x = (Math.random() * maxDistX) * -1;
+            enemy2.enemyAttributes.x = (Math.random() * maxDistX) * -1;
          } else {
             //spawn na direita
-             enemy1.enemyAttributes.x = GAME_WIDTH;
-             enemy2.enemyAttributes.x = GAME_WIDTH;
-             //inverte a velocidade
-             const newSpeed = enemy1.speed * -1;
-             enemy2.speed = enemy1.speed = newSpeed;
+            enemy1.enemyAttributes.x = (Math.random() * ((GAME_WIDTH - maxDistX) - GAME_WIDTH) + GAME_WIDTH);
+            enemy2.enemyAttributes.x = (Math.random() * ((GAME_WIDTH - maxDistX) - GAME_WIDTH) + GAME_WIDTH);
+            //inverte a velocidade
+            const newSpeed = enemy1.speed * -1;
+            enemy2.speed = enemy1.speed = newSpeed;
          }
 
 
