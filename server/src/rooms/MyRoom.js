@@ -61,7 +61,7 @@ export class MyRoom extends Room {
 
         //** Movimentação do Mapa */
         this.velocidadeMapa = 1;
-        this.state.bgSchema.scrollY = this.velocidadeMapa;
+        this.state.bgSchema.scrollY -= this.velocidadeMapa;
 
     }
 }

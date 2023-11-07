@@ -71,8 +71,10 @@ export class GameScene extends Phaser.Scene {
         }
 
         //** Scroll do Mapa **
+        this.room.state.bgSchema.listen("scrollY", (currentPosition, previousPosition) => {
+            this.bg.tilePositionY = currentPosition;
+        });
         //const receivedBackgroundSchema = this.room.state.bgSchema.scrollY;
-        //this.bg.tilePositionY -= 
 
     }
 }
