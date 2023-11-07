@@ -80,12 +80,15 @@ export class GameScene extends Phaser.Scene {
 // Configurações do Phaser gerais
 const config = {
     type: Phaser.AUTO,
-    width: 448, // Largura do Map
-    height: 500,//window.innerHeight * 0.8, //ajusta altura da cena para 80% do interior da janela do browser
+    width: 448, // Largura do TileMap
+    height: 512, //ajusta altura da cena para 80% do interior da janela do browser
     backgroundColor: '#b6d53c',
     parent: 'phaser-example',
     physics: { default: "arcade" },
     pixelArt: true,
+    scale: {
+        mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
+    },
     scene: [ GameScene ],
 };
 
