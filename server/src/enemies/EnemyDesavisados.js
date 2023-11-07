@@ -25,20 +25,35 @@ schema.defineTypes(EnemyDesavisadosSchema, {
 export class EnemyDesavisados extends Enemy {
 
     static spawn(roomState) {
-        const enemy1 = new EnemyDesavisados(roomState);
-        enemy1.enemyAttributes.x = -16;
-        enemy1.enemyAttributes.y = (Math.random() * 600);
+        //define as distancias minima e maxima entre os Desavisados
+        const minDistY = 40;
+        const maxDistY = 120;
 
+        const enemy1 = new EnemyDesavisados(roomState);
         const enemy2 = new EnemyDesavisados(roomState);
-        //define a distancia minima entre os Desavisados
-        let minY = enemy1.enemyAttributes.y + 40;
-        //define a distancia maxima entre os Desavisados
-        let maxY = enemy1.enemyAttributes.y + 120; 
-        if (maxY > 600) {
-            maxY = 600;
+
+        //calcula coordenada y do spawn
+        enemy1.enemyAttributes.y = (Math.random() * GAME_HEIGHT);
+        let minY = enemy1.enemyAttributes.y + minDistY;
+        let maxY = enemy1.enemyAttributes.y + maxDistY; 
+        if (maxY > GAME_HEIGHT) {
+            maxY = GAME_HEIGHT;
         }
-        enemy2.enemyAttributes.x = -16;
         enemy2.enemyAttributes.y = (Math.random() * (maxY - minY) + minY);
+
+         //calcula coordenada x do spawn
+         if (Math.random() >= 0.5) {
+            //spawn na esquerda
+            enemy1.enemyAttributes.x = -16;
+            enemy2.enemyAttributes.x = -16;
+         } else {
+            //spawn na direita
+             enemy1.enemyAttributes.x = GAME_WIDTH;
+             enemy2.enemyAttributes.x = GAME_WIDTH;
+             //inverte a velocidade
+             const newSpeed = enemy1.speed * -1;
+             enemy2.speed = enemy1.speed = newSpeed;
+         }
 
 
         return [enemy1, enemy2];
@@ -50,6 +65,7 @@ export class EnemyDesavisados extends Enemy {
         
         //define a velocidade dos Desavisados
         this.speed = 300;
+
     }
 
     update(deltaTime) {

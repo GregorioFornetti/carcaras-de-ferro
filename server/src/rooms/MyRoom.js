@@ -29,7 +29,6 @@ export class MyRoom extends Room {
             console.log("Received message from", client.sessionId, ":", message);
         });
 
-        //this.currentEnemies = this.currentEnemies.concat(EnemyDesavisados.spawn(this.state));
         
     }
 
