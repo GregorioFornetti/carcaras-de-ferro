@@ -23,27 +23,35 @@ export class EnemyCombatente extends Enemy {
 		
 		let r = Math.random();
 		
-		if (r < 0.60) {
+		if (r < 0.70) {
 			enemy.enemyAttributes.yFinal = MAPHEIGHT * (Math.random() * (EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA1 - EnemyCombatente.POSICAO_PARADA_MINIMA) + EnemyCombatente.POSICAO_PARADA_MINIMA);
-		} else if (r < 0.9) {
+		} else if (r < 0.95) {
 			enemy.enemyAttributes.yFinal = MAPHEIGHT * (Math.random() * (EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA2 - EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA1) + EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA1);
 		} else {
 			enemy.enemyAttributes.yFinal = MAPHEIGHT * (Math.random() * (EnemyCombatente.POSICAO_PARADA_MAXIMA - EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA2) + EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA2);
 		}
 		
-		console.log (enemy.enemyAttributes.yFinal);
 		
-		enemy.enemyAttributes.x = Math.floor(Math.random() * (MAPWIDTH - EnemyCombatente.WIDTH - MAPWIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL)) + EnemyCombatente.WIDTH/2;
+		
+		enemy.enemyAttributes.x = Math.floor(Math.random() * (MAPWIDTH - EnemyCombatente.WIDTH - 2*(MAPWIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL))) + EnemyCombatente.WIDTH/2 + MAPWIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL;
+		
+		//DEBUGING
+		//enemy.enemyAttributes.x = Math.floor(1 * (MAPWIDTH - EnemyCombatente.WIDTH - 2*(MAPWIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL))) + EnemyCombatente.WIDTH/2 + MAPWIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL;
 		enemy.enemyAttributes.xInit = enemy.enemyAttributes.x;
 		
 		return enemy;
 	}
+	
+	static get VELOCIDADE_HORIZONTAL_MAXIMA() {return 30};
+	static get VELOCIDADE_HORIZONTAL_MINIMA() {return 15};
 	
 	static get TAMANHO_MOVIMENTO_HORIZONTAL() {return 0.2};
 	static get POSICAO_PARADA_MINIMA() {return 0.1};
 	static get POSICAO_PARADA_INTERMEDIARIA1() {return 0.3};
 	static get POSICAO_PARADA_INTERMEDIARIA2() {return 0.5};
 	static get POSICAO_PARADA_MAXIMA() {return 0.7};
+	
+	static get TEMPO_MEIO_PONTO() {return 3};
 	
 	
 	static get HEIGHT () {return 32;}
@@ -53,6 +61,11 @@ export class EnemyCombatente extends Enemy {
 		super();
 		this.init(roomState.enemiesCombatenteSchema, EnemyCombatenteSchema);
 		this.verticalSpeed = 50;
+		if (Math.random() < 0.5)
+			this.horizontalSpeed = -EnemyCombatente.VELOCIDADE_HORIZONTAL_MAXIMA;
+		else
+			this.horizontalSpeed = EnemyCombatente.VELOCIDADE_HORIZONTAL_MAXIMA;
+		
 		this.state = 1;
 	}
 	
@@ -64,9 +77,13 @@ export class EnemyCombatente extends Enemy {
 					this.state = 2;
 				break;
 			case 2:
+				this.horizontalSpeed = (EnemyCombatente.VELOCIDADE_HORIZONTAL_MAXIMA - (EnemyCombatente.VELOCIDADE_HORIZONTAL_MAXIMA - EnemyCombatente.VELOCIDADE_HORIZONTAL_MINIMA) * Math.abs((this.enemyAttributes.xInit - this.enemyAttributes.x) / (MAPWIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL))) * Math.sign(this.horizontalSpeed);
 				
+				if (	(this.enemyAttributes.x >= (this.enemyAttributes.xInit + MAPWIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL)) ||
+						(this.enemyAttributes.x <= (this.enemyAttributes.xInit - MAPWIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL)))
+					this.horizontalSpeed *= -1;
 				
-				
+				this.enemyAttributes.x += this.horizontalSpeed * (deltaTime / 1000);
 				break;
 			default:
 				break;

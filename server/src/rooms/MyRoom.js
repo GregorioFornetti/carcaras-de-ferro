@@ -21,7 +21,11 @@ export class MyRoom extends Room {
         
         
         this.timerSolitario = 3;
+		this.timerSolitarioMaximo = 3;
         this.timerPatrulheiros = 8;
+		this.timerPatrulheirosMaximo = 8;
+		this.timerCombatente = 5;
+		this.timerCombatenteMaximo = 5;
         
         
         
@@ -71,19 +75,29 @@ export class MyRoom extends Room {
             }   
         }
         
+		
         if (this.timerSolitario > 0) {
         	this.timerSolitario -= deltaTime / 1000;
         } else {
-        	//this.currentEnemies = this.currentEnemies.concat(EnemySolitario.spawn(this.state));
-        	this.currentEnemies = this.currentEnemies.concat(EnemyCombatente.spawn(this.state));
-        	this.timerSolitario = 3;
+        	this.currentEnemies = this.currentEnemies.concat(EnemySolitario.spawn(this.state));
+        	this.timerSolitario = this.timerSolitarioMaximo;
         }
         
+		
         if (this.timerPatrulheiros > 0) {
         	this.timerPatrulheiros -= deltaTime / 1000;
         } else {
-        	//this.currentEnemies = this.currentEnemies.concat(EnemyPatrulheiros.spawn(this.state));
-        	this.timerPatrulheiros = 8;
+        	this.currentEnemies = this.currentEnemies.concat(EnemyPatrulheiros.spawn(this.state));
+        	this.timerPatrulheiros = this.timerPatrulheirosMaximo;
         }
+		
+		
+		if (this.timerCombatente > 0) {
+			this.timerCombatente -= deltaTime / 1000;
+		} else {
+			this.currentEnemies = this.currentEnemies.concat(EnemyCombatente.spawn(this.state));
+			this.timerCombatente = this.timerCombatenteMaximo;
+		}
+		
     }
 }

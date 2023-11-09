@@ -23,6 +23,9 @@ export class EnemyPatrulheiros extends Enemy {
 		enemy1.enemyAttributes.y = -EnemyPatrulheiros.HEIGHT/2 - EnemyPatrulheiros.SEPARACAO_VERTICAL;
 		enemy1.enemyAttributes.x = Math.floor(Math.random() * (MAPWIDTH - 2*EnemyPatrulheiros.SEPARACAO_HORIZONTAL - EnemyPatrulheiros.WIDTH)) + EnemyPatrulheiros.WIDTH/2;
 		
+		//DEBUGING
+		//enemy1.enemyAttributes.x = Math.floor(0 * (MAPWIDTH - 2*EnemyPatrulheiros.SEPARACAO_HORIZONTAL - EnemyPatrulheiros.WIDTH)) + EnemyPatrulheiros.WIDTH/2;
+		
 		enemy2.enemyAttributes.y = enemy1.enemyAttributes.y + EnemyPatrulheiros.SEPARACAO_VERTICAL;
 		enemy2.enemyAttributes.x = enemy1.enemyAttributes.x + EnemyPatrulheiros.SEPARACAO_HORIZONTAL;
 		
@@ -48,7 +51,6 @@ export class EnemyPatrulheiros extends Enemy {
 		
 		if (this.enemyAttributes.y > MAPHEIGHT + EnemyPatrulheiros.HEIGHT / 2) {
 			this.destroy();
-			console.log ("DESTROYED");	
 		}
 	}
 }

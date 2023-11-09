@@ -21,6 +21,9 @@ export class EnemySolitario extends Enemy {
 		enemy.enemyAttributes.y = -EnemySolitario.HEIGHT/2;
 		enemy.enemyAttributes.x = Math.floor(Math.random() * (MAPWIDTH - EnemySolitario.WIDTH)) + EnemySolitario.WIDTH/2;
 		
+		//DEBUGING
+		//enemy.enemyAttributes.x = Math.floor(1 * (MAPWIDTH - EnemySolitario.WIDTH)) + EnemySolitario.WIDTH/2;
+		
 		return enemy;
 	}
 	
