@@ -131,7 +131,7 @@ export class GameScene extends Phaser.Scene {
     //** Scroll do Mapa **
     this.room.state.bgSchema.listen("scrollY", (currentPosition, previousPosition) => {
       this.bg.tilePositionY = currentPosition;
-  });
+    });
 
     // envia o input para o servidor com o nome "pressedKeys"
     this.inputPayload.left = this.cursorKeys.A.isDown

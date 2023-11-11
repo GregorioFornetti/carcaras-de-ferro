@@ -86,6 +86,10 @@ export class MyRoom extends Room {
 
   // Game loop - essa função será chamada a cada tick ()
   update(deltaTime) {
+    //** Movimentação do Mapa */
+    this.velocidadeMapa = 1;
+    this.state.bgSchema.scrollY -= this.velocidadeMapa;
+
     if (this.currentEnemies.length != 0) {
       this.currentEnemies = this.currentEnemies.filter((enemy) => !enemy.dead)
 
@@ -93,9 +97,6 @@ export class MyRoom extends Room {
       for (let enemy of this.currentEnemies) {
         enemy.update(deltaTime)
       }
-      //** Movimentação do Mapa */
-      this.velocidadeMapa = 1;
-      this.state.bgSchema.scrollY -= this.velocidadeMapa;
     }
 
     if (this.currentBullets.length != 0) {
