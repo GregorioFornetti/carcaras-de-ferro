@@ -176,7 +176,8 @@ const config = {
     parent: 'phaser-example',
     physics: { 
       default: "arcade",
-      fps: 60
+      fps: 60,
+      forceSetTimeOut: true
     },
     pixelArt: true,
     scale: {
