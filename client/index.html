@@ -7,8 +7,34 @@
     <title>Carcaras De Ferro</title>
 </head>
 <body>
+    <div class="jogo">
+        <div id="phaser-example"></div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js" type="module"></script>
     <script src="https://unpkg.com/colyseus.js@^0.15.4/dist/colyseus.js" type="module"></script>
     <script src="index.js" type="module"></script>
+      
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: auto;
+            height: 100vh; /* 100% da view */
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+            background-color: black; /* Cor de fundo da página */
+        }
+        .jogo {
+            border: 1vh solid white;
+            
+        }
+        #phaser-example {
+            line-height: 0;
+            height: 95vh;
+        }
+    </style>
 </body>
 </html>
+    

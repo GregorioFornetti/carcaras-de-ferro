@@ -7,9 +7,11 @@ import { MyRoomState } from "./schema/MyRoomState.js";
 import { EnemyDesavisados } from "../enemies/EnemyDesavisados.js";
 import { PlayerSchema } from "../player/PlayerSchema.js"
 import { Bullet, BulletSchema } from "../bullet/Bullet.js"
+import { BackgroundSchema } from "../map/BackgroundSchema.js";
 
 export class MyRoom extends Room {
   maxClients = 4
+  x = 1;
 
   // Define o que será feito quando a sala for criada
   // Aqui será definido os callbacks de eventos da sala
@@ -18,6 +20,7 @@ export class MyRoom extends Room {
 
     this.currentEnemies = []
     this.currentBullets = []
+    this.velocidadeMapa = 0;
 
     //define o tempo de spawn dos Desavisados
     this.timerDesavisado = 5; 
@@ -90,6 +93,9 @@ export class MyRoom extends Room {
       for (let enemy of this.currentEnemies) {
         enemy.update(deltaTime)
       }
+      //** Movimentação do Mapa */
+      this.velocidadeMapa = 1;
+      this.state.bgSchema.scrollY -= this.velocidadeMapa;
     }
 
     if (this.currentBullets.length != 0) {

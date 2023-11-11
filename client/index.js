@@ -22,6 +22,7 @@ export class GameScene extends Phaser.Scene {
       down: false,
       shot: false,
     }
+    this.bg = null; //background (mapa do jogo)
     this.cursorKeys = null
     this.enemiesEntities = {}
     this.bulletsEntities = {}
@@ -33,7 +34,9 @@ export class GameScene extends Phaser.Scene {
   preload() {
     this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE")
 
+    this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
+    
     this.load.spritesheet("ship_1", "./Artes/Assets/Ships/ship_0001.png", {
       frameWidth: 32,
       frameHeight: 48,
@@ -114,6 +117,9 @@ export class GameScene extends Phaser.Scene {
           })
         })
 
+        const width = GAME_WIDTH;
+        const height = GAME_HEIGHT;
+        this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
     }
   
   update(time, delta) {
@@ -121,6 +127,11 @@ export class GameScene extends Phaser.Scene {
     if (!this.room) {
       return
     }
+
+    //** Scroll do Mapa **
+    this.room.state.bgSchema.listen("scrollY", (currentPosition, previousPosition) => {
+      this.bg.tilePositionY = currentPosition;
+  });
 
     // envia o input para o servidor com o nome "pressedKeys"
     this.inputPayload.left = this.cursorKeys.A.isDown
@@ -144,12 +155,15 @@ export class GameScene extends Phaser.Scene {
 // Configurações do Phaser gerais
 const config = {
     type: Phaser.AUTO,
-    width: GAME_WIDTH,
-    height: GAME_HEIGHT,
+    width: GAME_WIDTH, // Largura do TileMap
+    height: GAME_HEIGHT, //ajusta altura da cena para 80% do interior da janela do browser
     backgroundColor: '#b6d53c',
     parent: 'phaser-example',
     physics: { default: "arcade" },
     pixelArt: true,
+    scale: {
+        mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
+    },
     scene: [ GameScene ],
 };
 
