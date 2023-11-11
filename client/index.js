@@ -8,6 +8,9 @@ Nenhum estado do jogo é mantido na Cena, apenas os inputs do jogador são envia
 //import Phaser from "phaser";
 import { EnemyDesavisadosOnAdd, EnemyDesavisadosOnRemove } from "./enemies/EnemyDesavisados.js";
 import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js";
+import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
+import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
+import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -36,6 +39,9 @@ export class GameScene extends Phaser.Scene {
 
     this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('ship_0022', './Artes/Assets/Ships/ship_0022.png');
+    this.load.image('ship_0023', './Artes/Assets/Ships/ship_0023.png');
+    this.load.image('ship_0015', './Artes/Assets/Ships/ship_0015.png');
     
     this.load.spritesheet("ship_1", "./Artes/Assets/Ships/ship_0001.png", {
       frameWidth: 32,
@@ -74,53 +80,62 @@ export class GameScene extends Phaser.Scene {
             console.error(e);
         }
 
-        // Adicione as mudanças aqui
-        this.room.state.enemiesDesavisadosSchema.onAdd(EnemyDesavisadosOnAdd.bind(this));
-        this.room.state.enemiesDesavisadosSchema.onRemove(EnemyDesavisadosOnRemove.bind(this));
-        // Adicione as mudanças aqui
-        this.room.state.playersSchema.onRemove((player, sessionId) => {
-          const entity = this.playerEntities[sessionId]
-          if (entity) {
-            // loga no console a desconexão do jogador
-            console.log(`Jogador ${sessionId} desconectado!`)
+		
+		this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
+		this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
+		
+		this.room.state.enemiesPatrulheirosSchema.onAdd(EnemyPatrulheirosOnAdd.bind(this))
+		this.room.state.enemiesPatrulheirosSchema.onRemove(EnemyPatrulheirosOnRemove.bind(this))
+		
+		this.room.state.enemiesCombatenteSchema.onAdd(EnemyCombatenteOnAdd.bind(this))
+		this.room.state.enemiesCombatenteSchema.onRemove(EnemyCombatenteOnRemove.bind(this))
+    // Adicione as mudanças aqui
+    this.room.state.enemiesDesavisadosSchema.onAdd(EnemyDesavisadosOnAdd.bind(this));
+    this.room.state.enemiesDesavisadosSchema.onRemove(EnemyDesavisadosOnRemove.bind(this));
+    // Adicione as mudanças aqui
+    this.room.state.playersSchema.onRemove((player, sessionId) => {
+      const entity = this.playerEntities[sessionId]
+      if (entity) {
+        // loga no console a desconexão do jogador
+        console.log(`Jogador ${sessionId} desconectado!`)
 
-            // limpando referência local
-            delete this.playerEntities[sessionId]
-          }
-        })
+        // limpando referência local
+        delete this.playerEntities[sessionId]
+      }
+    })
 
-        this.room.state.playersSchema.onAdd((player, sessionId) => {
-          let playersSize = Object.keys(this.playerEntities).length
+    this.room.state.playersSchema.onAdd((player, sessionId) => {
+      let playersSize = Object.keys(this.playerEntities).length
 
-          this.playerEntities[sessionId] = this.physics.add.sprite(
-            player.x + playersSize * 100,
-            player.y + playersSize * 100,
-            `ship_${playersSize + 1}`
-          )
+      this.playerEntities[sessionId] = this.physics.add.sprite(
+        player.x + playersSize * 100,
+        player.y + playersSize * 100,
+        `ship_${playersSize + 1}`
+      )
 
-          player.onChange(() => {
-            this.playerEntities[sessionId].x = player.x
-            this.playerEntities[sessionId].y = player.y
-          })
-        })
+      player.onChange(() => {
+        this.playerEntities[sessionId].x = player.x
+        this.playerEntities[sessionId].y = player.y
+      })
+    })
 
-        this.room.state.bulletSchema.onAdd((bullet, sessionId) => {
-          this.bulletsEntities[sessionId] = this.physics.add.sprite(
-            bullet.x,
-            bullet.y,
-            "bullet"
-          )
+    this.room.state.bulletSchema.onAdd((bullet, sessionId) => {
+      this.bulletsEntities[sessionId] = this.physics.add.sprite(
+        bullet.x,
+        bullet.y,
+        "bullet"
+      )
 
-          bullet.onChange(() => {
-            this.bulletsEntities[sessionId].x = bullet.x
-            this.bulletsEntities[sessionId].y = bullet.y
-          })
-        })
+      bullet.onChange(() => {
+        this.bulletsEntities[sessionId].x = bullet.x
+        this.bulletsEntities[sessionId].y = bullet.y
+      })
+    })
 
-        const width = GAME_WIDTH;
-        const height = GAME_HEIGHT;
-        this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
-    }
+    const width = GAME_WIDTH;
+    const height = GAME_HEIGHT;
+    this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
+  }
   
   update(time, delta) {
     // Sai do loop se a sala não estiver conectada
