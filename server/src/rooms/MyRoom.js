@@ -53,13 +53,6 @@ export class MyRoom extends Room {
         }
       }
     })
-        
-    if (this.timerDesavisado > 0) {
-        this.timerDesavisado -= deltaTime/1000;
-    } else {
-        this.currentEnemies = this.currentEnemies.concat(EnemyDesavisados.spawn(this.state));
-        this.timerDesavisado = 5;
-    }
   }
 
   /* Define o que será feito quando um jogador conectar na sala
@@ -114,5 +107,12 @@ export class MyRoom extends Room {
     //for (let bullet of this.state.bulletSchema.values()) {
     //  bullet.update(deltaTime)
     //}
+
+    if (this.timerDesavisado > 0) {
+      this.timerDesavisado -= deltaTime/1000;
+    } else {
+        this.currentEnemies = this.currentEnemies.concat(EnemyDesavisados.spawn(this.state));
+        this.timerDesavisado = 5;
+    }
   }
 }
