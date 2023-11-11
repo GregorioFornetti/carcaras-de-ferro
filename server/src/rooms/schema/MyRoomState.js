@@ -5,6 +5,8 @@
 */
 import * as schema from "@colyseus/schema";
 import { EnemyDesavisadosSchema } from "../../enemies/EnemyDesavisados.js";
+import { PlayerSchema } from "../../player/PlayerSchema.js"
+import { BulletSchema } from "../../bullet/Bullet.js"
 
 
 export class MyRoomState extends schema.Schema {
@@ -13,13 +15,13 @@ export class MyRoomState extends schema.Schema {
         // Adicione os objetos aqui
         this.playersSchema = new schema.MapSchema();
         this.enemiesDesavisadosSchema = new schema.MapSchema();
+        this.bulletSchema = new schema.MapSchema()
     }
 }
 
 schema.defineTypes(MyRoomState, {
     // Defina o tipo dos objetos do estado aqui
-    playersSchema: { map: schema.MapSchema },
-    enemiesDesavisadosSchema: { map: EnemyDesavisadosSchema }
-    
-    
+    playersSchema: { map: PlayerSchema },
+    enemiesDesavisadosSchema: { map: EnemyDesavisadosSchema },
+    bulletSchema: { map: BulletSchema }
 })
