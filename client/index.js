@@ -174,7 +174,10 @@ const config = {
     height: GAME_HEIGHT, //ajusta altura da cena para 80% do interior da janela do browser
     backgroundColor: '#b6d53c',
     parent: 'phaser-example',
-    physics: { default: "arcade" },
+    physics: { 
+      default: "arcade",
+      fps: 60
+    },
     pixelArt: true,
     scale: {
         mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
