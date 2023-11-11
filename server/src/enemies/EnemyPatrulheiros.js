@@ -1,5 +1,6 @@
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
+import { GAME_HEIGHT, GAME_WIDTH } from '../../constants.js';
 
 export class EnemyPatrulheirosSchema extends schema.Schema {
 
@@ -10,9 +11,6 @@ schema.defineTypes(EnemyPatrulheirosSchema, {
 	y: "number",
 });
 
-const MAPHEIGHT = 800;
-const MAPWIDTH = 640;
-
 export class EnemyPatrulheiros extends Enemy {
 	
 	static spawn(roomState) {
@@ -21,10 +19,10 @@ export class EnemyPatrulheiros extends Enemy {
 		const enemy3 = new EnemyPatrulheiros(roomState);
 		
 		enemy1.enemyAttributes.y = -EnemyPatrulheiros.HEIGHT/2 - EnemyPatrulheiros.SEPARACAO_VERTICAL;
-		enemy1.enemyAttributes.x = Math.floor(Math.random() * (MAPWIDTH - 2*EnemyPatrulheiros.SEPARACAO_HORIZONTAL - EnemyPatrulheiros.WIDTH)) + EnemyPatrulheiros.WIDTH/2;
+		enemy1.enemyAttributes.x = Math.floor(Math.random() * (GAME_WIDTH - 2*EnemyPatrulheiros.SEPARACAO_HORIZONTAL - EnemyPatrulheiros.WIDTH)) + EnemyPatrulheiros.WIDTH/2;
 		
 		//DEBUGING
-		//enemy1.enemyAttributes.x = Math.floor(0 * (MAPWIDTH - 2*EnemyPatrulheiros.SEPARACAO_HORIZONTAL - EnemyPatrulheiros.WIDTH)) + EnemyPatrulheiros.WIDTH/2;
+		//enemy1.enemyAttributes.x = Math.floor(0 * (GAME_WIDTH - 2*EnemyPatrulheiros.SEPARACAO_HORIZONTAL - EnemyPatrulheiros.WIDTH)) + EnemyPatrulheiros.WIDTH/2;
 		
 		enemy2.enemyAttributes.y = enemy1.enemyAttributes.y + EnemyPatrulheiros.SEPARACAO_VERTICAL;
 		enemy2.enemyAttributes.x = enemy1.enemyAttributes.x + EnemyPatrulheiros.SEPARACAO_HORIZONTAL;
@@ -49,7 +47,7 @@ export class EnemyPatrulheiros extends Enemy {
 	update(deltaTime) {
 		this.enemyAttributes.y += this.speed * (deltaTime / 1000);
 		
-		if (this.enemyAttributes.y > MAPHEIGHT + EnemyPatrulheiros.HEIGHT / 2) {
+		if (this.enemyAttributes.y > GAME_HEIGHT + EnemyPatrulheiros.HEIGHT / 2) {
 			this.destroy();
 		}
 	}

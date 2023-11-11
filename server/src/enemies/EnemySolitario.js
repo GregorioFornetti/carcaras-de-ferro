@@ -1,5 +1,6 @@
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
+import { GAME_HEIGHT, GAME_WIDTH } from '../../constants.js';
 
 export class EnemySolitarioSchema extends schema.Schema {
 
@@ -10,19 +11,16 @@ schema.defineTypes(EnemySolitarioSchema, {
 	y: "number",
 });
 
-const MAPHEIGHT = 800;
-const MAPWIDTH = 640;
-
 export class EnemySolitario extends Enemy {
 
 	static spawn(roomState) {	
 		const enemy = new EnemySolitario(roomState);
 		//console.log (this.game);
 		enemy.enemyAttributes.y = -EnemySolitario.HEIGHT/2;
-		enemy.enemyAttributes.x = Math.floor(Math.random() * (MAPWIDTH - EnemySolitario.WIDTH)) + EnemySolitario.WIDTH/2;
+		enemy.enemyAttributes.x = Math.floor(Math.random() * (GAME_WIDTH - EnemySolitario.WIDTH)) + EnemySolitario.WIDTH/2;
 		
 		//DEBUGING
-		//enemy.enemyAttributes.x = Math.floor(1 * (MAPWIDTH - EnemySolitario.WIDTH)) + EnemySolitario.WIDTH/2;
+		//enemy.enemyAttributes.x = Math.floor(1 * (GAME_WIDTH - EnemySolitario.WIDTH)) + EnemySolitario.WIDTH/2;
 		
 		return enemy;
 	}
@@ -39,7 +37,7 @@ export class EnemySolitario extends Enemy {
 	update(deltaTime) {
 		this.enemyAttributes.y += this.speed * (deltaTime / 1000);
 		
-		if (this.enemyAttributes.y > MAPHEIGHT + EnemySolitario.HEIGHT / 2)
+		if (this.enemyAttributes.y > GAME_HEIGHT + EnemySolitario.HEIGHT / 2)
 			this.destroy();
 	}
 }

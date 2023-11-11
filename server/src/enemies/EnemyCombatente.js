@@ -1,5 +1,6 @@
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
+import { GAME_HEIGHT, GAME_WIDTH } from '../../constants.js';
 
 export class EnemyCombatenteSchema extends schema.Schema {
 
@@ -12,9 +13,6 @@ schema.defineTypes(EnemyCombatenteSchema, {
 	yFinal: "number",
 });
 
-const MAPHEIGHT = 800;
-const MAPWIDTH = 640;
-
 export class EnemyCombatente extends Enemy {
 	
 	static spawn(roomState) {	
@@ -24,19 +22,19 @@ export class EnemyCombatente extends Enemy {
 		let r = Math.random();
 		
 		if (r < 0.70) {
-			enemy.enemyAttributes.yFinal = MAPHEIGHT * (Math.random() * (EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA1 - EnemyCombatente.POSICAO_PARADA_MINIMA) + EnemyCombatente.POSICAO_PARADA_MINIMA);
+			enemy.enemyAttributes.yFinal = GAME_HEIGHT * (Math.random() * (EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA1 - EnemyCombatente.POSICAO_PARADA_MINIMA) + EnemyCombatente.POSICAO_PARADA_MINIMA);
 		} else if (r < 0.95) {
-			enemy.enemyAttributes.yFinal = MAPHEIGHT * (Math.random() * (EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA2 - EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA1) + EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA1);
+			enemy.enemyAttributes.yFinal = GAME_HEIGHT * (Math.random() * (EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA2 - EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA1) + EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA1);
 		} else {
-			enemy.enemyAttributes.yFinal = MAPHEIGHT * (Math.random() * (EnemyCombatente.POSICAO_PARADA_MAXIMA - EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA2) + EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA2);
+			enemy.enemyAttributes.yFinal = GAME_HEIGHT * (Math.random() * (EnemyCombatente.POSICAO_PARADA_MAXIMA - EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA2) + EnemyCombatente.POSICAO_PARADA_INTERMEDIARIA2);
 		}
 		
 		
 		
-		enemy.enemyAttributes.x = Math.floor(Math.random() * (MAPWIDTH - EnemyCombatente.WIDTH - 2*(EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL))) + EnemyCombatente.WIDTH/2 + EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL;
+		enemy.enemyAttributes.x = Math.floor(Math.random() * (GAME_WIDTH - EnemyCombatente.WIDTH - 2*(EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL))) + EnemyCombatente.WIDTH/2 + EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL;
 		
 		//DEBUGING
-		//enemy.enemyAttributes.x = Math.floor(1 * (MAPWIDTH - EnemyCombatente.WIDTH - 2*(MAPWIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL))) + EnemyCombatente.WIDTH/2 + MAPWIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL;
+		//enemy.enemyAttributes.x = Math.floor(1 * (GAME_WIDTH - EnemyCombatente.WIDTH - 2*(GAME_WIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL))) + EnemyCombatente.WIDTH/2 + GAME_WIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL;
 		enemy.enemyAttributes.xInit = enemy.enemyAttributes.x;
 		
 		return enemy;
