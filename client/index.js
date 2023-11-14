@@ -39,7 +39,7 @@ export class GameScene extends Phaser.Scene {
 
     this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.image('ship_0022', './Artes/Assets/Ships/ship_0022.png');
+    this.load.spritesheet('ship_0022', '../Artes/Assets/Ships/ship_0022.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('ship_0023', './Artes/Assets/Ships/ship_0023.png');
     this.load.image('ship_0015', './Artes/Assets/Ships/ship_0015.png');
     
