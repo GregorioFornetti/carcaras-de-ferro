@@ -3,7 +3,10 @@ export function EnemySolitarioOnAdd(enemy, id) {
 	//this.enemiesEntities[id] = this.add.rectangle (enemy.x, enemy.y, 32, 32, 0x888888);
 	
 	enemy.onChange(() => {
-		this.enemiesEntities[id].y = enemy.y;
+		//this.enemiesEntities[id].y = enemy.y;
+		
+		this.enemiesEntities[id].setData('serverX', enemy.x);
+		this.enemiesEntities[id].setData('serverY', enemy.y);
 	})
 }
 

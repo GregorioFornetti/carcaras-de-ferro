@@ -11,6 +11,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js";
 import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
 import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
+import { UpdateSprites } from "./updateSprites.js";
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -81,18 +82,18 @@ export class GameScene extends Phaser.Scene {
         }
 
 		
-		this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
-		this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
-		
-		this.room.state.enemiesPatrulheirosSchema.onAdd(EnemyPatrulheirosOnAdd.bind(this))
-		this.room.state.enemiesPatrulheirosSchema.onRemove(EnemyPatrulheirosOnRemove.bind(this))
-		
-		this.room.state.enemiesCombatenteSchema.onAdd(EnemyCombatenteOnAdd.bind(this))
-		this.room.state.enemiesCombatenteSchema.onRemove(EnemyCombatenteOnRemove.bind(this))
-    // Adicione as mudanças aqui
-    this.room.state.enemiesDesavisadosSchema.onAdd(EnemyDesavisadosOnAdd.bind(this));
-    this.room.state.enemiesDesavisadosSchema.onRemove(EnemyDesavisadosOnRemove.bind(this));
-    // Adicione as mudanças aqui
+	this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
+	this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
+
+	this.room.state.enemiesPatrulheirosSchema.onAdd(EnemyPatrulheirosOnAdd.bind(this))
+	this.room.state.enemiesPatrulheirosSchema.onRemove(EnemyPatrulheirosOnRemove.bind(this))
+
+	this.room.state.enemiesCombatenteSchema.onAdd(EnemyCombatenteOnAdd.bind(this))
+	this.room.state.enemiesCombatenteSchema.onRemove(EnemyCombatenteOnRemove.bind(this))
+
+	this.room.state.enemiesDesavisadosSchema.onAdd(EnemyDesavisadosOnAdd.bind(this));
+	this.room.state.enemiesDesavisadosSchema.onRemove(EnemyDesavisadosOnRemove.bind(this));
+
     this.room.state.playersSchema.onRemove((player, sessionId) => {
       const entity = this.playerEntities[sessionId]
       if (entity) {
@@ -114,8 +115,11 @@ export class GameScene extends Phaser.Scene {
       )
 
       player.onChange(() => {
-        this.playerEntities[sessionId].x = player.x
-        this.playerEntities[sessionId].y = player.y
+		//this.playerEntities[sessionId].x = player.x
+		//this.playerEntities[sessionId].y = player.y
+		
+		this.playerEntities[sessionId].setData('serverX', player.x);
+		this.playerEntities[sessionId].setData('serverY', player.y);
       })
     })
 
@@ -127,8 +131,11 @@ export class GameScene extends Phaser.Scene {
       )
 
       bullet.onChange(() => {
-        this.bulletsEntities[sessionId].x = bullet.x
-        this.bulletsEntities[sessionId].y = bullet.y
+		//this.bulletsEntities[sessionId].x = bullet.x
+		//this.bulletsEntities[sessionId].y = bullet.y
+		
+		this.bulletsEntities[sessionId].setData('serverX', bullet.x);
+		this.bulletsEntities[sessionId].setData('serverY', bullet.y);
       })
     })
 
@@ -142,7 +149,41 @@ export class GameScene extends Phaser.Scene {
     if (!this.room) {
       return
     }
+	
+	for (let id in this.playerEntities) {
+		const entity = this.playerEntities[id];
+		const { serverX, serverY } = entity.data.values;
+		
+		if (entity.data === undefined)
+			continue;
+		
+		entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+		entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+	}
 
+	for (let id in this.bulletsEntities) {
+		const entity = this.bulletsEntities[id];
+		const { serverX, serverY } = entity.data.values;
+		
+		if (entity.data === undefined)
+			continue;
+		
+		entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+		entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+	}
+
+	for (let id in this.enemiesEntities) {
+		const entity = this.enemiesEntities[id];
+		
+		if (entity.data === undefined)
+			continue;
+		
+		const { serverX, serverY } = entity.data.values;
+
+		entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+		entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+	}
+	
     //** Scroll do Mapa **
     this.room.state.bgSchema.listen("scrollY", (currentPosition, previousPosition) => {
       this.bg.tilePositionY = currentPosition;
