@@ -12,6 +12,8 @@ import { EnemySolitario } from "../enemies/EnemySolitario.js";
 import { EnemyPatrulheiros } from "../enemies/EnemyPatrulheiros.js";
 import { EnemyCombatente } from "../enemies/EnemyCombatente.js";
 
+import { Spawner } from "../enemies/Spawner.js";
+
 export class MyRoom extends Room {
   maxClients = 4
   x = 1;
@@ -25,14 +27,7 @@ export class MyRoom extends Room {
     this.currentBullets = []
     this.velocidadeMapa = 0;
 
-    //define o tempo de spawn dos Desavisados
-    this.timerDesavisado = 5; 
-    this.timerSolitario = 3;
-		this.timerSolitarioMaximo = 3;
-    this.timerPatrulheiros = 8;
-		this.timerPatrulheirosMaximo = 8;
-		this.timerCombatente = 5;
-		this.timerCombatenteMaximo = 5;
+	this.spawnCentral = new Spawner (this.state);
 
     // Gera o game loop, atualização de estado automatica a cada deltaTime
     // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
@@ -124,33 +119,9 @@ export class MyRoom extends Room {
     //  bullet.update(deltaTime)
     //}
 
-    if (this.timerDesavisado > 0) {
-      this.timerDesavisado -= deltaTime/1000;
-    } else {
-      this.currentEnemies = this.currentEnemies.concat(EnemyDesavisados.spawn(this.state));
-      this.timerDesavisado = 5;
-    }
-    if (this.timerSolitario > 0) {
-      this.timerSolitario -= deltaTime / 1000;
-    } else {
-      this.currentEnemies = this.currentEnemies.concat(EnemySolitario.spawn(this.state));
-      this.timerSolitario = this.timerSolitarioMaximo;
-    }
-    
-
-    if (this.timerPatrulheiros > 0) {
-      this.timerPatrulheiros -= deltaTime / 1000;
-    } else {
-      this.currentEnemies = this.currentEnemies.concat(EnemyPatrulheiros.spawn(this.state));
-      this.timerPatrulheiros = this.timerPatrulheirosMaximo;
-    }
-
-
-    if (this.timerCombatente > 0) {
-      this.timerCombatente -= deltaTime / 1000;
-    } else {
-      this.currentEnemies = this.currentEnemies.concat(EnemyCombatente.spawn(this.state));
-      this.timerCombatente = this.timerCombatenteMaximo;
-    }
+    let spawn_retorno = this.spawnCentral.update(deltaTime);
+	if (spawn_retorno != null) {
+		this.currentEnemies = this.currentEnemies.concat(spawn_retorno);
+	}
   }
 }
