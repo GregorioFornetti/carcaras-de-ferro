@@ -29,6 +29,7 @@ export class GameScene extends Phaser.Scene {
     this.cursorKeys = null
     this.enemiesEntities = {}
     this.bulletsEntities = {}
+  
   }
 
 
@@ -107,11 +108,13 @@ export class GameScene extends Phaser.Scene {
     this.room.state.playersSchema.onAdd((player, sessionId) => {
       let playersSize = Object.keys(this.playerEntities).length
 
+
       this.playerEntities[sessionId] = this.physics.add.sprite(
         player.x + playersSize * 100,
         player.y + playersSize * 100,
         `ship_${playersSize + 1}`
       )
+      this.physics.add.existing(this.playerEntities[sessionId]);
 
       player.onChange(() => {
         this.playerEntities[sessionId].x = player.x
@@ -126,6 +129,8 @@ export class GameScene extends Phaser.Scene {
         "bullet"
       )
 
+      this.physics.add.existing(this.bulletsEntities[sessionId]);
+  
       bullet.onChange(() => {
         this.bulletsEntities[sessionId].x = bullet.x
         this.bulletsEntities[sessionId].y = bullet.y
