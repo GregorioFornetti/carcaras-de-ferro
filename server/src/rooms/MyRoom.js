@@ -118,10 +118,10 @@ export class MyRoom extends Room {
     //for (let bullet of this.state.bulletSchema.values()) {
     //  bullet.update(deltaTime)
     //}
-
+    
     let spawn_retorno = this.spawnCentral.update(deltaTime);
-	if (spawn_retorno != null) {
-		this.currentEnemies = this.currentEnemies.concat(spawn_retorno);
-	}
+    if (spawn_retorno != null) {
+      this.currentEnemies = this.currentEnemies.concat(spawn_retorno);
+    }
   }
 }
