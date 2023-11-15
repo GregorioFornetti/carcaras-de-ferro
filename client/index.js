@@ -11,6 +11,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js";
 import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
 import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
+import {Collisor} from "./enemies/Collisor.js";
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -159,6 +160,11 @@ export class GameScene extends Phaser.Scene {
     this.inputPayload.up = this.cursorKeys.W.isDown
     this.inputPayload.down = this.cursorKeys.S.isDown
     this.inputPayload.shot = this.cursorKeys.SPACE.isDown
+
+    this.physics.collide(Object.values(this.playerEntities), Object.values(this.enemiesEntities), Collisor.bind(this));
+    this.physics.collide(Object.values(this.bulletsEntities), Object.values(this.enemiesEntities), Collisor.bind(this));
+    this.physics.collide(Object.values(this.playerEntities), Object.values(this.bulletsEntities),Collisor.bind(this));
+    this.physics.collide(Object.values(this.playerEntities), this.enemiesEntities, Collisor.bind(this));
 
     if (
       this.inputPayload.left ||

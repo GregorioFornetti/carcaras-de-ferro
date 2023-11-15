@@ -60,6 +60,19 @@ export class MyRoom extends Room {
         }
       }
     })
+
+    this.onMessage("bulletHitEnemy", (client, message) => {
+
+      /* GAMBIARRA: 
+      Falta uma forma de identificar um tipo de inimigo
+      e informar na mensagem. Foi adicionado um simples delete para
+      provar o funcionamento da colisão.
+      */
+      this.state.enemiesDesavisadosSchema.delete(message.enemy);
+      this.state.enemiesCombatenteSchema.delete(message.enemy);
+      this.state.enemiesSolitarioSchema.delete(message.enemy);
+      this.state.enemiesPatrulheirosSchema.delete(message.enemy);
+    });
   }
 
   /* Define o que será feito quando um jogador conectar na sala
