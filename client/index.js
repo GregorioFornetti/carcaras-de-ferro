@@ -24,19 +24,25 @@ export class GameScene extends Phaser.Scene {
       up: false,
       down: false,
       shot: false,
+      explosion: false, // simular som da explosão 
+      dano: false, // simular som do dano 
     }
     this.bg = null; //background (mapa do jogo)
     this.cursorKeys = null
     this.enemiesEntities = {}
     this.bulletsEntities = {}
-    this.disparoJogador = null;
+
+    //Sons
+    this.somDisparoJogador = null;
+    this.somExplosao = null;
+    this.somDano = null;
   }
 
 
   // Carrega os assets a serem utilizados no jogo
   // Aqui serão carregadas as imagens, sons, etc.
   preload() {
-    this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE")
+    this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE,E,R") //simulação - > E (explosão), R (Dano)
 
     this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
@@ -44,6 +50,8 @@ export class GameScene extends Phaser.Scene {
     this.load.image('ship_0023', './Artes/Assets/Ships/ship_0023.png');
     this.load.image('ship_0015', './Artes/Assets/Ships/ship_0015.png');
     this.load.audio('disparo2', './Efeitos/Disparos/Disparo2.wav');
+    this.load.audio('explosao', './Efeitos/Explosão/Explosão1.wav');
+    this.load.audio('dano', './Efeitos/Dano/Dano2.wav');
 
     
     this.load.spritesheet("ship_1", "./Artes/Assets/Ships/ship_0001.png", {
@@ -140,7 +148,9 @@ export class GameScene extends Phaser.Scene {
     this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
 
     // Sons
-    this.disparoJogador = this.sound.add('disparo2');
+    this.somDisparoJogador = this.sound.add('disparo2');
+    this.somExplosao = this.sound.add('explosao');
+    this.somDano = this.sound.add('dano');
 
   }
   
@@ -162,6 +172,12 @@ export class GameScene extends Phaser.Scene {
     this.inputPayload.down = this.cursorKeys.S.isDown
     this.inputPayload.shot = this.cursorKeys.SPACE.isDown
 
+    //simulação sons
+    this.inputPayload.explosion = this.cursorKeys.E.isDown
+    this.inputPayload.dano = this.cursorKeys.R.isDown
+    if(this.inputPayload.explosion) this.somExplosao.play(); //simulação som explosão E
+    if(this.inputPayload.dano) this.somDano.play(); //simulação som dano R
+
     if (
       this.inputPayload.left ||
       this.inputPayload.right ||
@@ -169,9 +185,11 @@ export class GameScene extends Phaser.Scene {
       this.inputPayload.down ||
       this.inputPayload.shot
     ) {
-      if(this.inputPayload.shot) this.disparoJogador.play();
+      if(this.inputPayload.shot) this.somDisparoJogador.play();
       this.room.send("pressedKeys", this.inputPayload)
     }
+
+    
   }
 }
 
