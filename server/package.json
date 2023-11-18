@@ -23,6 +23,7 @@
     "@colyseus/loadtest": "^0.15.0",
     "@colyseus/testing": "^0.15.0",
     "mocha": "^10.2.0",
+    "nodemon": "^3.0.1",
     "rimraf": "^5.0.0"
   },
   "dependencies": {

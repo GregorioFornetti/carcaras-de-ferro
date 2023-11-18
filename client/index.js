@@ -29,6 +29,7 @@ export class GameScene extends Phaser.Scene {
     this.cursorKeys = null
     this.enemiesEntities = {}
     this.bulletsEntities = {}
+    this.disparoJogador = null;
   }
 
 
@@ -42,6 +43,8 @@ export class GameScene extends Phaser.Scene {
     this.load.spritesheet('ship_0022', '../Artes/Assets/Ships/ship_0022.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('ship_0023', './Artes/Assets/Ships/ship_0023.png');
     this.load.image('ship_0015', './Artes/Assets/Ships/ship_0015.png');
+    this.load.audio('disparo3', './Efeitos/Disparos/disparo3n.mp3');
+
     
     this.load.spritesheet("ship_1", "./Artes/Assets/Ships/ship_0001.png", {
       frameWidth: 32,
@@ -135,6 +138,10 @@ export class GameScene extends Phaser.Scene {
     const width = GAME_WIDTH;
     const height = GAME_HEIGHT;
     this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
+
+    // Sons
+    this.disparoJogador = this.sound.add('disparo3');
+
   }
   
   update(time, delta) {
@@ -162,6 +169,7 @@ export class GameScene extends Phaser.Scene {
       this.inputPayload.down ||
       this.inputPayload.shot
     ) {
+      if(this.inputPayload.shot) this.disparoJogador.play();
       this.room.send("pressedKeys", this.inputPayload)
     }
   }
