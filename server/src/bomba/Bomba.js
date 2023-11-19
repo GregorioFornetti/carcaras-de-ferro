@@ -1,5 +1,10 @@
 import * as schema from "@colyseus/schema"
 
+const speedY = 1
+const speedTamanho = 1
+const tamanhoBomba = 30
+
+
 let bombaId = 0
 
 export class BombaSchema extends schema.Schema {
@@ -29,19 +34,15 @@ export class Bomba {
     const bomba = new Bomba(roomState)
     bomba.bombaAttributes.x = player.x
     bomba.bombaAttributes.y = player.y
-    bomba.bombaAttributes.tamanho = 30 //alterar dps
+    bomba.bombaAttributes.tamanho = tamanhoBomba
 
     return bomba
   }
 
   update(deltaTime) {
-    //alterar dps
-    this.bombaAttributes.y += 1
-    this.bombaAttributes.tamanho -= 1
-    if ( this.bombaAttributes.tamanho < 5) {
-      //this.destroy()
-      
-    }
+    
+    this.bombaAttributes.y += speedY
+    this.bombaAttributes.tamanho -= speedTamanho
     
   }
 

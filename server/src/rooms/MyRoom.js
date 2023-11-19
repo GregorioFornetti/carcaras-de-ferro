@@ -28,7 +28,8 @@ export class MyRoom extends Room {
     this.currentBullets = []
     this.currentBombas = []
     this.velocidadeMapa = 0;
-    this.timerBomba = 4;
+    this.tempoVidaBomba = 3;
+    this.timerBomba = this.tempoVidaBomba + 1; //recebe esse valor para o timer nao iniciar automaticamente
 
 	this.spawnCentral = new Spawner (this.state);
 
@@ -68,8 +69,7 @@ export class MyRoom extends Room {
           player.nBombas--
           const bomba = new BombaSchema()
           this.currentBombas = this.currentBombas.concat( Bomba.spawn(this.state, player) )
-          this.timerBomba = 3 // segundos / alterar dps
-          console.log("timer bomba: " + this.timerBomba)
+          this.timerBomba = this.tempoVidaBomba //inicia o timer
         }
       }
     })
@@ -132,14 +132,15 @@ export class MyRoom extends Room {
       this.currentBombas = this.currentBombas.filter(
         (bomba) => !bomba.destroyed
       )
-        
+      
+      // Loop de atualizacao automatica das bombas
       for (let bomba of this.currentBombas) {
         bomba.update(deltaTime)
       }
     }
 
     // Explodir bomba e inimigos
-    if (this.timerBomba > 0 && this.timerBomba < 4) {
+    if (this.timerBomba > 0 && this.timerBomba <= this.tempoVidaBomba) {
       this.timerBomba -= deltaTime/1000;
       console.log("timer bomba: " + this.timerBomba)
     } else if (this.timerBomba < 0) {
@@ -149,7 +150,7 @@ export class MyRoom extends Room {
       for (let enemy of this.currentEnemies) {
         enemy.onNuke()
       }
-      this.timerBomba = 4
+      this.timerBomba = this.tempoVidaBomba + 1
     }
 
     // Loop de atualização automática de balas

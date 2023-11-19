@@ -12,4 +12,6 @@ export function BombaOnRemove(bomba, id) {
     console.log('removendo bomba')
     console.log(id)
     this.bombasEntities[id].destroy();
+
+    // implementar explosao
 }
