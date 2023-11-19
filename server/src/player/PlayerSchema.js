@@ -6,7 +6,7 @@ export class PlayerSchema extends schema.Schema {
 
     this.x = 50
     this.y = 50
-    this.nBombas = x
+    this.nBombas = 5
   }
 }
 
