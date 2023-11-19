@@ -22,14 +22,36 @@ export class Bomba {
     this.bombaState = bombaState
     this.id = bombaId++
     this.bombaState.set(this.id, this.bombaAttributes)
+    this.destroyed = false
   }
 
   static spawn(roomState, player) {
     const bomba = new Bomba(roomState)
     bomba.bombaAttributes.x = player.x
     bomba.bombaAttributes.y = player.y
+    bomba.bombaAttributes.tamanho = 30 //alterar dps
 
     return bomba
+  }
+
+  update(deltaTime) {
+    //alterar dps
+    this.bombaAttributes.y += 5
+    this.bombaAttributes.tamanho -= 1
+    if ( this.bombaAttributes.tamanho == 5) {
+      this.destroy()
+    }
+    
+  }
+
+  destroy() {
+    if (this.destroyed){
+      return
+    }
+      
+    this.bombaState.delete(this.id.toString())
+    this.destroyed = true
+    
   }
 
 }
