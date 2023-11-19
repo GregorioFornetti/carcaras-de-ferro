@@ -36,10 +36,11 @@ export class Bomba {
 
   update(deltaTime) {
     //alterar dps
-    this.bombaAttributes.y += 5
+    this.bombaAttributes.y += 1
     this.bombaAttributes.tamanho -= 1
-    if ( this.bombaAttributes.tamanho == 5) {
+    if ( this.bombaAttributes.tamanho < 5) {
       this.destroy()
+      //console.log("chamou destroy bomba")
     }
     
   }

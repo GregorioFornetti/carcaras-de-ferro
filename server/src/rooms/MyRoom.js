@@ -26,7 +26,7 @@ export class MyRoom extends Room {
 
     this.currentEnemies = []
     this.currentBullets = []
-    this.currentBombs = []
+    this.currentBombas = []
     this.velocidadeMapa = 0;
 
 	this.spawnCentral = new Spawner (this.state);
@@ -66,7 +66,7 @@ export class MyRoom extends Room {
         if (player.nBombas > 0){
           player.nBombas--
           const bomba = new BombaSchema()
-          this.currentBombs = this.currentBombs.concat(
+          this.currentBombas = this.currentBombas.concat(
             Bomba.spawn(this.state, player)
           )
         }
@@ -113,6 +113,7 @@ export class MyRoom extends Room {
       for (let enemy of this.currentEnemies) {
         enemy.update(deltaTime)
       }
+
     }
 
     if (this.currentBullets.length != 0) {
@@ -123,6 +124,16 @@ export class MyRoom extends Room {
       // Loop de atualização automática das balas
       for (let bullet of this.currentBullets) {
         bullet.update(deltaTime)
+      }
+    }
+
+    if (this.currentBombas.length != 0) {
+      this.currentBombas = this.currentBombas.filter(
+        (bomba) => !bomba.destroyed
+      )
+        
+      for (let bomba of this.currentBombas) {
+        bomba.update(deltaTime)
       }
     }
 

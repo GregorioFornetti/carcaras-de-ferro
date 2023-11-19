@@ -11,6 +11,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js";
 import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
 import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
+import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -30,6 +31,7 @@ export class GameScene extends Phaser.Scene {
     this.cursorKeys = null
     this.enemiesEntities = {}
     this.bulletsEntities = {}
+    this.bombasEntities = {}
   }
 
 
@@ -65,6 +67,8 @@ export class GameScene extends Phaser.Scene {
     })
 
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
+
+    this.load.image("bomba", "./Artes/Assets/Tiles/tile_0016.png")
   }
 
   /* Cria os objetos do jogo, além de efetivamente conectar na sala do Colyseus
@@ -132,6 +136,9 @@ export class GameScene extends Phaser.Scene {
         this.bulletsEntities[sessionId].y = bullet.y
       })
     })
+
+    this.room.state.bombaSchema.onAdd(BombaOnAdd.bind(this))
+    this.room.state.bombaSchema.onRemove(BombaOnRemove.bind(this))
 
     const width = GAME_WIDTH;
     const height = GAME_HEIGHT;
