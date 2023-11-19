@@ -24,6 +24,7 @@ export class GameScene extends Phaser.Scene {
       up: false,
       down: false,
       shot: false,
+      nuke: false,
     }
     this.bg = null; //background (mapa do jogo)
     this.cursorKeys = null
@@ -154,13 +155,15 @@ export class GameScene extends Phaser.Scene {
     this.inputPayload.up = this.cursorKeys.W.isDown
     this.inputPayload.down = this.cursorKeys.S.isDown
     this.inputPayload.shot = this.cursorKeys.SPACE.isDown
+    this.inputPayload.nuke = this.cursorKeys.M.isDown
 
     if (
       this.inputPayload.left ||
       this.inputPayload.right ||
       this.inputPayload.up ||
       this.inputPayload.down ||
-      this.inputPayload.shot
+      this.inputPayload.shot ||
+      this.inputPayload.nuke
     ) {
       this.room.send("pressedKeys", this.inputPayload)
     }
