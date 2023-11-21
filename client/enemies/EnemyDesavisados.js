@@ -20,4 +20,5 @@ export function EnemyDesavisadosOnRemove(enemy, id) {
     console.log('removendo desavisado')
     console.log(id)
     this.enemiesEntities[id].destroy();
+    delete this.enemiesEntities[id];
 }
