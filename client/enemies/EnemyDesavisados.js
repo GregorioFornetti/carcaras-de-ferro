@@ -9,7 +9,10 @@ export function EnemyDesavisadosOnAdd(enemy, id) {
     }
 
     enemy.onChange(() => {
-        this.enemiesEntities[id].x = enemy.x;
+        //this.enemiesEntities[id].x = enemy.x;
+		
+		this.enemiesEntities[id].setData('serverX', enemy.x);
+		this.enemiesEntities[id].setData('serverY', enemy.y);
     })
 }
 

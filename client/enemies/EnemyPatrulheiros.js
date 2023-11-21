@@ -3,7 +3,10 @@ export function EnemyPatrulheirosOnAdd(enemy, id) {
 	this.physics.add.existing(this.enemiesEntities[id]);
 	
 	enemy.onChange(() => {
-		this.enemiesEntities[id].y = enemy.y;
+		//this.enemiesEntities[id].y = enemy.y;
+		
+		this.enemiesEntities[id].setData('serverX', enemy.x);
+		this.enemiesEntities[id].setData('serverY', enemy.y);
 	})
 }
 
