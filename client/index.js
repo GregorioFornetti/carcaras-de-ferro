@@ -6,11 +6,25 @@ Nenhum estado do jogo é mantido na Cena, apenas os inputs do jogador são envia
 */
 
 //import Phaser from "phaser";
-import { EnemyDesavisadosOnAdd, EnemyDesavisadosOnRemove } from "./enemies/EnemyDesavisados.js";
-import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js";
-import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
-import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
-import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
+import {
+  EnemyDesavisadosOnAdd,
+  EnemyDesavisadosOnRemove,
+} from "./enemies/EnemyDesavisados.js"
+import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js"
+import {
+  EnemySolitarioOnAdd,
+  EnemySolitarioOnRemove,
+} from "./enemies/EnemySolitario.js"
+import {
+  EnemyPatrulheirosOnAdd,
+  EnemyPatrulheirosOnRemove,
+} from "./enemies/EnemyPatrulheiros.js"
+import {
+  EnemyCombatenteOnAdd,
+  EnemyCombatenteOnRemove,
+} from "./enemies/EnemyCombatente.js"
+import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
+import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -25,24 +39,29 @@ export class GameScene extends Phaser.Scene {
       down: false,
       shot: false,
     }
-    this.bg = null; //background (mapa do jogo)
+    this.bg = null //background (mapa do jogo)
     this.cursorKeys = null
     this.enemiesEntities = {}
     this.bulletsEntities = {}
   }
-
 
   // Carrega os assets a serem utilizados no jogo
   // Aqui serão carregadas as imagens, sons, etc.
   preload() {
     this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE")
 
-    this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
-    this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.spritesheet('ship_0022', '../Artes/Assets/Ships/ship_0022.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.image('ship_0023', './Artes/Assets/Ships/ship_0023.png');
-    this.load.image('ship_0015', './Artes/Assets/Ships/ship_0015.png');
-    
+    this.load.image("myMap", "./Artes/Mapas/Stub/export/map.png")
+    this.load.spritesheet("ship_0012", "../Artes/Assets/Ships/ship_0012.png", {
+      frameWidth: 32,
+      frameHeight: 48,
+    })
+    this.load.spritesheet("ship_0022", "../Artes/Assets/Ships/ship_0022.png", {
+      frameWidth: 32,
+      frameHeight: 48,
+    })
+    this.load.image("ship_0023", "./Artes/Assets/Ships/ship_0023.png")
+    this.load.image("ship_0015", "./Artes/Assets/Ships/ship_0015.png")
+
     this.load.spritesheet("ship_1", "./Artes/Assets/Ships/ship_0001.png", {
       frameWidth: 32,
       frameHeight: 48,
@@ -72,71 +91,54 @@ export class GameScene extends Phaser.Scene {
     */
   async create() {
     console.log("Conectando na sala...")
-        try {
-            this.room = await this.client.joinOrCreate("my_room");
-            console.log(`Conectado com sucesso com id de cliente {${this.room.sessionId}}`);
-
-        } catch (e) {
-            console.error(e);
-        }
-
-		
-		this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
-		this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
-		
-		this.room.state.enemiesPatrulheirosSchema.onAdd(EnemyPatrulheirosOnAdd.bind(this))
-		this.room.state.enemiesPatrulheirosSchema.onRemove(EnemyPatrulheirosOnRemove.bind(this))
-		
-		this.room.state.enemiesCombatenteSchema.onAdd(EnemyCombatenteOnAdd.bind(this))
-		this.room.state.enemiesCombatenteSchema.onRemove(EnemyCombatenteOnRemove.bind(this))
-    // Adicione as mudanças aqui
-    this.room.state.enemiesDesavisadosSchema.onAdd(EnemyDesavisadosOnAdd.bind(this));
-    this.room.state.enemiesDesavisadosSchema.onRemove(EnemyDesavisadosOnRemove.bind(this));
-    // Adicione as mudanças aqui
-    this.room.state.playersSchema.onRemove((player, sessionId) => {
-      const entity = this.playerEntities[sessionId]
-      if (entity) {
-        // loga no console a desconexão do jogador
-        console.log(`Jogador ${sessionId} desconectado!`)
-
-        // limpando referência local
-        delete this.playerEntities[sessionId]
-      }
-    })
-
-    this.room.state.playersSchema.onAdd((player, sessionId) => {
-      let playersSize = Object.keys(this.playerEntities).length
-
-      this.playerEntities[sessionId] = this.physics.add.sprite(
-        player.x + playersSize * 100,
-        player.y + playersSize * 100,
-        `ship_${playersSize + 1}`
+    try {
+      this.room = await this.client.joinOrCreate("my_room")
+      console.log(
+        `Conectado com sucesso com id de cliente {${this.room.sessionId}}`
       )
+    } catch (e) {
+      console.error(e)
+    }
 
-      player.onChange(() => {
-        this.playerEntities[sessionId].x = player.x
-        this.playerEntities[sessionId].y = player.y
-      })
-    })
+    this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
+    this.room.state.enemiesSolitarioSchema.onRemove(
+      EnemySolitarioOnRemove.bind(this)
+    )
 
-    this.room.state.bulletSchema.onAdd((bullet, sessionId) => {
-      this.bulletsEntities[sessionId] = this.physics.add.sprite(
-        bullet.x,
-        bullet.y,
-        "bullet"
-      )
+    this.room.state.enemiesPatrulheirosSchema.onAdd(
+      EnemyPatrulheirosOnAdd.bind(this)
+    )
+    this.room.state.enemiesPatrulheirosSchema.onRemove(
+      EnemyPatrulheirosOnRemove.bind(this)
+    )
 
-      bullet.onChange(() => {
-        this.bulletsEntities[sessionId].x = bullet.x
-        this.bulletsEntities[sessionId].y = bullet.y
-      })
-    })
+    this.room.state.enemiesCombatenteSchema.onAdd(
+      EnemyCombatenteOnAdd.bind(this)
+    )
+    this.room.state.enemiesCombatenteSchema.onRemove(
+      EnemyCombatenteOnRemove.bind(this)
+    )
 
-    const width = GAME_WIDTH;
-    const height = GAME_HEIGHT;
-    this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
+    this.room.state.enemiesDesavisadosSchema.onAdd(
+      EnemyDesavisadosOnAdd.bind(this)
+    )
+    this.room.state.enemiesDesavisadosSchema.onRemove(
+      EnemyDesavisadosOnRemove.bind(this)
+    )
+
+    // Player states changes
+    this.room.state.playersSchema.onAdd(PlayerOnAdd.bind(this))
+    this.room.state.playersSchema.onRemove(PlayerOnRemove.bind(this))
+
+    // Bullet states changes
+    this.room.state.bulletSchema.onAdd(BulletOnAdd.bind(this))
+    this.room.state.bulletSchema.onRemove(BulletOnRemove.bind(this))
+
+    const width = GAME_WIDTH
+    const height = GAME_HEIGHT
+    this.bg = this.add.tileSprite(width / 2, height / 2, width, height, "myMap") //tileSprite para movimentacao
   }
-  
+
   update(time, delta) {
     // Sai do loop se a sala não estiver conectada
     if (!this.room) {
@@ -144,9 +146,12 @@ export class GameScene extends Phaser.Scene {
     }
 
     //** Scroll do Mapa **
-    this.room.state.bgSchema.listen("scrollY", (currentPosition, previousPosition) => {
-      this.bg.tilePositionY = currentPosition;
-    });
+    this.room.state.bgSchema.listen(
+      "scrollY",
+      (currentPosition, previousPosition) => {
+        this.bg.tilePositionY = currentPosition
+      }
+    )
 
     // envia o input para o servidor com o nome "pressedKeys"
     this.inputPayload.left = this.cursorKeys.A.isDown
@@ -169,22 +174,22 @@ export class GameScene extends Phaser.Scene {
 
 // Configurações do Phaser gerais
 const config = {
-    type: Phaser.AUTO,
-    width: GAME_WIDTH, // Largura do TileMap
-    height: GAME_HEIGHT, //ajusta altura da cena para 80% do interior da janela do browser
-    backgroundColor: '#b6d53c',
-    parent: 'phaser-example',
-    physics: { 
-      default: "arcade",
-      fps: 60,
-      forceSetTimeOut: true
-    },
-    pixelArt: true,
-    scale: {
-        mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
-    },
-    scene: [ GameScene ],
-};
+  type: Phaser.AUTO,
+  width: GAME_WIDTH, // Largura do TileMap
+  height: GAME_HEIGHT, //ajusta altura da cena para 80% do interior da janela do browser
+  backgroundColor: "#b6d53c",
+  parent: "phaser-example",
+  physics: {
+    default: "arcade",
+    fps: 60,
+    forceSetTimeOut: true,
+  },
+  pixelArt: true,
+  scale: {
+    mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
+  },
+  scene: [GameScene],
+}
 
 // Inicializa o Phaser
 const game = new Phaser.Game(config)

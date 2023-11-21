@@ -2,21 +2,23 @@
    o que deve acontecer quando um jogador realizar uma ação
    e como isso deve ser atualizado para todos os outros jogadores
 */
-import { Room } from "@colyseus/core";
-import { MyRoomState } from "./schema/MyRoomState.js";
-import { EnemyDesavisados } from "../enemies/EnemyDesavisados.js";
+import { Room } from "@colyseus/core"
+import { MyRoomState } from "./schema/MyRoomState.js"
+import { EnemyDesavisados } from "../enemies/EnemyDesavisados.js"
 import { PlayerSchema } from "../player/PlayerSchema.js"
 import { Bullet, BulletSchema } from "../bullet/Bullet.js"
-import { BackgroundSchema } from "../map/BackgroundSchema.js";
-import { EnemySolitario } from "../enemies/EnemySolitario.js";
-import { EnemyPatrulheiros } from "../enemies/EnemyPatrulheiros.js";
-import { EnemyCombatente } from "../enemies/EnemyCombatente.js";
+import { BackgroundSchema } from "../map/BackgroundSchema.js"
+import { EnemySolitario } from "../enemies/EnemySolitario.js"
+import { EnemyPatrulheiros } from "../enemies/EnemyPatrulheiros.js"
+import { EnemyCombatente } from "../enemies/EnemyCombatente.js"
 
-import { Spawner } from "../enemies/Spawner.js";
+import { Spawner } from "../enemies/Spawner.js"
 
 export class MyRoom extends Room {
   maxClients = 4
-  x = 1;
+  x = 1
+
+  isShot = false
 
   // Define o que será feito quando a sala for criada
   // Aqui será definido os callbacks de eventos da sala
@@ -25,14 +27,14 @@ export class MyRoom extends Room {
 
     this.currentEnemies = []
     this.currentBullets = []
-    this.velocidadeMapa = 0;
+    this.velocidadeMapa = 0
 
-	this.spawnCentral = new Spawner (this.state);
+    this.spawnCentral = new Spawner(this.state)
 
     // Gera o game loop, atualização de estado automatica a cada deltaTime
     // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
-    this.setSimulationInterval((deltaTime) => this.update(deltaTime));
-    
+    this.setSimulationInterval((deltaTime) => this.update(deltaTime))
+
     //this.currentEnemies = this.currentEnemies.concat(EnemyDesavisados.spawn(this.state));
     this.onMessage("pressedKeys", (client, message) => {
       // get reference to the player who sent the message
@@ -53,7 +55,7 @@ export class MyRoom extends Room {
         bullet.speed = 5
         bullet.destroyed = false
 
-        if (this.currentBullets.length === 0 || bullet.destroyed) {
+        if (this.currentBullets.length === 0) {
           this.currentBullets = this.currentBullets.concat(
             Bullet.spawn(this.state, player, 5)
           )
@@ -91,8 +93,8 @@ export class MyRoom extends Room {
   // Game loop - essa função será chamada a cada tick ()
   update(deltaTime) {
     //** Movimentação do Mapa */
-    this.velocidadeMapa = 1;
-    this.state.bgSchema.scrollY -= this.velocidadeMapa;
+    this.velocidadeMapa = 1
+    this.state.bgSchema.scrollY -= this.velocidadeMapa
 
     if (this.currentEnemies.length != 0) {
       this.currentEnemies = this.currentEnemies.filter((enemy) => !enemy.dead)
@@ -114,14 +116,9 @@ export class MyRoom extends Room {
       }
     }
 
-    // Loop de atualização automática de balas
-    //for (let bullet of this.state.bulletSchema.values()) {
-    //  bullet.update(deltaTime)
-    //}
-    
-    let spawn_retorno = this.spawnCentral.update(deltaTime);
+    let spawn_retorno = this.spawnCentral.update(deltaTime)
     if (spawn_retorno != null) {
-      this.currentEnemies = this.currentEnemies.concat(spawn_retorno);
+      this.currentEnemies = this.currentEnemies.concat(spawn_retorno)
     }
   }
 }
