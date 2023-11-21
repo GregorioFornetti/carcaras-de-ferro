@@ -183,36 +183,29 @@ export class GameScene extends Phaser.Scene {
 	
 	for (let id in this.playerEntities) {
 		const entity = this.playerEntities[id];
-		const { serverX, serverY } = entity.data.values;
-		
-		if (entity.data === undefined)
-			continue;
-		
-		entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
-		entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+    if (entity !== undefined && entity !== null) {
+      const { serverX, serverY } = entity.data.values;
+		  entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+		  entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+    }
 	}
 
 	for (let id in this.bulletsEntities) {
 		const entity = this.bulletsEntities[id];
-		const { serverX, serverY } = entity.data.values;
-		
-		if (entity.data === undefined)
-			continue;
-		
-		entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
-		entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+    if (entity !== undefined && entity !== null) {
+		  const { serverX, serverY } = entity.data.values;
+      entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+      entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+    }
 	}
 
 	for (let id in this.enemiesEntities) {
 		const entity = this.enemiesEntities[id];
-		
-		if (entity.data === undefined)
-			continue;
-		
-		const { serverX, serverY } = entity.data.values;
-
-		entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
-		entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+		if (entity !== undefined && entity !== null) {
+      const { serverX, serverY } = entity.data.values;
+      entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+      entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+    }
 	}
 	
     //** Scroll do Mapa **

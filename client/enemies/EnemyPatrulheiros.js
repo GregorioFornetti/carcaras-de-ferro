@@ -14,4 +14,5 @@ export function EnemyPatrulheirosOnRemove(enemy, id) {
 	console.log('removendo patrulheiro')
 	console.log(id);
 	this.enemiesEntities[id].destroy();
+	delete this.enemiesEntities[id];
 }
