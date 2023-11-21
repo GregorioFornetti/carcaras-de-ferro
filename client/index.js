@@ -12,6 +12,7 @@ import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySoli
 import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
 import { UpdateSprites } from "./updateSprites.js";
+import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -27,11 +28,13 @@ export class GameScene extends Phaser.Scene {
       shot: false,
       explosion: false, // simular som da explosão 
       dano: false, // simular som do dano 
+      nuke: false
     }
     this.bg = null; //background (mapa do jogo)
     this.cursorKeys = null
     this.enemiesEntities = {}
     this.bulletsEntities = {}
+    this.bombasEntities = {}
 
     //Sons
     this.somDisparoJogador = null;
@@ -43,7 +46,7 @@ export class GameScene extends Phaser.Scene {
   // Carrega os assets a serem utilizados no jogo
   // Aqui serão carregadas as imagens, sons, etc.
   preload() {
-    this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE,E,R") //simulação - > E (explosão), R (Dano)
+    this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE,M,E,R") //simulação - > E (explosão), R (Dano)
 
     this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
@@ -76,6 +79,8 @@ export class GameScene extends Phaser.Scene {
     })
 
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
+
+    this.load.image("bomba", "./Artes/Assets/Tiles/tile_0012.png")
   }
 
   /* Cria os objetos do jogo, além de efetivamente conectar na sala do Colyseus
@@ -150,6 +155,9 @@ export class GameScene extends Phaser.Scene {
       })
     })
 
+    this.room.state.bombaSchema.onAdd(BombaOnAdd.bind(this))
+    this.room.state.bombaSchema.onRemove(BombaOnRemove.bind(this))
+
     const width = GAME_WIDTH;
     const height = GAME_HEIGHT;
     this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
@@ -212,6 +220,7 @@ export class GameScene extends Phaser.Scene {
     this.inputPayload.up = this.cursorKeys.W.isDown
     this.inputPayload.down = this.cursorKeys.S.isDown
     this.inputPayload.shot = this.cursorKeys.SPACE.isDown
+    this.inputPayload.nuke = this.cursorKeys.M.isDown
 
     //simulação sons
     this.inputPayload.explosion = this.cursorKeys.E.isDown
@@ -224,7 +233,8 @@ export class GameScene extends Phaser.Scene {
       this.inputPayload.right ||
       this.inputPayload.up ||
       this.inputPayload.down ||
-      this.inputPayload.shot
+      this.inputPayload.shot ||
+      this.inputPayload.nuke
     ) {
       if(this.inputPayload.shot) this.somDisparoJogador.play();
       this.room.send("pressedKeys", this.inputPayload)
