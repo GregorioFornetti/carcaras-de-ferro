@@ -1,13 +1,37 @@
-export function Collisor(obj1, obj2) {
-    // obj1.texture.key
-    const obj1type = obj1.texture.key;
-    const obj2type = obj2.texture.key;
-    // Terá "ifs" para identificar o que colidiu, e tratar de acordo com a ocorrência
-    if(obj1type == "bullet"){
-        const input = {bullet: getKeyByValue(this.bulletsEntities,obj1), enemy: getKeyByValue(this.enemiesEntities,obj2)}
-        this.room.send("bulletHitEnemy",input);
-        console.log("bullet hit enemy");
+export function CollisorPlayerEnemy(player, enemy) {
+    const collisionMsg = {
+        "playerId": getKeyByValue(this.playerEntities, player),
+        "enemyId": getKeyByValue(this.enemiesEntities, enemy)
     }
+    this.room.send("enemyHitPlayer", collisionMsg);
+}
+
+export function CollisorBulletEnemy(bullet, enemy) {
+    if(bullet.data.values.owner !== this.room.sessionId || bullet.data.values.sent) {
+        return;
+    }
+
+    bullet.setData('sent', true)
+
+    const collisionMsg = {
+        "bulletId": getKeyByValue(this.bulletsEntities, bullet),
+        "enemyId": getKeyByValue(this.enemiesEntities, enemy)
+    }
+    console.log("OPAAAAAAAAAAAAAAAAAAAAAAA")
+    this.room.send("bulletHitEnemy", collisionMsg);
+}
+
+export function CollisorPlayerBullet(player, bullet) {
+    if (bullet.data.values.owner in this.playerEntities) {
+        return;
+    }
+
+    const collisionMsg = {
+        "bulletId": getKeyByValue(this.bulletsEntities, bullet),
+        "playerId": getKeyByValue(this.enemiesEntities, enemy)
+    }
+    this.room.send("bulletHitPlayer", collisionMsg);
+
 }
 
 function getKeyByValue(object, value) {

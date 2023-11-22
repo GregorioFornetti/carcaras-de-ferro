@@ -37,7 +37,7 @@ export class EnemyCombatente extends Enemy {
 		//enemy.enemyAttributes.x = Math.floor(1 * (GAME_WIDTH - EnemyCombatente.WIDTH - 2*(GAME_WIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL))) + EnemyCombatente.WIDTH/2 + GAME_WIDTH * EnemyCombatente.TAMANHO_MOVIMENTO_HORIZONTAL;
 		enemy.enemyAttributes.xInit = enemy.enemyAttributes.x;
 		
-		return enemy;
+		return [enemy];
 	}
 	
 	static get VELOCIDADE_HORIZONTAL_MAXIMA() {return 30};
@@ -59,6 +59,7 @@ export class EnemyCombatente extends Enemy {
 		super();
 		this.init(roomState.enemiesCombatenteSchema, EnemyCombatenteSchema);
 		this.verticalSpeed = 50;
+		this.health = 4
 		if (Math.random() < 0.5)
 			this.horizontalSpeed = -EnemyCombatente.VELOCIDADE_HORIZONTAL_MAXIMA;
 		else

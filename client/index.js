@@ -11,7 +11,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js";
 import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
 import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
-import {Collisor} from "./enemies/Collisor.js";
+import {CollisorPlayerEnemy,CollisorBulletEnemy,CollisorPlayerBullet} from "./enemies/Collisor.js";
 import { UpdateSprites } from "./updateSprites.js";
 import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
@@ -191,10 +191,9 @@ export class GameScene extends Phaser.Scene {
     if(this.inputPayload.explosion) this.somExplosao.play(); //simulação som explosão E
     if(this.inputPayload.dano) this.somDano.play(); //simulação som dano R
 
-    this.physics.collide(Object.values(this.playerEntities), Object.values(this.enemiesEntities), Collisor.bind(this));
-    this.physics.collide(Object.values(this.bulletsEntities), Object.values(this.enemiesEntities), Collisor.bind(this));
-    this.physics.collide(Object.values(this.playerEntities), Object.values(this.bulletsEntities),Collisor.bind(this));
-    this.physics.collide(Object.values(this.playerEntities), this.enemiesEntities, Collisor.bind(this));
+    this.physics.collide(Object.values(this.playerEntities), Object.values(this.enemiesEntities), CollisorPlayerEnemy.bind(this));
+    this.physics.collide(Object.values(this.bulletsEntities), Object.values(this.enemiesEntities), CollisorBulletEnemy.bind(this));
+    this.physics.collide(Object.values(this.playerEntities), Object.values(this.bulletsEntities), CollisorPlayerBullet.bind(this));
 
     if (
       this.inputPayload.left ||

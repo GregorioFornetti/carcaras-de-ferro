@@ -31,11 +31,19 @@ export class Enemy {
         this.dead = false;
     }
 
+
     update(deltaTime) {
         /*
             Função que será chamada no gameloop do servidor. Principal função para movimentação dos inimigos.
         */
         throw new Error('You have to implement the method update!');
+    }
+
+    hit() {
+        this.health -= 1
+        if (this.health <= 0) {
+            this.destroy()
+        }
     }
 
     destroy() {

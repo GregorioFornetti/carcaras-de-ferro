@@ -26,7 +26,7 @@ export class MyRoom extends Room {
   onCreate(options) {
     this.setState(new MyRoomState())
 
-    this.currentEnemies = []
+    this.currentEnemies = {}
     this.currentBullets = []
     this.currentBombas = []
     this.velocidadeMapa = 0;
@@ -53,15 +53,11 @@ export class MyRoom extends Room {
       else if (message.down) player.y += speed
 
       if (message.shot) {
-        const bullet = new BulletSchema()
-        bullet.x = player.x
-        bullet.y = player.y - 20
-        bullet.speed = 5
-        bullet.destroyed = false
+        
 
         if (this.currentBullets.length === 0) {
           this.currentBullets = this.currentBullets.concat(
-            Bullet.spawn(this.state, player, 5)
+            Bullet.spawn(this.state, player, 5, client.sessionId)
           )
         }
       }
@@ -77,16 +73,7 @@ export class MyRoom extends Room {
     })
 
     this.onMessage("bulletHitEnemy", (client, message) => {
-
-      /* GAMBIARRA: 
-      Falta uma forma de identificar um tipo de inimigo
-      e informar na mensagem. Foi adicionado um simples delete para
-      provar o funcionamento da colisão.
-      */
-      this.state.enemiesDesavisadosSchema.delete(message.enemy);
-      this.state.enemiesCombatenteSchema.delete(message.enemy);
-      this.state.enemiesSolitarioSchema.delete(message.enemy);
-      this.state.enemiesPatrulheirosSchema.delete(message.enemy);
+      this.currentEnemies[message.enemyId].hit()
     });
   }
 
@@ -123,11 +110,17 @@ export class MyRoom extends Room {
     this.state.bgSchema.scrollY -= this.velocidadeMapa
 
     if (this.currentEnemies.length != 0) {
-      this.currentEnemies = this.currentEnemies.filter((enemy) => !enemy.dead)
+      for (const enemyId in this.currentEnemies) {
+        if (this.currentEnemies[enemyId].dead) {
+          delete this.currentEnemies[enemyId]
+        }
+      }
+      // this.currentEnemies = this.currentEnemies.filter((enemy) => !enemy.dead)
+
 
       // Loop de atualização automática dos inimigos
-      for (let enemy of this.currentEnemies) {
-        enemy.update(deltaTime)
+      for (const enemyId in this.currentEnemies) {
+        this.currentEnemies[enemyId].update(deltaTime)
       }
 
     }
@@ -175,7 +168,11 @@ export class MyRoom extends Room {
     
     let spawn_retorno = this.spawnCentral.update(deltaTime);
     if (spawn_retorno != null) {
-      this.currentEnemies = this.currentEnemies.concat(spawn_retorno)
+      for (let enemy of spawn_retorno) {
+        this.currentEnemies[enemy.id] = enemy
+      }
+      //this.currentEnemies = this.currentEnemies.concat(spawn_retorno)
+
     }
   }
 }

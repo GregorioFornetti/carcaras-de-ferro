@@ -41,6 +41,7 @@ export class EnemyPatrulheiros extends Enemy {
 	constructor(roomState) {
 		super();
 		this.init(roomState.enemiesPatrulheirosSchema, EnemyPatrulheirosSchema);
+		this.health = 1
 		this.speed = 50;
 	}
 	
