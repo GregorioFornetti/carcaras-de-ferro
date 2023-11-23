@@ -27,7 +27,7 @@ export class MyRoom extends Room {
     this.setState(new MyRoomState())
 
     this.currentEnemies = {}
-    this.currentBullets = []
+    this.currentBullets = {}
     this.currentBombas = []
     this.velocidadeMapa = 0;
     this.tempoVidaBomba = 3;
@@ -55,10 +55,9 @@ export class MyRoom extends Room {
       if (message.shot) {
         
 
-        if (this.currentBullets.length === 0) {
-          this.currentBullets = this.currentBullets.concat(
-            Bullet.spawn(this.state, player, 5, client.sessionId)
-          )
+        if (Object.keys(this.currentBullets).length === 0) {
+          let newBullet = Bullet.spawn(this.state, player, 5, client.sessionId)
+          this.currentBullets[newBullet.id] = newBullet
         }
       }
 
@@ -74,6 +73,7 @@ export class MyRoom extends Room {
 
     this.onMessage("bulletHitEnemy", (client, message) => {
       this.currentEnemies[message.enemyId].hit()
+      this.currentBullets[message.bulletId].destroy()
     });
   }
 
@@ -126,12 +126,11 @@ export class MyRoom extends Room {
     }
 
     if (this.currentBullets.length != 0) {
-      this.currentBullets = this.currentBullets.filter(
-        (bullet) => !bullet.destroyed
-      )
-
       // Loop de atualização automática das balas
-      for (let bullet of this.currentBullets) {
+      for (let bullet of Object.values(this.currentBullets)) {
+        if (bullet.destroyed) {
+          delete this.currentBullets[bullet.id]
+        }
         bullet.update(deltaTime)
       }
     }
