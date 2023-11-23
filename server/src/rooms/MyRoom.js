@@ -154,8 +154,8 @@ export class MyRoom extends Room {
       for (let bomba of this.currentBombas) {
         bomba.destroy()
       }
-      for (let enemy of this.currentEnemies) {
-        enemy.onNuke()
+      for (let enemyId in this.currentEnemies) {
+        this.currentEnemies[enemyId].onNuke()
       }
       this.timerBomba = this.tempoVidaBomba + 1
     }
