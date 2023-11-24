@@ -76,21 +76,6 @@ export class GameScene extends Phaser.Scene {
       frameHeight: 64,
     })
 
-    this.load.spritesheet("ship_2", "./Artes/Assets/Ships/ship_0002.png", {
-      frameWidth: 32,
-      frameHeight: 48,
-    })
-
-    this.load.spritesheet("ship_3", "./Artes/Assets/Ships/ship_0003.png", {
-      frameWidth: 32,
-      frameHeight: 48,
-    })
-
-    this.load.spritesheet("ship_4", "./Artes/Assets/Ships/ship_0004.png", {
-      frameWidth: 32,
-      frameHeight: 48,
-    })
-
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
 
     this.load.image("bomba", "./Artes/Assets/Tiles/tile_0012.png")
