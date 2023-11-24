@@ -190,10 +190,14 @@ export class GameScene extends Phaser.Scene {
       this.inputPayload.up ||
       this.inputPayload.down ||
       this.inputPayload.shot ||
-      this.inputPayload.nuke
+      this.inputPayload.nuke ||
+      this.inputPayload.dano ||
+      this.inputPayload.explosion
     ) {
       this.room.send("pressedKeys", this.inputPayload)
     }  
+
+
   }
 }
 

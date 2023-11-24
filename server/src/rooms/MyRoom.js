@@ -58,10 +58,10 @@ export class MyRoom extends Room {
 
       if (message.up) { 
         player.y -= speed; 
-        player.currentAnimation = "ship_frente";
+        player.currentAnimation = `ship_frente_d${player.dano}`;
       } else if (message.down) {
         player.y += speed
-        player.currentAnimation = "ship_frente";
+        player.currentAnimation = `ship_frente_d${player.dano}`;
       }
 
       if (message.shot) {
@@ -86,6 +86,17 @@ export class MyRoom extends Room {
           this.timerBomba = this.tempoVidaBomba //inicia o timer
         }
       }
+
+      if (message.dano) {
+        if (player.dano == 0) {
+          player.dano++;
+          player.currentAnimation = `ship_frente_d${player.dano}`;
+          
+        }
+          
+        //this.somDano.play();
+      }
+      
     })
   }
 
