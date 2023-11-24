@@ -1,13 +1,14 @@
 export function PlayerOnAdd(player, id) {
   let playersSize = Object.keys(this.playerEntities).length
-  let danoP = 0;
+  let danoP = player.dano;
   
   this.playerEntities[id] = this.physics.add.sprite(
     player.x + playersSize * 100,
     player.y + playersSize * 100,
     `ship_${playersSize + 1}_animado`
     )
-    console.log(playersSize);
+  //this.playerEntities[id].setTint(0xff00ff, 0xff0000, 0x00ff00, 0x0000ff);;
+
   this.playerEntities[id].anims.create({
     key: "ship_frente_d0",
     frames: [{ key: `ship_${playersSize + 1}_animado`, frame: 0 }],
@@ -58,9 +59,25 @@ export function PlayerOnAdd(player, id) {
     this.playerEntities[id].setData('serverX', player.x);
 		this.playerEntities[id].setData('serverY', player.y);
     var animation = player.currentAnimation;
-    this.playerEntities[id].anims.play(animation);
+    if(player.dano > danoP) {
+      this.somDano.play(); 
+      danoP = player.dano;
+      this.tweens.add({
+        targets: this.playerEntities[id],
+        alpha: 0,
+        ease: 'Cubic.easeOut',  
+        duration: 500,
+        repeat: 0,
+        yoyo: true,
+        onStart: function () { this.targets[0].setTint(0xff0000); },
+        onComplete: function () { this.targets[0].clearTint(); this.targets[0].anims.play(animation);}
+      })
+    } else {
+      this.playerEntities[id].anims.play(animation);
+    }
   })
 }
+
 
 export function PlayerOnRemove(player, id) {
   const entity = this.playerEntities[id]

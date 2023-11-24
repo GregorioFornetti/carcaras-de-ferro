@@ -91,10 +91,10 @@ export class MyRoom extends Room {
         if (player.dano == 0) {
           player.dano++;
           player.currentAnimation = `ship_frente_d${player.dano}`;
-          
+          //this.pl
         }
           
-        //this.somDano.play();
+        
       }
       
     })
