@@ -20,6 +20,27 @@ export function PlayerOnAdd(player, id) {
     repeat: 0, // Não se repete, reproduz uma vez
   });
 
+  this.playerEntities[id].anims.create({
+    key: "ship_esquerda",
+    frames: this.anims.generateFrameNumbers(`ship_${playersSize + 1}_animado`, { start: 5, end: 7 }),
+    frameRate: 10,
+    repeat: 0, // Não se repete, reproduz uma vez
+  });
+
+  this.anims.create({
+    key: "ship_direita_reverse",
+    frames: this.anims.generateFrameNumbers(`ship_${playersSize + 1}_animado`, { start: 3, end: 0 }),
+    frameRate: 10,
+    repeat: 0, // Não se repete, reproduz uma vez
+  });
+
+  this.anims.create({
+    key: "ship_esquerda_reverse",
+    frames: this.anims.generateFrameNumbers(`ship_${playersSize + 1}_animado`, { start: 7, end: 4 }),
+    frameRate: 10,
+    repeat: 0, // Não se repete, reproduz uma vez
+  });
+
   player.onChange(() => {
     this.playerEntities[id].setData('serverX', player.x);
 		this.playerEntities[id].setData('serverY', player.y);

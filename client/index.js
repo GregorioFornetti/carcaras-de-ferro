@@ -60,15 +60,21 @@ export class GameScene extends Phaser.Scene {
     this.load.audio('dano', './Efeitos/Dano/Dano2.wav');
 
     this.load.spritesheet('ship_1_animado', './Artes/Assets_Personalizados/Ships/Spritesheets/ship2.png', {
-      frameWidth: 62,
-      frameHeight: 88,
+      frameWidth: 64,
+      frameHeight: 64,
     })
-
-    
- /*    this.load.spritesheet("ship_1", "./Artes/Assets/Ships/ship_0001.png", {
-      frameWidth: 32,
-      frameHeight: 48,
-    }) */
+    this.load.spritesheet('ship_2_animado', './Artes/Assets_Personalizados/Ships/Spritesheets/ship1.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+    this.load.spritesheet('ship_3_animado', './Artes/Assets_Personalizados/Ships/Spritesheets/ship3.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+    this.load.spritesheet('ship_4_animado', './Artes/Assets_Personalizados/Ships/Spritesheets/ship4.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
 
     this.load.spritesheet("ship_2", "./Artes/Assets/Ships/ship_0002.png", {
       frameWidth: 32,
@@ -137,11 +143,6 @@ export class GameScene extends Phaser.Scene {
     this.somExplosao = this.sound.add('explosao');
     this.somDano = this.sound.add('dano');
 
-/*     this.anims.create({
-      key: "ship_frente",
-      frames: [{ key: "ship_1_animado", frame: 0 }],
-      frameRate: 1,
-    }); */
   }
 
   update(time, delta) {
@@ -149,15 +150,7 @@ export class GameScene extends Phaser.Scene {
     if (!this.room) {
       return
     }
-    /*
 
-    this.anims.create({
-      key: "nave_direita_reversa",
-      frames: this.anims.generateFrameNumbers("ship_1_animado", { start: 3, end: 1 }),
-      frameRate: 10,
-      repeat: 0, // Não se repete, reproduz uma vez
-    });
-	*/
     for (let id in this.playerEntities) {
       const entity = this.playerEntities[id];
       if (entity !== undefined && entity !== null) {
