@@ -4,6 +4,7 @@ export function BulletOnAdd(bullet, id) {
     bullet.y,
     "bullet"
   )
+  this.somDisparoJogador.play();
 
   bullet.onChange(() => {
     this.bulletsEntities[id].setData('serverX', bullet.x);

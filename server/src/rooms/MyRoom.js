@@ -47,10 +47,15 @@ export class MyRoom extends Room {
       const speed = 5
 
       if (message.left) player.x -= speed
-      else if (message.right) player.x += speed
+      else if (message.right) {
+        player.x += speed;
+        player.currentAnimation = "ship_direita";
+      }
 
-      if (message.up) player.y -= speed
-      else if (message.down) player.y += speed
+      if (message.up) { 
+        player.y -= speed; 
+        
+      } else if (message.down) player.y += speed
 
       if (message.shot) {
         const bullet = new BulletSchema()
