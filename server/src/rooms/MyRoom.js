@@ -14,6 +14,7 @@ import { EnemyPatrulheiros } from "../enemies/EnemyPatrulheiros.js";
 import { EnemyCombatente } from "../enemies/EnemyCombatente.js";
 
 import { Spawner } from "../enemies/Spawner.js"
+import { GAME_HEIGHT, GAME_WIDTH } from "../../constants.js"
 
 export class MyRoom extends Room {
   maxClients = 4
@@ -46,11 +47,22 @@ export class MyRoom extends Room {
 
       const speed = 5
 
-      if (message.left) player.x -= speed
-      else if (message.right) player.x += speed
+      const MIN_X = 0
+      const MAX_X = GAME_WIDTH
+      const MIN_Y = 0
+      const MAX_Y = GAME_HEIGHT
 
-      if (message.up) player.y -= speed
-      else if (message.down) player.y += speed
+      if (message.left) {
+        player.x = Math.max(player.x - speed, MIN_X)
+      } else if (message.right) {
+        player.x = Math.min(player.x + speed, MAX_X)
+      }
+
+      if (message.up) { 
+        player.y = Math.max(player.y - speed, MIN_Y)
+      } else if (message.down) { 
+        player.y = Math.min(player.y + speed, MAX_Y)
+      }
 
       if (message.shot) {
         
