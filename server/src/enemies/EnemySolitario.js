@@ -32,8 +32,6 @@ export class EnemySolitario extends Enemy {
 		super();
 		this.init(roomState.enemiesSolitarioSchema, EnemySolitarioSchema);
 		this.speed = 50;
-		this.width = 16;
-		this.height = 16;
 	}
 	
 	update(deltaTime) {

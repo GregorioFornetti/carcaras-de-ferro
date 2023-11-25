@@ -42,8 +42,6 @@ export class EnemyPatrulheiros extends Enemy {
 		super();
 		this.init(roomState.enemiesPatrulheirosSchema, EnemyPatrulheirosSchema);
 		this.speed = 50;
-		this.width = 16;
-		this.height = 16;
 	}
 	
 	update(deltaTime) {

@@ -38,8 +38,6 @@ export class Bullet {
     this.id = bulletId++
     this.bulletState.set(this.id, this.bulletAttributes)
     this.destroyed = false
-    this.width = 10
-    this.height = 16
   }
 
   update(deltaTime) {
@@ -56,7 +54,7 @@ export class Bullet {
     }
 
     this.bulletState.delete(this.id.toString())
-    
+
     this.destroyed = true
   }
 }

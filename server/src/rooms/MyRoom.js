@@ -12,10 +12,8 @@ import { BackgroundSchema } from "../map/BackgroundSchema.js";
 import { EnemySolitario } from "../enemies/EnemySolitario.js";
 import { EnemyPatrulheiros } from "../enemies/EnemyPatrulheiros.js";
 import { EnemyCombatente } from "../enemies/EnemyCombatente.js";
-import { Collisor } from "../collisor/Collissor.js"
 
 import { Spawner } from "../enemies/Spawner.js"
-import { GAME_HEIGHT, GAME_WIDTH } from "../../constants.js"
 
 export class MyRoom extends Room {
   maxClients = 4
@@ -35,14 +33,7 @@ export class MyRoom extends Room {
     this.tempoVidaBomba = 3;
     this.timerBomba = this.tempoVidaBomba + 1; //recebe esse valor para o timer nao iniciar automaticamente
 
-    this.collisor = new Collisor()
-    this.collisor.registerActionForCollission("bullet", "enemy", (bullet, enemy) => {
-      bullet.destroy()
-      enemy.destroy()
-    })
-
     this.spawnCentral = new Spawner(this.state)
-    
 
     // Gera o game loop, atualização de estado automatica a cada deltaTime
     // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
@@ -69,11 +60,9 @@ export class MyRoom extends Room {
         bullet.destroyed = false
 
         if (this.currentBullets.length === 0) {
-          let bullet = Bullet.spawn(this.state, player, 5)
           this.currentBullets = this.currentBullets.concat(
-            bullet
+            Bullet.spawn(this.state, player, 5)
           )
-          this.collisor.registerForCollission(bullet,bullet.bulletAttributes,"bullet")
         }
       }
 
@@ -174,27 +163,6 @@ export class MyRoom extends Room {
     let spawn_retorno = this.spawnCentral.update(deltaTime);
     if (spawn_retorno != null) {
       this.currentEnemies = this.currentEnemies.concat(spawn_retorno)
-      // Teste
-      for (let enemy of spawn_retorno) {
-        this.collisor.registerForCollission(enemy, enemy.enemyAttributes, "enemy")
-      }
     }
-
-    // Aplica os efeitos de colisões de objetos, se existirem 
-    this.collisor.update()
-
-    // Faz limpeza de objetos destruidos
-    for (let enemy of this.currentEnemies) {
-      if (enemy.dead) {
-        this.collisor.removeForCollission(enemy, "enemy")
-      }
-    }
-
-    for (let bullet of this.currentBullets) {
-      if (bullet.destroyed) {
-        this.collisor.removeForCollission(bullet, "bullet")
-      }
-    }
-
   }
 }
