@@ -29,6 +29,8 @@ export class Enemy {
         this.id = enemyId++;  // Id único do inimigo, pode ser útil no futuro em colisões
         this.enemiesState.set(this.id, this.enemyAttributes);
         this.dead = false;
+        this.width = 32
+        this.height = 32
     }
 
     update(deltaTime) {

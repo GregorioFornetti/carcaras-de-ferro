@@ -66,6 +66,8 @@ export class EnemyDesavisados extends Enemy {
         
         //define a velocidade dos Desavisados
         this.speed = 300;
+        this.width = 16;
+        this.height = 16;
 
     }
 
