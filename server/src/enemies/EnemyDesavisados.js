@@ -68,6 +68,7 @@ export class EnemyDesavisados extends Enemy {
         this.health = 1
         //define a velocidade dos Desavisados
         this.speed = 300;
+        this.score = 50
 
     }
 

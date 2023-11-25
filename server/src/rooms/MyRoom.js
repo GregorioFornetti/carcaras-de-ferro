@@ -77,15 +77,22 @@ export class MyRoom extends Room {
         if (player.nBombas > 0){
           player.nBombas--
           const bomba = new BombaSchema()
-          this.currentBombas = this.currentBombas.concat( Bomba.spawn(this.state, player) )
+          console.log('oiiiiiiiiii')
+          console.log(client.sessionId)
+          this.currentBombas = this.currentBombas.concat( Bomba.spawn(this.state, player, client.sessionId) )
           this.timerBomba = this.tempoVidaBomba //inicia o timer
         }
       }
     })
 
     this.onMessage("bulletHitEnemy", (client, message) => {
-      this.currentEnemies[message.enemyId].hit()
+      const score = this.currentEnemies[message.enemyId].hit()
       this.currentBullets[message.bulletId].destroy()
+
+      const player = this.state.playersSchema.get(client.sessionId)
+      if (score) {
+        player.score += score
+      }
     });
   }
 
@@ -163,11 +170,17 @@ export class MyRoom extends Room {
       this.timerBomba -= deltaTime/1000;
       console.log("timer bomba: " + this.timerBomba)
     } else if (this.timerBomba < 0) {
+      const bomba = this.currentBombas[0]  // O mais certo seria um timer para cada bomba, mas por enquanto vou só pegar o primeiro
+      console.log(bomba.owner)
+      const player = this.state.playersSchema.get(bomba.owner)
+      for (let enemyId in this.currentEnemies) {
+        const score = this.currentEnemies[enemyId].onNuke()
+        if (score) {
+          player.score += score
+        }
+      }
       for (let bomba of this.currentBombas) {
         bomba.destroy()
-      }
-      for (let enemyId in this.currentEnemies) {
-        this.currentEnemies[enemyId].onNuke()
       }
       this.timerBomba = this.tempoVidaBomba + 1
     }

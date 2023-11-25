@@ -60,6 +60,7 @@ export class EnemyCombatente extends Enemy {
 		this.init(roomState.enemiesCombatenteSchema, EnemyCombatenteSchema);
 		this.verticalSpeed = 50;
 		this.health = 4
+		this.score = 400
 		if (Math.random() < 0.5)
 			this.horizontalSpeed = -EnemyCombatente.VELOCIDADE_HORIZONTAL_MAXIMA;
 		else

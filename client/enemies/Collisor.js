@@ -17,7 +17,7 @@ export function CollisorBulletEnemy(bullet, enemy) {
         "bulletId": getKeyByValue(this.bulletsEntities, bullet),
         "enemyId": getKeyByValue(this.enemiesEntities, enemy)
     }
-    console.log("OPAAAAAAAAAAAAAAAAAAAAAAA")
+
     this.room.send("bulletHitEnemy", collisionMsg);
 }
 

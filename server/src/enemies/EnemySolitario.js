@@ -32,6 +32,7 @@ export class EnemySolitario extends Enemy {
 		super();
 		this.init(roomState.enemiesSolitarioSchema, EnemySolitarioSchema);
 		this.health = 1
+		this.score = 100
 		this.speed = 50;
 	}
 	

@@ -42,7 +42,7 @@ export class Enemy {
     hit() {
         this.health -= 1
         if (this.health <= 0) {
-            this.destroy()
+            return this.destroy()
         }
     }
 
@@ -56,9 +56,10 @@ export class Enemy {
         
         this.enemiesState.delete(this.id.toString());
         this.dead = true
+        return this.score
     }
 
     onNuke() {
-        this.destroy()
+        return this.destroy()
     }
 }
