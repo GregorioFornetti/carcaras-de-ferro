@@ -30,7 +30,7 @@ export class MyRoom extends Room {
     this.currentBullets = []
     this.currentBombas = []
     this.velocidadeMapa = 0;
-    this.tempoVidaBomba = 3;
+    this.tempoVidaBomba = 2;
     this.timerBomba = this.tempoVidaBomba + 1; //recebe esse valor para o timer nao iniciar automaticamente
 
     this.spawnCentral = new Spawner(this.state)
@@ -144,7 +144,7 @@ export class MyRoom extends Room {
     // Explodir bomba e inimigos
     if (this.timerBomba > 0 && this.timerBomba <= this.tempoVidaBomba) {
       this.timerBomba -= deltaTime/1000;
-      console.log("timer bomba: " + this.timerBomba)
+      //console.log("timer bomba: " + this.timerBomba)
     } else if (this.timerBomba < 0) {
       for (let bomba of this.currentBombas) {
         bomba.destroy()
