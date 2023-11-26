@@ -49,4 +49,8 @@ export class Enemy {
         this.enemiesState.delete(this.id.toString());
         this.dead = true
     }
+
+    onNuke() {
+        this.destroy()
+    }
 }

@@ -14,4 +14,5 @@ export function EnemySolitarioOnRemove(enemy, id) {
 	console.log('removendo solitario')
 	console.log(id);
 	this.enemiesEntities[id].destroy();
+	delete this.enemiesEntities[id];
 }

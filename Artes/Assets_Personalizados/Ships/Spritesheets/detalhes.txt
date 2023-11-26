@@ -1,0 +1,7 @@
+Cada spritesheet de uma determinada nave possui dimensões:
+Width: 256px
+Height: 576px
+
+Um quadro específico em cada spritesheet possui dimensões:
+Width: 64px
+Height: 64px

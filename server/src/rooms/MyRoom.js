@@ -2,21 +2,24 @@
    o que deve acontecer quando um jogador realizar uma ação
    e como isso deve ser atualizado para todos os outros jogadores
 */
-import { Room } from "@colyseus/core";
-import { MyRoomState } from "./schema/MyRoomState.js";
-import { EnemyDesavisados } from "../enemies/EnemyDesavisados.js";
+import { Room } from "@colyseus/core"
+import { MyRoomState } from "./schema/MyRoomState.js"
+import { EnemyDesavisados } from "../enemies/EnemyDesavisados.js"
 import { PlayerSchema } from "../player/PlayerSchema.js"
 import { Bullet, BulletSchema } from "../bullet/Bullet.js"
+import { Bomba, BombaSchema } from "../bomba/Bomba.js";
 import { BackgroundSchema } from "../map/BackgroundSchema.js";
 import { EnemySolitario } from "../enemies/EnemySolitario.js";
 import { EnemyPatrulheiros } from "../enemies/EnemyPatrulheiros.js";
 import { EnemyCombatente } from "../enemies/EnemyCombatente.js";
 
-import { Spawner } from "../enemies/Spawner.js";
+import { Spawner } from "../enemies/Spawner.js"
 
 export class MyRoom extends Room {
   maxClients = 4
-  x = 1;
+  x = 1
+
+  isShot = false
 
   // Define o que será feito quando a sala for criada
   // Aqui será definido os callbacks de eventos da sala
@@ -25,14 +28,17 @@ export class MyRoom extends Room {
 
     this.currentEnemies = []
     this.currentBullets = []
+    this.currentBombas = []
     this.velocidadeMapa = 0;
+    this.tempoVidaBomba = 3;
+    this.timerBomba = this.tempoVidaBomba + 1; //recebe esse valor para o timer nao iniciar automaticamente
 
-	this.spawnCentral = new Spawner (this.state);
+    this.spawnCentral = new Spawner(this.state)
 
     // Gera o game loop, atualização de estado automatica a cada deltaTime
     // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
-    this.setSimulationInterval((deltaTime) => this.update(deltaTime));
-    
+    this.setSimulationInterval((deltaTime) => this.update(deltaTime))
+
     //this.currentEnemies = this.currentEnemies.concat(EnemyDesavisados.spawn(this.state));
     this.onMessage("pressedKeys", (client, message) => {
       // get reference to the player who sent the message
@@ -53,10 +59,19 @@ export class MyRoom extends Room {
         bullet.speed = 5
         bullet.destroyed = false
 
-        if (this.currentBullets.length === 0 || bullet.destroyed) {
+        if (this.currentBullets.length === 0) {
           this.currentBullets = this.currentBullets.concat(
             Bullet.spawn(this.state, player, 5)
           )
+        }
+      }
+
+      if (message.nuke) {
+        if (player.nBombas > 0){
+          player.nBombas--
+          const bomba = new BombaSchema()
+          this.currentBombas = this.currentBombas.concat( Bomba.spawn(this.state, player) )
+          this.timerBomba = this.tempoVidaBomba //inicia o timer
         }
       }
     })
@@ -91,8 +106,8 @@ export class MyRoom extends Room {
   // Game loop - essa função será chamada a cada tick ()
   update(deltaTime) {
     //** Movimentação do Mapa */
-    this.velocidadeMapa = 1;
-    this.state.bgSchema.scrollY -= this.velocidadeMapa;
+    this.velocidadeMapa = 1
+    this.state.bgSchema.scrollY -= this.velocidadeMapa
 
     if (this.currentEnemies.length != 0) {
       this.currentEnemies = this.currentEnemies.filter((enemy) => !enemy.dead)
@@ -101,6 +116,7 @@ export class MyRoom extends Room {
       for (let enemy of this.currentEnemies) {
         enemy.update(deltaTime)
       }
+
     }
 
     if (this.currentBullets.length != 0) {
@@ -114,6 +130,31 @@ export class MyRoom extends Room {
       }
     }
 
+    if (this.currentBombas.length != 0) {
+      this.currentBombas = this.currentBombas.filter(
+        (bomba) => !bomba.destroyed
+      )
+      
+      // Loop de atualizacao automatica das bombas
+      for (let bomba of this.currentBombas) {
+        bomba.update(deltaTime)
+      }
+    }
+
+    // Explodir bomba e inimigos
+    if (this.timerBomba > 0 && this.timerBomba <= this.tempoVidaBomba) {
+      this.timerBomba -= deltaTime/1000;
+      console.log("timer bomba: " + this.timerBomba)
+    } else if (this.timerBomba < 0) {
+      for (let bomba of this.currentBombas) {
+        bomba.destroy()
+      }
+      for (let enemy of this.currentEnemies) {
+        enemy.onNuke()
+      }
+      this.timerBomba = this.tempoVidaBomba + 1
+    }
+
     // Loop de atualização automática de balas
     //for (let bullet of this.state.bulletSchema.values()) {
     //  bullet.update(deltaTime)
@@ -121,7 +162,7 @@ export class MyRoom extends Room {
     
     let spawn_retorno = this.spawnCentral.update(deltaTime);
     if (spawn_retorno != null) {
-      this.currentEnemies = this.currentEnemies.concat(spawn_retorno);
+      this.currentEnemies = this.currentEnemies.concat(spawn_retorno)
     }
   }
 }

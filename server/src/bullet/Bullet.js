@@ -43,7 +43,7 @@ export class Bullet {
   update(deltaTime) {
     this.bulletAttributes.y -= this.speed
 
-    if (this.bulletAttributes.y < 0) {
+    if (this.bulletAttributes.y < -20) {
       this.destroy()
     }
   }

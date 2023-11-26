@@ -14,4 +14,5 @@ export function EnemyCombatenteOnRemove(enemy, id) {
 	console.log('removendo combatente')
 	console.log(id);
 	this.enemiesEntities[id].destroy();
+	delete this.enemiesEntities[id];
 }
