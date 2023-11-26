@@ -120,6 +120,7 @@ export class GameScene extends Phaser.Scene {
     this.room.state.bulletSchema.onAdd(BulletOnAdd.bind(this))
     this.room.state.bulletSchema.onRemove(BulletOnRemove.bind(this))
 
+    // Bomba states changes
     this.room.state.bombaSchema.onAdd(BombaOnAdd.bind(this))
     this.room.state.bombaSchema.onRemove(BombaOnRemove.bind(this))
 
@@ -132,6 +133,7 @@ export class GameScene extends Phaser.Scene {
     this.somExplosao = this.sound.add('explosao');
     this.somDano = this.sound.add('dano');
 
+    //Eventos Input
     this.input.keyboard.on('keydown-M', () => {
       this.inputPayload.nuke = true;
       //console.log("M pressionado")
@@ -187,7 +189,6 @@ export class GameScene extends Phaser.Scene {
     this.inputPayload.up = this.cursorKeys.W.isDown
     this.inputPayload.down = this.cursorKeys.S.isDown
     this.inputPayload.shot = this.cursorKeys.SPACE.isDown
-    //this.inputPayload.nuke = this.input.keyboard.on('keyup-M', listener)
     //simulação sons
     this.inputPayload.explosion = this.cursorKeys.E.isDown
     this.inputPayload.dano = this.cursorKeys.R.isDown
@@ -206,6 +207,8 @@ export class GameScene extends Phaser.Scene {
       this.room.send("pressedKeys", this.inputPayload)
     }
 
+    //Seta o input da bomba de volta pra false pra dps do evento key down
+    // Assim só é enviado uma bomba por tecla pressionada
     this.inputPayload.nuke = false;
 
     

@@ -1,4 +1,5 @@
 import * as schema from "@colyseus/schema"
+import {GAME_WIDTH, GAME_HEIGHT} from '../../constants.js';
 
 const speedY = 1
 const speedTamanho = 1
@@ -42,6 +43,8 @@ export class Bomba {
   update(deltaTime) {
     
     this.bombaAttributes.y += speedY
+    if (this.bombaAttributes.y > GAME_HEIGHT)
+      this.bombaAttributes.y = GAME_HEIGHT
     this.bombaAttributes.tamanho -= speedTamanho
     
   }
