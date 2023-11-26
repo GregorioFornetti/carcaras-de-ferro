@@ -37,6 +37,7 @@ export class GameScene extends Phaser.Scene {
     this.enemiesEntities = {}
     this.bulletsEntities = {}
     this.bombasEntities = {}
+    this.nuke = false
 
     //Sons
     this.somDisparoJogador = null;
@@ -131,9 +132,15 @@ export class GameScene extends Phaser.Scene {
     this.somExplosao = this.sound.add('explosao');
     this.somDano = this.sound.add('dano');
 
+    this.input.keyboard.on('keydown-M', () => {
+      this.inputPayload.nuke = true;
+      //console.log("M pressionado")
+    })
+
   }
 
   update(time, delta) {
+
     // Sai do loop se a sala não estiver conectada
     if (!this.room) {
       return
@@ -180,8 +187,7 @@ export class GameScene extends Phaser.Scene {
     this.inputPayload.up = this.cursorKeys.W.isDown
     this.inputPayload.down = this.cursorKeys.S.isDown
     this.inputPayload.shot = this.cursorKeys.SPACE.isDown
-    this.inputPayload.nuke = this.cursorKeys.M.isDown
-
+    //this.inputPayload.nuke = this.input.keyboard.on('keyup-M', listener)
     //simulação sons
     this.inputPayload.explosion = this.cursorKeys.E.isDown
     this.inputPayload.dano = this.cursorKeys.R.isDown
@@ -199,6 +205,8 @@ export class GameScene extends Phaser.Scene {
       if(this.inputPayload.shot) this.somDisparoJogador.play();
       this.room.send("pressedKeys", this.inputPayload)
     }
+
+    this.inputPayload.nuke = false;
 
     
   }
