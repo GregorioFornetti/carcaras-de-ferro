@@ -58,19 +58,16 @@ export class MyRoom extends Room {
         bullet.y = player.y - 20
         bullet.speed = 5
         bullet.destroyed = false
-
-        if (this.currentBullets.length === 0) {
-          this.currentBullets = this.currentBullets.concat(
-            Bullet.spawn(this.state, player, 5)
-          )
-        }
+      
+        this.currentBullets = this.currentBullets.concat(Bullet.spawn(this.state, player, 5))
+        
       }
 
       if (message.nuke) {
         if (player.nBombas > 0){
           player.nBombas--
           const bomba = new BombaSchema()
-          this.currentBombas = this.currentBombas.concat( Bomba.spawn(this.state, player) )
+          this.currentBombas = this.currentBombas.concat(Bomba.spawn(this.state, player))
           this.timerBomba = this.tempoVidaBomba //inicia o timer
         }
       }
@@ -116,7 +113,6 @@ export class MyRoom extends Room {
       for (let enemy of this.currentEnemies) {
         enemy.update(deltaTime)
       }
-
     }
 
     if (this.currentBullets.length != 0) {
@@ -154,11 +150,6 @@ export class MyRoom extends Room {
       }
       this.timerBomba = this.tempoVidaBomba + 1
     }
-
-    // Loop de atualização automática de balas
-    //for (let bullet of this.state.bulletSchema.values()) {
-    //  bullet.update(deltaTime)
-    //}
     
     let spawn_retorno = this.spawnCentral.update(deltaTime);
     if (spawn_retorno != null) {

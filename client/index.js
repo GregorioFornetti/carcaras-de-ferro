@@ -97,7 +97,6 @@ export class GameScene extends Phaser.Scene {
     } catch (e) {
       console.error(e);
     }
-
 		
     this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
     this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
@@ -131,6 +130,9 @@ export class GameScene extends Phaser.Scene {
     this.somExplosao = this.sound.add('explosao');
     this.somDano = this.sound.add('dano');
 
+    this.input.keyboard.on('keydown-SPACE', () => {
+      this.inputPayload.shot = true
+    })
   }
 
   update(time, delta) {
@@ -179,7 +181,7 @@ export class GameScene extends Phaser.Scene {
     this.inputPayload.right = this.cursorKeys.D.isDown
     this.inputPayload.up = this.cursorKeys.W.isDown
     this.inputPayload.down = this.cursorKeys.S.isDown
-    this.inputPayload.shot = this.cursorKeys.SPACE.isDown
+    //this.inputPayload.shot = this.cursorKeys.SPACE.isDown
     this.inputPayload.nuke = this.cursorKeys.M.isDown
 
     //simulação sons
@@ -200,7 +202,7 @@ export class GameScene extends Phaser.Scene {
       this.room.send("pressedKeys", this.inputPayload)
     }
 
-    
+    this.inputPayload.shot = false
   }
 }
 
