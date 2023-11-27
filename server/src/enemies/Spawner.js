@@ -17,7 +17,7 @@ export class Spawner {
 		this.enemies.push ({"enemy": EnemyPatrulheiros, "weight": 3});
 		this.enemies.push ({"enemy": EnemyDesavisados, "weight": 2});
 		this.enemies.push ({"enemy": EnemyCombatente, "weight": 1});
-		this.enemies.push ({"enemy": EnemyFortaleza, "weight": 10});
+		this.enemies.push ({"enemy": EnemyFortaleza, "weight": 1});
 		
 		this.spawn_quantities_weights = [1, 1, 1, 1, 1];
 		
