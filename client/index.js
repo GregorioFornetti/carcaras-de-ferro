@@ -11,6 +11,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js";
 import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
 import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
+import { EnemyFortalezaOnAdd, EnemyFortalezaOnRemove } from "./enemies/EnemyFortaleza.js";
 import { UpdateSprites } from "./updateSprites.js";
 import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
@@ -79,6 +80,11 @@ export class GameScene extends Phaser.Scene {
       frameHeight: 48,
     })
 
+    this.load.spritesheet("ship_19", "./Artes/Assets/Ships/ship_0019.png", {
+      frameWidth: 32,
+      frameHeight: 48,
+    })
+
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
 
     this.load.image("bomba", "./Artes/Assets/Tiles/tile_0012.png")
@@ -110,6 +116,9 @@ export class GameScene extends Phaser.Scene {
 
     this.room.state.enemiesDesavisadosSchema.onAdd(EnemyDesavisadosOnAdd.bind(this));
     this.room.state.enemiesDesavisadosSchema.onRemove(EnemyDesavisadosOnRemove.bind(this));
+
+    this.room.state.enemiesFortalezaSchema.onAdd(EnemyFortalezaOnAdd.bind(this));
+    this.room.state.enemiesFortalezaSchema.onRemove(EnemyFortalezaOnRemove.bind(this));
 
     // Player states changes
     this.room.state.playersSchema.onAdd(PlayerOnAdd.bind(this))
