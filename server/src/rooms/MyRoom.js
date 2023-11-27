@@ -58,7 +58,14 @@ export class MyRoom extends Room {
 
       if (message.up) { 
         player.y -= speed; 
-        player.currentAnimation = `ship_frente_d${player.dano}`;
+        if(message.left) {
+          player.currentAnimation = "ship_esquerda";
+          player.currentAnimation = "ship_esquerda_reverse";
+        } else if(message.right) {
+          player.currentAnimation = "ship_direita";
+          player.currentAnimation = "ship_direita_reverse";
+        } else
+          player.currentAnimation = `ship_frente_d${player.dano}`;
       } else if (message.down) {
         player.y += speed
         player.currentAnimation = `ship_frente_d${player.dano}`;
