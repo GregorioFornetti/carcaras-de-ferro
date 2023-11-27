@@ -48,4 +48,10 @@ export class EnemyFortaleza extends Enemy {
         }
        
     }
+
+    onNuke() {
+
+        this.health = this.health / 2;
+        
+    }
 }
