@@ -57,7 +57,6 @@ export class GameScene extends Phaser.Scene {
     this.load.audio('disparo2', './Efeitos/Disparos/Disparo2.wav');
     this.load.audio('explosao', './Efeitos/Explosão/Explosão1.wav');
     this.load.audio('dano', './Efeitos/Dano/Dano2.wav');
-
     
     this.load.spritesheet("ship_1", "./Artes/Assets/Ships/ship_0001.png", {
       frameWidth: 32,
@@ -97,7 +96,6 @@ export class GameScene extends Phaser.Scene {
     } catch (e) {
       console.error(e);
     }
-
 		
     this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
     this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
@@ -121,7 +119,15 @@ export class GameScene extends Phaser.Scene {
 
     this.room.state.bombaSchema.onAdd(BombaOnAdd.bind(this))
     this.room.state.bombaSchema.onRemove(BombaOnRemove.bind(this))
-
+	
+	//** Scroll do Mapa **
+    this.room.state.bgSchema.listen(
+      "scrollY",
+      (currentPosition, previousPosition) => {
+        this.bg.setData("scrollY", currentPosition)
+      }
+    )
+	
     const width = GAME_WIDTH;
     const height = GAME_HEIGHT;
     this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
@@ -138,41 +144,8 @@ export class GameScene extends Phaser.Scene {
     if (!this.room) {
       return
     }
-	
-    for (let id in this.playerEntities) {
-      const entity = this.playerEntities[id];
-      if (entity !== undefined && entity !== null) {
-        const { serverX, serverY } = entity.data.values;
-        entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
-        entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
-      }
-    }
 
-    for (let id in this.bulletsEntities) {
-      const entity = this.bulletsEntities[id];
-      if (entity !== undefined && entity !== null) {
-        const { serverX, serverY } = entity.data.values;
-        entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
-        entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
-      }
-    }
-
-    for (let id in this.enemiesEntities) {
-      const entity = this.enemiesEntities[id];
-      if (entity !== undefined && entity !== null) {
-        const { serverX, serverY } = entity.data.values;
-        entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
-        entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
-      }
-    }
-	
-    //** Scroll do Mapa **
-    this.room.state.bgSchema.listen(
-      "scrollY",
-      (currentPosition, previousPosition) => {
-        this.bg.tilePositionY = currentPosition
-      }
-    )
+	UpdateSprites.call (this);
 
     // envia o input para o servidor com o nome "pressedKeys"
     this.inputPayload.left = this.cursorKeys.A.isDown
@@ -199,8 +172,6 @@ export class GameScene extends Phaser.Scene {
       if(this.inputPayload.shot) this.somDisparoJogador.play();
       this.room.send("pressedKeys", this.inputPayload)
     }
-
-    
   }
 }
 
