@@ -1,6 +1,6 @@
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
-import { GAME_HEIGHT, GAME_WIDTH } from '../../constants.js';
+import { GAME_HEIGHT, GAME_WIDTH, PATRULHEIRO_HEALTH, PATRULHEIRO_HEIGHT, PATRULHEIRO_SCORE, PATRULHEIRO_SPEED, PATRULHEIRO_WIDTH } from '../../constants.js';
 
 export class EnemyPatrulheirosSchema extends schema.Schema {
 
@@ -41,9 +41,11 @@ export class EnemyPatrulheiros extends Enemy {
 	constructor(roomState) {
 		super();
 		this.init(roomState.enemiesPatrulheirosSchema, EnemyPatrulheirosSchema);
-		this.health = 1
-		this.score = 100
-		this.speed = 50;
+		this.health = PATRULHEIRO_HEALTH
+		this.score = PATRULHEIRO_SCORE
+		this.speed = PATRULHEIRO_SPEED;
+		this.width = PATRULHEIRO_WIDTH;
+		this.height = PATRULHEIRO_HEIGHT
 	}
 	
 	update(deltaTime) {

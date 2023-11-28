@@ -1,6 +1,6 @@
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
-import { GAME_HEIGHT, GAME_WIDTH } from '../../constants.js';
+import { GAME_HEIGHT, GAME_WIDTH, COMBATENTE_HEALTH, COMBATENTE_HEIGHT, COMBATENTE_INTERMEDIARY1_VERTICAL_POS, COMBATENTE_INTERMEDIARY2_VERTICAL_POS, COMBATENTE_MAX_VERTICAL_POS, COMBATENTE_MIN_VERTICAL_POS, COMBATENTE_VERTICAL_SPEED, COMBATENTE_WIDTH, COMBATENTE_SCORE, COMBATENTE_MAX_HORIZONTAL_SPEED, COMBATENTE_MIN_HORIZONTAL_SPEED, COMBATENTE_HORIZONTAL_MOVEMENT_SIZE } from '../../constants.js';
 
 export class EnemyCombatenteSchema extends schema.Schema {
 
@@ -40,27 +40,27 @@ export class EnemyCombatente extends Enemy {
 		return [enemy];
 	}
 	
-	static get VELOCIDADE_HORIZONTAL_MAXIMA() {return 30};
-	static get VELOCIDADE_HORIZONTAL_MINIMA() {return 15};
+	static get VELOCIDADE_HORIZONTAL_MAXIMA() {return COMBATENTE_MAX_HORIZONTAL_SPEED};
+	static get VELOCIDADE_HORIZONTAL_MINIMA() {return COMBATENTE_MIN_HORIZONTAL_SPEED};
 	
-	static get TAMANHO_MOVIMENTO_HORIZONTAL() {return 128};
-	static get POSICAO_PARADA_MINIMA() {return 0.1};
-	static get POSICAO_PARADA_INTERMEDIARIA1() {return 0.3};
-	static get POSICAO_PARADA_INTERMEDIARIA2() {return 0.5};
-	static get POSICAO_PARADA_MAXIMA() {return 0.7};
+	static get TAMANHO_MOVIMENTO_HORIZONTAL() {return COMBATENTE_HORIZONTAL_MOVEMENT_SIZE};
+	static get POSICAO_PARADA_MINIMA() {return COMBATENTE_MIN_VERTICAL_POS};
+	static get POSICAO_PARADA_INTERMEDIARIA1() {return COMBATENTE_INTERMEDIARY1_VERTICAL_POS};
+	static get POSICAO_PARADA_INTERMEDIARIA2() {return COMBATENTE_INTERMEDIARY2_VERTICAL_POS};
+	static get POSICAO_PARADA_MAXIMA() {return COMBATENTE_MAX_VERTICAL_POS};
 	
 	static get TEMPO_MEIO_PONTO() {return 3};
 	
 	
-	static get HEIGHT () {return 32;}
-	static get WIDTH () {return 32;}
+	static get HEIGHT () {return COMBATENTE_HEIGHT;}
+	static get WIDTH () {return COMBATENTE_WIDTH;}
 	
 	constructor(roomState) {
 		super();
 		this.init(roomState.enemiesCombatenteSchema, EnemyCombatenteSchema);
-		this.verticalSpeed = 50;
-		this.health = 4
-		this.score = 400
+		this.verticalSpeed = COMBATENTE_VERTICAL_SPEED;
+		this.health = COMBATENTE_HEALTH
+		this.score = COMBATENTE_SCORE
 		if (Math.random() < 0.5)
 			this.horizontalSpeed = -EnemyCombatente.VELOCIDADE_HORIZONTAL_MAXIMA;
 		else

@@ -9,6 +9,7 @@ export class BulletSchema extends schema.Schema {
     this.x = 50
     this.y = 50
     this.destroyed = false
+    this.owner = ""
   }
 }
 
@@ -16,7 +17,6 @@ schema.defineTypes(BulletSchema, {
   x: "number",
   y: "number",
   destroyed: "boolean",
-  owner: "string",
 })
 
 export class Bullet {
@@ -29,7 +29,7 @@ export class Bullet {
     const bullet = new Bullet(roomState, bulletSpeed)
     bullet.bulletAttributes.x = player.x
     bullet.bulletAttributes.y = player.y - 20
-    bullet.bulletAttributes.owner = sessionId
+    bullet.owner = sessionId
 
     return bullet
   }
@@ -40,6 +40,8 @@ export class Bullet {
     this.id = bulletId++
     this.bulletState.set(this.id, this.bulletAttributes)
     this.destroyed = false
+    this.width = 10
+    this.height = 16
   }
 
   update(deltaTime) {
@@ -56,7 +58,7 @@ export class Bullet {
     }
 
     this.bulletState.delete(this.id.toString())
-
+    
     this.destroyed = true
   }
 }

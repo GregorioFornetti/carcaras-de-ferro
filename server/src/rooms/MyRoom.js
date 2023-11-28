@@ -12,9 +12,11 @@ import { BackgroundSchema } from "../map/BackgroundSchema.js";
 import { EnemySolitario } from "../enemies/EnemySolitario.js";
 import { EnemyPatrulheiros } from "../enemies/EnemyPatrulheiros.js";
 import { EnemyCombatente } from "../enemies/EnemyCombatente.js";
+import { Collisor } from "../collisor/Collissor.js"
 
 import { Spawner } from "../enemies/Spawner.js"
 import { GAME_HEIGHT, GAME_WIDTH } from "../../constants.js"
+import { EnemyFortaleza } from "../enemies/EnemyFortaleza.js"
 
 export class MyRoom extends Room {
   maxClients = 4
@@ -34,7 +36,18 @@ export class MyRoom extends Room {
     this.tempoVidaBomba = 2;
     this.timerBomba = this.tempoVidaBomba + 1; //recebe esse valor para o timer nao iniciar automaticamente
 
+    this.collisor = new Collisor()
+    this.collisor.registerActionForCollission("bullet", "enemy", (bullet, enemy) => {
+      bullet.destroy()
+      const score = enemy.hit()
+      const player = this.state.playersSchema.get(bullet.owner)
+      if (score) {
+        player.score += score
+      }
+    })
+
     this.spawnCentral = new Spawner(this.state)
+    
 
     // Gera o game loop, atualização de estado automatica a cada deltaTime
     // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
@@ -76,6 +89,7 @@ export class MyRoom extends Room {
         bullet.destroyed = false
         let newBullet = Bullet.spawn(this.state, player, 5, client.sessionId)
         this.currentBullets[newBullet.id] = newBullet
+        this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
       }
         
       const MIN_X = 0
@@ -93,15 +107,6 @@ export class MyRoom extends Room {
         player.y = Math.max(player.y - speed, MIN_Y)
       } else if (message.down) { 
         player.y = Math.min(player.y + speed, MAX_Y)
-      }
-
-      if (message.shot) {
-        
-
-        if (Object.keys(this.currentBullets).length === 0) {
-          let newBullet = Bullet.spawn(this.state, player, 5, client.sessionId)
-          this.currentBullets[newBullet.id] = newBullet
-        }
       }
 
       if (message.nuke) {
@@ -123,19 +128,9 @@ export class MyRoom extends Room {
           player.currentAnimation = `ship_frente_d${player.dano}`;
         } 
       }
-      //console.log(message.dano);
       
     })
 
-    this.onMessage("bulletHitEnemy", (client, message) => {
-      const score = this.currentEnemies[message.enemyId].hit()
-      this.currentBullets[message.bulletId].destroy()
-
-      const player = this.state.playersSchema.get(client.sessionId)
-      if (score) {
-        player.score += score
-      }
-    });
   }
 
   /* Define o que será feito quando um jogador conectar na sala
@@ -173,6 +168,7 @@ export class MyRoom extends Room {
     if (this.currentEnemies.length != 0) {
       for (const enemyId in this.currentEnemies) {
         if (this.currentEnemies[enemyId].dead) {
+          this.collisor.removeForCollission(this.currentEnemies[enemyId], "bullet")
           delete this.currentEnemies[enemyId]
         }
       }
@@ -189,6 +185,7 @@ export class MyRoom extends Room {
       // Loop de atualização automática das balas
       for (let bullet of Object.values(this.currentBullets)) {
         if (bullet.destroyed) {
+          this.collisor.removeForCollission(bullet, "bullet")
           delete this.currentBullets[bullet.id]
         }
         bullet.update(deltaTime)
@@ -209,10 +206,8 @@ export class MyRoom extends Room {
     // Explodir bomba e inimigos
     if (this.timerBomba > 0 && this.timerBomba <= this.tempoVidaBomba) {
       this.timerBomba -= deltaTime/1000;
-      //console.log("timer bomba: " + this.timerBomba)
     } else if (this.timerBomba < 0) {
       const bomba = this.currentBombas[0]  // O mais certo seria um timer para cada bomba, mas por enquanto vou só pegar o primeiro
-      console.log(bomba.owner)
       const player = this.state.playersSchema.get(bomba.owner)
       for (let enemyId in this.currentEnemies) {
         const score = this.currentEnemies[enemyId].onNuke()
@@ -231,7 +226,26 @@ export class MyRoom extends Room {
       for (let enemy of spawn_retorno) {
         this.currentEnemies[enemy.id] = enemy
       }
-      //this.currentEnemies = this.currentEnemies.concat(spawn_retorno)
+      for (let enemy of spawn_retorno) {
+        this.collisor.registerForCollission(enemy, enemy.enemyAttributes, "enemy")
+      }
     }
+
+    // Aplica os efeitos de colisões de objetos, se existirem 
+    this.collisor.update()
+
+    // Faz limpeza de objetos destruidos
+    for (let i in this.currentEnemies) {
+      if (this.currentEnemies[i].dead) {
+        this.collisor.removeForCollission(this.currentEnemies[i], "enemy")
+      }
+    }
+
+    for (let i in this.currentBullets) {
+      if (this.currentBullets[i].destroyed) {
+        this.collisor.removeForCollission(this.currentBullets[i], "bullet")
+      }
+    }
+
   }
 }

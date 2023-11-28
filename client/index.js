@@ -12,7 +12,7 @@ import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySoli
 import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
 import { EnemyFortalezaOnAdd, EnemyFortalezaOnRemove } from "./enemies/EnemyFortaleza.js";
-import {CollisorPlayerEnemy,CollisorBulletEnemy,CollisorPlayerBullet} from "./enemies/Collisor.js";
+//import {CollisorPlayerEnemy,CollisorBulletEnemy,CollisorPlayerBullet} from "./enemies/Collisor.js";
 import { UpdateSprites } from "./updateSprites.js";
 import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
@@ -123,7 +123,6 @@ export class GameScene extends Phaser.Scene {
     this.room.state.bgSchema.listen(
       "scrollY",
       (currentPosition, previousPosition) => {
-        console.log(currentPosition)
         this.bg.setData("scrollY", currentPosition)
       }
     )
@@ -152,7 +151,6 @@ export class GameScene extends Phaser.Scene {
     //Eventos Input
     this.input.keyboard.on('keydown-M', () => {
       this.inputPayload.nuke = true;
-      //console.log("M pressionado")
     })
 
     this.input.keyboard.on('keydown-SPACE', () => {
@@ -214,10 +212,10 @@ export class GameScene extends Phaser.Scene {
     //if(this.inputPayload.dano) this.somDano.play(); //simulação som dano R
 
 
-    this.physics.collide(Object.values(this.playerEntities), Object.values(this.enemiesEntities), CollisorPlayerEnemy.bind(this));
+    /*this.physics.collide(Object.values(this.playerEntities), Object.values(this.enemiesEntities), CollisorPlayerEnemy.bind(this));
     this.physics.collide(Object.values(this.bulletsEntities), Object.values(this.enemiesEntities), CollisorBulletEnemy.bind(this));
     this.physics.collide(Object.values(this.playerEntities), Object.values(this.bulletsEntities), CollisorPlayerBullet.bind(this));
-
+    */
     if (
       this.inputPayload.left ||
       this.inputPayload.right ||

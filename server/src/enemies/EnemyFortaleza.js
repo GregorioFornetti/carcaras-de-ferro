@@ -1,10 +1,6 @@
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
-import {GAME_WIDTH, GAME_HEIGHT} from '../../constants.js';
-
-const SCORE = 800
-const MAX_HEALTH = 12
-
+import {GAME_WIDTH, GAME_HEIGHT, FORTALEZA_HEALTH, FORTALEZA_SCORE, FORTALEZA_SPEED, FORTALEZA_HEIGHT, FORTALEZA_WIDTH} from '../../constants.js';
 
 export class EnemyFortalezaSchema extends schema.Schema {
     
@@ -25,7 +21,7 @@ export class EnemyFortaleza extends Enemy {
         enemy.enemyAttributes.y = 0;
         enemy.enemyAttributes.x = (Math.random() * GAME_WIDTH);
 
-        return enemy;
+        return [enemy];
 
     }
 
@@ -34,8 +30,11 @@ export class EnemyFortaleza extends Enemy {
         this.init(roomState.enemiesFortalezaSchema, EnemyFortalezaSchema)
         
         /* VELOCIDADE FORTALEZA */
-        this.speed = 50
-        this.health = MAX_HEALTH
+        this.speed = FORTALEZA_SPEED
+        this.health = FORTALEZA_HEALTH
+        this.width = FORTALEZA_WIDTH
+        this.height = FORTALEZA_HEIGHT
+        this.score = FORTALEZA_SCORE
 
     }
 

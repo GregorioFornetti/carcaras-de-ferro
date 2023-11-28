@@ -10,7 +10,7 @@
 */
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
-import {GAME_WIDTH, GAME_HEIGHT} from '../../constants.js';
+import {GAME_WIDTH, GAME_HEIGHT, DESAVISADOS_HEALTH,DESAVISADOS_HEIGHT,DESAVISADOS_WIDTH,DESAVISADOS_SPEED, DESAVISADOS_SCORE} from '../../constants.js';
 
 
 export class EnemyDesavisadosSchema extends schema.Schema {
@@ -65,10 +65,12 @@ export class EnemyDesavisados extends Enemy {
         super()
         this.init(roomState.enemiesDesavisadosSchema, EnemyDesavisadosSchema)
         
-        this.health = 1
+        this.health = DESAVISADOS_HEALTH;
         //define a velocidade dos Desavisados
-        this.speed = 300;
-        this.score = 50
+        this.speed = DESAVISADOS_SPEED;
+        this.score = DESAVISADOS_SCORE;
+        this.width = DESAVISADOS_WIDTH;
+        this.height = DESAVISADOS_HEIGHT;
 
     }
 

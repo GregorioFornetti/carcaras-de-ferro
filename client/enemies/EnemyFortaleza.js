@@ -14,8 +14,6 @@ export function EnemyFortalezaOnAdd(enemy, id) {
 
 
 export function EnemyFortalezaOnRemove(enemy, id) {
-    console.log('removendo fortaleza')
-    console.log(id)
     this.enemiesEntities[id].destroy();
     delete this.enemiesEntities[id];
 }
