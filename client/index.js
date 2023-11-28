@@ -113,6 +113,15 @@ export class GameScene extends Phaser.Scene {
     this.room.state.enemiesDesavisadosSchema.onAdd(EnemyDesavisadosOnAdd.bind(this));
     this.room.state.enemiesDesavisadosSchema.onRemove(EnemyDesavisadosOnRemove.bind(this));
 
+    //** Scroll do Mapa **
+    this.room.state.bgSchema.listen(
+      "scrollY",
+      (currentPosition, previousPosition) => {
+        console.log(currentPosition)
+        this.bg.setData("scrollY", currentPosition)
+      }
+    )
+
     // Player states changes
     this.room.state.playersSchema.onAdd(PlayerOnAdd.bind(this))
     this.room.state.playersSchema.onRemove(PlayerOnRemove.bind(this))
@@ -139,6 +148,11 @@ export class GameScene extends Phaser.Scene {
     // Sai do loop se a sala não estiver conectada
     if (!this.room) {
       return
+    }
+
+    const { scrollY } = this.room.state.bgSchema
+    if (scrollY) {
+      this.bg.tilePositionY = Phaser.Math.Linear(this.bg.tilePositionY, scrollY, 0.2)
     }
 	
     for (let id in this.playerEntities) {
@@ -168,14 +182,7 @@ export class GameScene extends Phaser.Scene {
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
     }
-	
-    //** Scroll do Mapa **
-    this.room.state.bgSchema.listen(
-      "scrollY",
-      (currentPosition, previousPosition) => {
-        this.bg.tilePositionY = currentPosition
-      }
-    )
+
 
     // envia o input para o servidor com o nome "pressedKeys"
     this.inputPayload.left = this.cursorKeys.A.isDown
