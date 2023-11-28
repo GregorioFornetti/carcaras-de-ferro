@@ -69,7 +69,6 @@ export function PlayerOnAdd(player, id) {
   player.onChange(() => {
     this.playerEntities[id].setData('serverX', player.x);
 		this.playerEntities[id].setData('serverY', player.y);
-<<<<<<< HEAD
     var animation = player.currentAnimation;
     if(player.dano > danoP) {
       this.somDano.play(); 
@@ -86,10 +85,8 @@ export function PlayerOnAdd(player, id) {
     } else {
       this.playerEntities[id].anims.play(animation);
     }
-=======
 
     playerHtml.innerHTML = `Jogador ${playersSize+1}: ${player.score}`
->>>>>>> playerBorderColision
   })
 }
 
