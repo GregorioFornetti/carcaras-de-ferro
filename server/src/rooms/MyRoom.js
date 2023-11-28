@@ -100,7 +100,7 @@ export class MyRoom extends Room {
           player.currentAnimation = `ship_frente_d${player.dano}`;
         } 
       }
-      console.log(message.dano);
+      //console.log(message.dano);
       
     })
   }
