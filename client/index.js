@@ -43,6 +43,7 @@ export class GameScene extends Phaser.Scene {
     this.somExplosao = null;
     this.somDano = null;
 
+
   }
 
   // Carrega os assets a serem utilizados no jogo
@@ -180,9 +181,10 @@ export class GameScene extends Phaser.Scene {
 
     //simulação sons
     this.inputPayload.explosion = this.cursorKeys.E.isDown
-    this.inputPayload.dano = this.cursorKeys.R.isDown
+    this.cursorKeys.R.on('down', () => { this.inputPayload.dano = true });
     if(this.inputPayload.explosion) this.somExplosao.play(); //simulação som explosão E
     //if(this.inputPayload.dano) this.somDano.play(); //simulação som dano R
+
 
     if (
       this.inputPayload.left ||
@@ -197,6 +199,7 @@ export class GameScene extends Phaser.Scene {
       this.room.send("pressedKeys", this.inputPayload)
     }  
 
+    this.inputPayload.dano = false;
 
   }
 }

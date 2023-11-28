@@ -54,21 +54,17 @@ export class MyRoom extends Room {
         player.x += speed;
         player.currentAnimation = "ship_direita";
         player.currentAnimation = "ship_direita_reverse";
+        
       }
 
       if (message.up) { 
         player.y -= speed; 
-        if(message.left) {
-          player.currentAnimation = "ship_esquerda";
-          player.currentAnimation = "ship_esquerda_reverse";
-        } else if(message.right) {
-          player.currentAnimation = "ship_direita";
-          player.currentAnimation = "ship_direita_reverse";
-        } else
+        if(!message.left && !message.right)
           player.currentAnimation = `ship_frente_d${player.dano}`;
       } else if (message.down) {
         player.y += speed
-        player.currentAnimation = `ship_frente_d${player.dano}`;
+        if(!message.left && !message.right)
+          player.currentAnimation = `ship_frente_d${player.dano}`;
       }
 
       if (message.shot) {
@@ -98,11 +94,13 @@ export class MyRoom extends Room {
         if (player.dano == 0) {
           player.dano++;
           player.currentAnimation = `ship_frente_d${player.dano}`;
-          //this.pl
-        }
-          
-        
+        } 
+        else if (player.dano == 1) {
+          player.dano++;
+          player.currentAnimation = `ship_frente_d${player.dano}`;
+        } 
       }
+      console.log(message.dano);
       
     })
   }

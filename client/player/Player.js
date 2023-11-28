@@ -12,26 +12,29 @@ export function PlayerOnAdd(player, id) {
   this.playerEntities[id].anims.create({
     key: "ship_frente_d0",
     frames: [{ key: `ship_${playersSize + 1}_animado`, frame: 0 }],
-    frameRate: 1,
+    frameRate: 10,
   });
 
   this.playerEntities[id].anims.create({
     key: "ship_frente_d1",
     frames: [{ key: `ship_${playersSize + 1}_animado`, frame: 8 }],
-    frameRate: 1,
+    frameRate: 10,
   });
 
   this.playerEntities[id].anims.create({
     key: "ship_frente_d2",
     frames: [{ key: `ship_${playersSize + 1}_animado`, frame: 16 }],
-    frameRate: 1,
+    frameRate: 10,
   });
 
   this.playerEntities[id].anims.create({
     key: "ship_direita",
     frames: this.anims.generateFrameNumbers(`ship_${playersSize + 1}_animado`, { start: 1, end: 3 }),
-    frameRate: 10,
+    frameRate: 6,
     repeat: 0, // Não se repete, reproduz uma vez
+    onComplete: function () {
+      this.playerEntities[id].anims.play("ship_direita_reverse");
+    },
   });
   
   this.playerEntities[id].anims.create({
@@ -53,6 +56,7 @@ export function PlayerOnAdd(player, id) {
     frames: this.anims.generateFrameNumbers(`ship_${playersSize + 1}_animado`, { start: 7, end: 4 }),
     frameRate: 10,
     repeat: 0, // Não se repete, reproduz uma vez
+    
   });
   
   player.onChange(() => {
@@ -65,13 +69,12 @@ export function PlayerOnAdd(player, id) {
       this.tweens.add({
         targets: this.playerEntities[id],
         alpha: 0,
-        ease: 'Cubic.easeOut',  
-        duration: 500,
-        repeat: 0,
+        duration: 300,
+        repeat: 4,
         yoyo: true,
-        onStart: function () { this.targets[0].setTint(0xff0000); },
-        onComplete: function () { this.targets[0].clearTint(); this.targets[0].anims.play(animation);}
-      })
+        onStart: function () { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(animation); },
+        onComplete: function () { this.targets[0].clearTint(); }
+      });
     } else {
       this.playerEntities[id].anims.play(animation);
     }
