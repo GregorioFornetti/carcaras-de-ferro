@@ -14,7 +14,6 @@ export function PlayerOnAdd(player, id) {
     player.y + playersSize * 100,
     `ship_${playersSize + 1}_animado`
     )
-  //this.playerEntities[id].setTint(0xff00ff, 0xff0000, 0x00ff00, 0x0000ff);;
 
   this.playerEntities[id].anims.create({
     key: "ship_frente_d0",

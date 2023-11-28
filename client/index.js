@@ -46,8 +46,6 @@ export class GameScene extends Phaser.Scene {
     this.somDisparoJogador = null;
     this.somExplosao = null;
     this.somDano = null;
-
-
   }
 
   // Carrega os assets a serem utilizados no jogo
@@ -156,6 +154,11 @@ export class GameScene extends Phaser.Scene {
     this.input.keyboard.on('keydown-SPACE', () => {
       this.inputPayload.shot = true
     })
+
+    this.cursorKeys.R.on('down', () => { 
+      this.inputPayload.dano = true 
+    });
+
   }
 
   update(time, delta) {
@@ -176,6 +179,15 @@ export class GameScene extends Phaser.Scene {
         const { serverX, serverY } = entity.data.values;
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+        if (this.inputPayload.up) {
+          this.playerEntities[id].anims.play("ship_frente_d0");
+        } else if (this.inputPayload.down) {
+          this.playerEntities[id].anims.play("ship_frente_d0");
+        } else if (this.inputPayload.left) {
+          this.playerEntities[id].anims.play("ship_esquerda");
+        } else if (this.inputPayload.right) {
+          this.playerEntities[id].anims.play("ship_direita");
+        }
       }
     }
 
@@ -198,7 +210,6 @@ export class GameScene extends Phaser.Scene {
       }
     }
 
-
     // envia o input para o servidor com o nome "pressedKeys"
     this.inputPayload.left = this.cursorKeys.A.isDown
     this.inputPayload.right = this.cursorKeys.D.isDown
@@ -207,10 +218,7 @@ export class GameScene extends Phaser.Scene {
 
     //simulação sons
     this.inputPayload.explosion = this.cursorKeys.E.isDown
-    this.cursorKeys.R.on('down', () => { this.inputPayload.dano = true });
     if(this.inputPayload.explosion) this.somExplosao.play(); //simulação som explosão E
-    //if(this.inputPayload.dano) this.somDano.play(); //simulação som dano R
-
 
     /*this.physics.collide(Object.values(this.playerEntities), Object.values(this.enemiesEntities), CollisorPlayerEnemy.bind(this));
     this.physics.collide(Object.values(this.bulletsEntities), Object.values(this.enemiesEntities), CollisorBulletEnemy.bind(this));
@@ -228,6 +236,8 @@ export class GameScene extends Phaser.Scene {
     ) {
       this.room.send("pressedKeys", this.inputPayload)
     }  
+
+    
 
     this.inputPayload.dano = false;
 
