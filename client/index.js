@@ -98,7 +98,6 @@ export class GameScene extends Phaser.Scene {
     } catch (e) {
       console.error(e);
     }
-
 		
     this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
     this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
@@ -139,6 +138,9 @@ export class GameScene extends Phaser.Scene {
       //console.log("M pressionado")
     })
 
+    this.input.keyboard.on('keydown-SPACE', () => {
+      this.inputPayload.shot = true
+    })
   }
 
   update(time, delta) {
@@ -188,7 +190,7 @@ export class GameScene extends Phaser.Scene {
     this.inputPayload.right = this.cursorKeys.D.isDown
     this.inputPayload.up = this.cursorKeys.W.isDown
     this.inputPayload.down = this.cursorKeys.S.isDown
-    this.inputPayload.shot = this.cursorKeys.SPACE.isDown
+
     //simulação sons
     this.inputPayload.explosion = this.cursorKeys.E.isDown
     this.inputPayload.dano = this.cursorKeys.R.isDown
@@ -210,8 +212,7 @@ export class GameScene extends Phaser.Scene {
     //Seta o input da bomba de volta pra false pra dps do evento key down
     // Assim só é enviado uma bomba por tecla pressionada
     this.inputPayload.nuke = false;
-
-    
+    this.inputPayload.shot = false
   }
 }
 
