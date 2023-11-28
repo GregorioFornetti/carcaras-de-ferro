@@ -26,6 +26,7 @@ export class EnemyDesavisados extends Enemy {
 
     static spawn(roomState) {
         //define as distancias minima e maxima entre os Desavisados
+
         const minDistY = 40;
         const maxDistY = 120;
         const maxDistX = 50;
@@ -64,8 +65,10 @@ export class EnemyDesavisados extends Enemy {
         super()
         this.init(roomState.enemiesDesavisadosSchema, EnemyDesavisadosSchema)
         
+        this.health = 1
         //define a velocidade dos Desavisados
         this.speed = 300;
+        this.score = 50
 
     }
 

@@ -19,20 +19,21 @@ schema.defineTypes(BombaSchema, {
 })
 
 export class Bomba {
-  constructor(roomState) {
-    this.init(roomState.bombaSchema, BombaSchema)
+  constructor(roomState, playerId) {
+    this.init(roomState.bombaSchema, BombaSchema, playerId)
   }
 
-  init(bombaState, BombaSchema) {
+  init(bombaState, BombaSchema, playerId) {
     this.bombaAttributes = new BombaSchema()
     this.bombaState = bombaState
     this.id = bombaId++
     this.bombaState.set(this.id, this.bombaAttributes)
     this.destroyed = false
+    this.owner = playerId
   }
 
-  static spawn(roomState, player) {
-    const bomba = new Bomba(roomState)
+  static spawn(roomState, player, playerId) {
+    const bomba = new Bomba(roomState, playerId)
     bomba.bombaAttributes.x = player.x
     bomba.bombaAttributes.y = player.y
     bomba.bombaAttributes.tamanho = tamanhoBomba

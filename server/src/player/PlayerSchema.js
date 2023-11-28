@@ -9,6 +9,7 @@ export class PlayerSchema extends schema.Schema {
     this.nBombas = 5
     this.currentAnimation = "ship_frente_d0";
     this.dano = 0;
+    this.score = 0
   }
 }
 
@@ -18,4 +19,5 @@ schema.defineTypes(PlayerSchema, {
   nBombas: "number",
   currentAnimation: "string",
   dano: "number",
+  score: "number"
 })

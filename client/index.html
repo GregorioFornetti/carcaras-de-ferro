@@ -9,7 +9,10 @@
 <body>
     <div class="jogo">
         <div id="phaser-example"></div>
+        
     </div>
+
+    <div id="players"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js" type="module"></script>
     <script src="https://unpkg.com/colyseus.js@^0.15.4/dist/colyseus.js" type="module"></script>
@@ -40,6 +43,15 @@
         #phaser-example {
             line-height: 0;
             height: 95vh;
+        }
+
+        #players {
+            width: 200px;
+            height: 95vh;
+            background-color: white;
+            border-color: white;
+            border-style: solid;
+            border-width: 1vh 1vh 1vh 0;
         }
     </style>
 </body>

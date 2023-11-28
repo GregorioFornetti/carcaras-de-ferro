@@ -12,6 +12,7 @@ import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySoli
 import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
 import { EnemyFortalezaOnAdd, EnemyFortalezaOnRemove } from "./enemies/EnemyFortaleza.js";
+import {CollisorPlayerEnemy,CollisorBulletEnemy,CollisorPlayerBullet} from "./enemies/Collisor.js";
 import { UpdateSprites } from "./updateSprites.js";
 import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
@@ -37,6 +38,7 @@ export class GameScene extends Phaser.Scene {
     this.cursorKeys = null
     this.enemiesEntities = {}
     this.bulletsEntities = {}
+  
     this.bombasEntities = {}
     this.nuke = false
 
@@ -117,6 +119,14 @@ export class GameScene extends Phaser.Scene {
 
     this.room.state.enemiesFortalezaSchema.onAdd(EnemyFortalezaOnAdd.bind(this));
     this.room.state.enemiesFortalezaSchema.onRemove(EnemyFortalezaOnRemove.bind(this));
+    //** Scroll do Mapa **
+    this.room.state.bgSchema.listen(
+      "scrollY",
+      (currentPosition, previousPosition) => {
+        console.log(currentPosition)
+        this.bg.setData("scrollY", currentPosition)
+      }
+    )
 
     // Player states changes
     this.room.state.playersSchema.onAdd(PlayerOnAdd.bind(this))
@@ -157,6 +167,11 @@ export class GameScene extends Phaser.Scene {
       return
     }
 
+    const { scrollY } = this.room.state.bgSchema
+    if (scrollY) {
+      this.bg.tilePositionY = Phaser.Math.Linear(this.bg.tilePositionY, scrollY, 0.2)
+    }
+	
     for (let id in this.playerEntities) {
       const entity = this.playerEntities[id];
       if (entity !== undefined && entity !== null) {
@@ -173,6 +188,7 @@ export class GameScene extends Phaser.Scene {
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
+      
     }
 
     for (let id in this.enemiesEntities) {
@@ -183,14 +199,8 @@ export class GameScene extends Phaser.Scene {
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
     }
-	
-    //** Scroll do Mapa **
-    this.room.state.bgSchema.listen(
-      "scrollY",
-      (currentPosition, previousPosition) => {
-        this.bg.tilePositionY = currentPosition
-      }
-    )
+
+
     // envia o input para o servidor com o nome "pressedKeys"
     this.inputPayload.left = this.cursorKeys.A.isDown
     this.inputPayload.right = this.cursorKeys.D.isDown
@@ -203,6 +213,10 @@ export class GameScene extends Phaser.Scene {
     if(this.inputPayload.explosion) this.somExplosao.play(); //simulação som explosão E
     //if(this.inputPayload.dano) this.somDano.play(); //simulação som dano R
 
+
+    this.physics.collide(Object.values(this.playerEntities), Object.values(this.enemiesEntities), CollisorPlayerEnemy.bind(this));
+    this.physics.collide(Object.values(this.bulletsEntities), Object.values(this.enemiesEntities), CollisorBulletEnemy.bind(this));
+    this.physics.collide(Object.values(this.playerEntities), Object.values(this.bulletsEntities), CollisorPlayerBullet.bind(this));
 
     if (
       this.inputPayload.left ||

@@ -22,7 +22,7 @@ export class EnemySolitario extends Enemy {
 		//DEBUGING
 		//enemy.enemyAttributes.x = Math.floor(1 * (GAME_WIDTH - EnemySolitario.WIDTH)) + EnemySolitario.WIDTH/2;
 		
-		return enemy;
+		return [enemy];
 	}
 	
 	static get HEIGHT () {return 32;}
@@ -31,6 +31,8 @@ export class EnemySolitario extends Enemy {
 	constructor(roomState) {
 		super();
 		this.init(roomState.enemiesSolitarioSchema, EnemySolitarioSchema);
+		this.health = 1
+		this.score = 100
 		this.speed = 50;
 	}
 	

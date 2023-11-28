@@ -2,6 +2,13 @@ export function PlayerOnAdd(player, id) {
   let playersSize = Object.keys(this.playerEntities).length
   let danoP = player.dano;
   
+
+  const playersHtmlContainer = document.getElementById('players')
+  const playerHtml = document.createElement('div')
+  playerHtml.id = `player-${id}`
+
+  playersHtmlContainer.appendChild(playerHtml)
+
   this.playerEntities[id] = this.physics.add.sprite(
     player.x + playersSize * 100,
     player.y + playersSize * 100,
@@ -62,6 +69,7 @@ export function PlayerOnAdd(player, id) {
   player.onChange(() => {
     this.playerEntities[id].setData('serverX', player.x);
 		this.playerEntities[id].setData('serverY', player.y);
+<<<<<<< HEAD
     var animation = player.currentAnimation;
     if(player.dano > danoP) {
       this.somDano.play(); 
@@ -78,6 +86,10 @@ export function PlayerOnAdd(player, id) {
     } else {
       this.playerEntities[id].anims.play(animation);
     }
+=======
+
+    playerHtml.innerHTML = `Jogador ${playersSize+1}: ${player.score}`
+>>>>>>> playerBorderColision
   })
 }
 
@@ -89,6 +101,8 @@ export function PlayerOnRemove(player, id) {
     console.log(`Jogador ${id} desconectado!`)
 
     delete this.playerEntities[id]
+
+    document.getElementById(`player-${id}`).remove()
 
     entity.destroy()
   }
