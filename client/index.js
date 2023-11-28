@@ -19,7 +19,7 @@ import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 export class GameScene extends Phaser.Scene {
   constructor() {
     super()
-    this.client = new Colyseus.Client("ws://localhost:8080")
+    this.client = new Colyseus.Client(/*"https://b63f-2804-14d-90a7-896c-c472-30ce-4266-b797.ngrok-free.app");*/"ws://localhost:8080");
     this.room = null
     this.playerEntities = {}
     this.inputPayload = {
@@ -43,6 +43,8 @@ export class GameScene extends Phaser.Scene {
     this.somDisparoJogador = null;
     this.somExplosao = null;
     this.somDano = null;
+
+
   }
 
   // Carrega os assets a serem utilizados no jogo
@@ -59,25 +61,21 @@ export class GameScene extends Phaser.Scene {
     this.load.audio('explosao', './Efeitos/Explosão/Explosão1.wav');
     this.load.audio('dano', './Efeitos/Dano/Dano2.wav');
 
-    
-    this.load.spritesheet("ship_1", "./Artes/Assets/Ships/ship_0001.png", {
-      frameWidth: 32,
-      frameHeight: 48,
+    this.load.spritesheet('ship_1_animado', './Artes/Assets_Personalizados/Ships/Spritesheets/ship2.png', {
+      frameWidth: 64,
+      frameHeight: 64,
     })
-
-    this.load.spritesheet("ship_2", "./Artes/Assets/Ships/ship_0002.png", {
-      frameWidth: 32,
-      frameHeight: 48,
+    this.load.spritesheet('ship_2_animado', './Artes/Assets_Personalizados/Ships/Spritesheets/ship1.png', {
+      frameWidth: 64,
+      frameHeight: 64,
     })
-
-    this.load.spritesheet("ship_3", "./Artes/Assets/Ships/ship_0003.png", {
-      frameWidth: 32,
-      frameHeight: 48,
+    this.load.spritesheet('ship_3_animado', './Artes/Assets_Personalizados/Ships/Spritesheets/ship3.png', {
+      frameWidth: 64,
+      frameHeight: 64,
     })
-
-    this.load.spritesheet("ship_4", "./Artes/Assets/Ships/ship_0004.png", {
-      frameWidth: 32,
-      frameHeight: 48,
+    this.load.spritesheet('ship_4_animado', './Artes/Assets_Personalizados/Ships/Spritesheets/ship4.png', {
+      frameWidth: 64,
+      frameHeight: 64,
     })
 
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
@@ -149,7 +147,7 @@ export class GameScene extends Phaser.Scene {
     if (!this.room) {
       return
     }
-	
+
     for (let id in this.playerEntities) {
       const entity = this.playerEntities[id];
       if (entity !== undefined && entity !== null) {
@@ -184,7 +182,6 @@ export class GameScene extends Phaser.Scene {
         this.bg.tilePositionY = currentPosition
       }
     )
-
     // envia o input para o servidor com o nome "pressedKeys"
     this.inputPayload.left = this.cursorKeys.A.isDown
     this.inputPayload.right = this.cursorKeys.D.isDown
@@ -193,9 +190,10 @@ export class GameScene extends Phaser.Scene {
 
     //simulação sons
     this.inputPayload.explosion = this.cursorKeys.E.isDown
-    this.inputPayload.dano = this.cursorKeys.R.isDown
+    this.cursorKeys.R.on('down', () => { this.inputPayload.dano = true });
     if(this.inputPayload.explosion) this.somExplosao.play(); //simulação som explosão E
-    if(this.inputPayload.dano) this.somDano.play(); //simulação som dano R
+    //if(this.inputPayload.dano) this.somDano.play(); //simulação som dano R
+
 
     if (
       this.inputPayload.left ||
@@ -203,11 +201,14 @@ export class GameScene extends Phaser.Scene {
       this.inputPayload.up ||
       this.inputPayload.down ||
       this.inputPayload.shot ||
-      this.inputPayload.nuke
+      this.inputPayload.nuke ||
+      this.inputPayload.dano ||
+      this.inputPayload.explosion
     ) {
-      if(this.inputPayload.shot) this.somDisparoJogador.play();
       this.room.send("pressedKeys", this.inputPayload)
-    }
+    }  
+
+    this.inputPayload.dano = false;
 
     //Seta o input da bomba de volta pra false pra dps do evento key down
     // Assim só é enviado uma bomba por tecla pressionada

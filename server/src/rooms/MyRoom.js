@@ -46,11 +46,26 @@ export class MyRoom extends Room {
 
       const speed = 5
 
-      if (message.left) player.x -= speed
-      else if (message.right) player.x += speed
+      if (message.left) {
+        player.x -= speed;
+        player.currentAnimation = "ship_esquerda";
+        player.currentAnimation = "ship_esquerda_reverse";
+      } else if (message.right) {
+        player.x += speed;
+        player.currentAnimation = "ship_direita";
+        player.currentAnimation = "ship_direita_reverse";
+        
+      }
 
-      if (message.up) player.y -= speed
-      else if (message.down) player.y += speed
+      if (message.up) { 
+        player.y -= speed; 
+        if(!message.left && !message.right)
+          player.currentAnimation = `ship_frente_d${player.dano}`;
+      } else if (message.down) {
+        player.y += speed
+        if(!message.left && !message.right)
+          player.currentAnimation = `ship_frente_d${player.dano}`;
+      }
 
       if (message.shot) {
         const bullet = new BulletSchema()
@@ -71,6 +86,19 @@ export class MyRoom extends Room {
           this.timerBomba = this.tempoVidaBomba //inicia o timer
         }
       }
+
+      if (message.dano) {
+        if (player.dano == 0) {
+          player.dano++;
+          player.currentAnimation = `ship_frente_d${player.dano}`;
+        } 
+        else if (player.dano == 1) {
+          player.dano++;
+          player.currentAnimation = `ship_frente_d${player.dano}`;
+        } 
+      }
+      //console.log(message.dano);
+      
     })
   }
 
