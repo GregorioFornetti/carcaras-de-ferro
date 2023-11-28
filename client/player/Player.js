@@ -62,16 +62,22 @@ export function PlayerOnAdd(player, id) {
     frames: this.anims.generateFrameNumbers(`ship_${playersSize + 1}_animado`, { start: 7, end: 4 }),
     frameRate: 10,
     repeat: 0, // Não se repete, reproduz uma vez
-    
+  });
+  this.playerEntities[id].anims.create({
+    key: "explosao",
+    frames: this.anims.generateFrameNumbers("explosao", { start: 0, end: 7 }),
+    frameRate: 10,
+    repeat: 0, // Não se repete, reproduz uma vez
   });
   
   player.onChange(() => {
     this.playerEntities[id].setData('serverX', player.x);
 		this.playerEntities[id].setData('serverY', player.y);
     var animation = player.currentAnimation;
-    if(player.dano > danoP) {
-      this.somDano.play(); 
-      danoP = player.dano;
+    if(player.dano > danoP) { //variavel auxiliar para verificar se o dano foi alterado
+      if(player.dano == 3) this.somExplosao.play();
+      else this.somDano.play(); 
+      danoP = player.dano; //atualiza aux
       this.tweens.add({
         targets: this.playerEntities[id],
         alpha: 0,
@@ -81,9 +87,8 @@ export function PlayerOnAdd(player, id) {
         onStart: function () { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(animation); },
         onComplete: function () { this.targets[0].clearTint(); }
       });
-    } else {
-      this.playerEntities[id].anims.play(animation);
-    }
+    } else this.playerEntities[id].anims.play(animation);
+    
 
     playerHtml.innerHTML = `Jogador ${playersSize+1}: ${player.score}`
   })

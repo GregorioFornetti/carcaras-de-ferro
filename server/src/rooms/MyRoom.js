@@ -111,14 +111,13 @@ export class MyRoom extends Room {
       }
 
       if (message.dano) {
-        if (player.dano == 0) {
+        if (player.dano < 2) {
           player.dano++;
           player.currentAnimation = `ship_frente_d${player.dano}`;
-        } 
-        else if (player.dano == 1) {
+        } else {
           player.dano++;
-          player.currentAnimation = `ship_frente_d${player.dano}`;
-        } 
+          player.currentAnimation = "explosao";
+        }
       }
       
     })

@@ -78,6 +78,10 @@ export class GameScene extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64,
     })
+    this.load.spritesheet('explosao', './Artes/Assets_Personalizados/Ships/Spritesheets/ships_Explosao.png', {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
 
     this.load.spritesheet("ship_19", "./Artes/Assets/Ships/ship_0019.png", {
       frameWidth: 32,
@@ -218,7 +222,7 @@ export class GameScene extends Phaser.Scene {
 
     //simulação sons
     this.inputPayload.explosion = this.cursorKeys.E.isDown
-    if(this.inputPayload.explosion) this.somExplosao.play(); //simulação som explosão E
+    //if(this.inputPayload.explosion) this.somExplosao.play(); //simulação som explosão E
 
     /*this.physics.collide(Object.values(this.playerEntities), Object.values(this.enemiesEntities), CollisorPlayerEnemy.bind(this));
     this.physics.collide(Object.values(this.bulletsEntities), Object.values(this.enemiesEntities), CollisorBulletEnemy.bind(this));
