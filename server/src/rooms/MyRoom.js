@@ -29,6 +29,7 @@ export class MyRoom extends Room {
   onCreate(options) {
     this.setState(new MyRoomState())
 
+    this.currentPlayers = {}
     this.currentEnemies = {}
     this.currentBullets = {}
     this.currentBombas = []
@@ -56,79 +57,47 @@ export class MyRoom extends Room {
     //this.currentEnemies = this.currentEnemies.concat(EnemyDesavisados.spawn(this.state));
     this.onMessage("pressedKeys", (client, message) => {
       // get reference to the player who sent the message
+      return
+    })
+
+    this.onMessage("UP", (client, message) => {
+      this.currentPlayers[client.sessionId].up = message.pressed
+    })
+
+    this.onMessage("DOWN", (client, message) => {
+      this.currentPlayers[client.sessionId].down = message.pressed
+    })
+
+    this.onMessage("LEFT", (client, message) => {
+      this.currentPlayers[client.sessionId].left = message.pressed
+    })
+
+    this.onMessage("RIGHT", (client, message) => {
+      this.currentPlayers[client.sessionId].right = message.pressed
+    })
+
+    this.onMessage("FIRE", (client, message) => {
       const player = this.state.playersSchema.get(client.sessionId)
+      this.currentPlayers[client.sessionId].fire = true
+      const bullet = new BulletSchema()
+      bullet.x = player.x
+      bullet.y = player.y - 20
+      bullet.speed = 5
+      bullet.destroyed = false
+      let newBullet = Bullet.spawn(this.state, player, 5, client.sessionId)
+      this.currentBullets[newBullet.id] = newBullet
+      this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
+    })
 
-      const speed = 5
-
-      if (message.left) {
-        player.x -= speed;
-        player.currentAnimation = "ship_esquerda";
-        player.currentAnimation = "ship_esquerda_reverse";
-      } else if (message.right) {
-        player.x += speed;
-        player.currentAnimation = "ship_direita";
-        player.currentAnimation = "ship_direita_reverse";
-        
-      }
-
-      if (message.up) { 
-        player.y -= speed; 
-        if(!message.left && !message.right)
-          player.currentAnimation = `ship_frente_d${player.dano}`;
-      } else if (message.down) {
-        player.y += speed
-        if(!message.left && !message.right)
-          player.currentAnimation = `ship_frente_d${player.dano}`;
-      }
-
-      if (message.shot) {
-        const bullet = new BulletSchema()
-        bullet.x = player.x
-        bullet.y = player.y - 20
-        bullet.speed = 5
-        bullet.destroyed = false
-        let newBullet = Bullet.spawn(this.state, player, 5, client.sessionId)
-        this.currentBullets[newBullet.id] = newBullet
-        this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
-      }
-        
-      const MIN_X = 0
-      const MAX_X = GAME_WIDTH
-      const MIN_Y = 0
-      const MAX_Y = GAME_HEIGHT
-
-      if (message.left) {
-        player.x = Math.max(player.x - speed, MIN_X)
-      } else if (message.right) {
-        player.x = Math.min(player.x + speed, MAX_X)
-      }
-
-      if (message.up) { 
-        player.y = Math.max(player.y - speed, MIN_Y)
-      } else if (message.down) { 
-        player.y = Math.min(player.y + speed, MAX_Y)
-      }
-
-      if (message.nuke) {
-        if (player.nBombas > 0){
+    this.onMessage("NUKE", (client, message) => {
+      const player = this.state.playersSchema.get(client.sessionId)
+      this.currentPlayers[client.sessionId].nuke = true
+      if (player.nBombas > 0) {
           player.nBombas--
           const bomba = new BombaSchema()
           this.currentBombas = this.currentBombas.concat( Bomba.spawn(this.state, player, client.sessionId) )
           this.timerBomba = this.tempoVidaBomba //inicia o timer
         }
-      }
-
-      if (message.dano) {
-        if (player.dano == 0) {
-          player.dano++;
-          player.currentAnimation = `ship_frente_d${player.dano}`;
-        } 
-        else if (player.dano == 1) {
-          player.dano++;
-          player.currentAnimation = `ship_frente_d${player.dano}`;
-        } 
-      }
-      
     })
 
   }
@@ -143,6 +112,16 @@ export class MyRoom extends Room {
 
     // Coloca o jogador na coleção de jogadores da sala
     this.state.playersSchema.set(client.sessionId, player)
+    // PROVISORIO
+    this.currentPlayers[client.sessionId] = {
+      up: false, 
+      down: false, 
+      left: false, 
+      right: false, 
+      fire: false, 
+      nuke: false, 
+      dano: false
+    }
   }
 
   /* Define o que será feito quando um jogador desconectar da sala
@@ -161,6 +140,65 @@ export class MyRoom extends Room {
 
   // Game loop - essa função será chamada a cada tick ()
   update(deltaTime) {
+    // Update do jogador, levando em conta os inputs
+    // PROVISORIO
+    for (let iclient in this.currentPlayers) {
+      let client = this.currentPlayers[iclient]
+      const player = this.state.playersSchema.get(iclient)
+      const message = this.currentPlayers[iclient]
+      const speed = 5
+
+      if (message.left) {
+        player.x -= speed * (deltaTime / 1000);
+        player.currentAnimation = "ship_esquerda";
+        player.currentAnimation = "ship_esquerda_reverse";
+      } else if (message.right) {
+        player.x += speed * (deltaTime / 1000);
+        player.currentAnimation = "ship_direita";
+        player.currentAnimation = "ship_direita_reverse";
+
+      }
+
+      if (message.up) { 
+        player.y -= speed * (deltaTime / 1000); 
+        if(!message.left && !message.right)
+          player.currentAnimation = `ship_frente_d${player.dano}`;
+      } else if (message.down) {
+        player.y += speed * (deltaTime / 1000);
+        if(!message.left && !message.right)
+          player.currentAnimation = `ship_frente_d${player.dano}`;
+      }
+
+      const MIN_X = 0
+      const MAX_X = GAME_WIDTH
+      const MIN_Y = 0
+      const MAX_Y = GAME_HEIGHT
+
+      if (message.left) {
+        player.x = Math.max(player.x - speed, MIN_X)
+      } else if (message.right) {
+        player.x = Math.min(player.x + speed, MAX_X)
+      }
+
+      if (message.up) { 
+        player.y = Math.max(player.y - speed, MIN_Y)
+      } else if (message.down) { 
+        player.y = Math.min(player.y + speed, MAX_Y)
+      }
+
+      if (message.dano) {
+        if (player.dano == 0) {
+          player.dano++;
+          player.currentAnimation = `ship_frente_d${player.dano}`;
+        } 
+        else if (player.dano == 1) {
+          player.dano++;
+          player.currentAnimation = `ship_frente_d${player.dano}`;
+        } 
+      }
+    }
+    /* FIM PLAYER */
+
     //** Movimentação do Mapa */
     this.velocidadeMapa = 1
     this.state.bgSchema.scrollY -= this.velocidadeMapa
