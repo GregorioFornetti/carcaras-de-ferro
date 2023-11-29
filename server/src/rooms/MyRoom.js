@@ -75,7 +75,7 @@ export class MyRoom extends Room {
     this.onMessage("RIGHT", (client, message) => {
       this.currentPlayers[client.sessionId].right = message.pressed
     })
-
+    
     this.onMessage("FIRE", (client, message) => {
       const player = this.state.playersSchema.get(client.sessionId)
       this.currentPlayers[client.sessionId].fire = true
@@ -93,13 +93,16 @@ export class MyRoom extends Room {
       const player = this.state.playersSchema.get(client.sessionId)
       this.currentPlayers[client.sessionId].nuke = true
       if (player.nBombas > 0) {
-          player.nBombas--
-          const bomba = new BombaSchema()
-          this.currentBombas = this.currentBombas.concat( Bomba.spawn(this.state, player, client.sessionId) )
-          this.timerBomba = this.tempoVidaBomba //inicia o timer
-        }
+        player.nBombas--
+        const bomba = new BombaSchema()
+        this.currentBombas = this.currentBombas.concat( Bomba.spawn(this.state, player, client.sessionId) )
+        this.timerBomba = this.tempoVidaBomba //inicia o timer
+      }
     })
-
+    
+    this.onMessage("DANO", (client, message) => {
+      this.currentPlayers[client.sessionId].dano = message.pressed;
+    });
   }
 
   /* Define o que será feito quando um jogador conectar na sala
@@ -150,23 +153,18 @@ export class MyRoom extends Room {
 
       if (message.left) {
         player.x -= speed * (deltaTime / 1000);
-        player.currentAnimation = "ship_esquerda";
-        player.currentAnimation = "ship_esquerda_reverse";
+        
       } else if (message.right) {
         player.x += speed * (deltaTime / 1000);
-        player.currentAnimation = "ship_direita";
-        player.currentAnimation = "ship_direita_reverse";
 
       }
 
       if (message.up) { 
         player.y -= speed * (deltaTime / 1000); 
-        if(!message.left && !message.right)
-          player.currentAnimation = `ship_frente_d${player.dano}`;
+
       } else if (message.down) {
         player.y += speed * (deltaTime / 1000);
-        if(!message.left && !message.right)
-          player.currentAnimation = `ship_frente_d${player.dano}`;
+
       }
 
       const MIN_X = 0
@@ -185,8 +183,9 @@ export class MyRoom extends Room {
       } else if (message.down) { 
         player.y = Math.min(player.y + speed, MAX_Y)
       }
-
-      if (message.dano) {
+      console.log(player.dano);
+      if (client.dano) {
+        client.dano = false;
         if (player.dano == 0) {
           player.dano++;
           player.currentAnimation = `ship_frente_d${player.dano}`;

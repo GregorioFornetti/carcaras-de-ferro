@@ -74,6 +74,7 @@ export function PlayerOnAdd(player, id) {
     this.playerEntities[id].setData('serverX', player.x);
 		this.playerEntities[id].setData('serverY', player.y);
     var animation = player.currentAnimation;
+    
     if(player.dano > danoP) { //variavel auxiliar para verificar se o dano foi alterado
       if(player.dano == 3) this.somExplosao.play();
       else this.somDano.play(); 

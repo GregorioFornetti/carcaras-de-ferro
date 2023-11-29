@@ -30,7 +30,6 @@ export class GameScene extends Phaser.Scene {
       up: false,
       down: false,
       shot: false,
-      explosion: false, // simular som da explosão 
       dano: false, // simular som do dano 
       nuke: false
     }
@@ -46,6 +45,7 @@ export class GameScene extends Phaser.Scene {
     this.somDisparoJogador = null;
     this.somExplosao = null;
     this.somDano = null;
+    this.danoP;
   }
 
   // Carrega os assets a serem utilizados no jogo
@@ -177,19 +177,26 @@ export class GameScene extends Phaser.Scene {
 
     this.input.keyboard.on('keydown-A', () => {
       this.room.send("LEFT",{pressed:true});
+      this.inputPayload.left = true;
     })
 
     this.input.keyboard.on('keyup-A', () => {
       this.room.send("LEFT",{pressed:false});
+      this.inputPayload.left = false;
     })
 
     this.input.keyboard.on('keydown-D', () => {
       this.room.send("RIGHT",{pressed:true});
+      this.inputPayload.right = true;
     })
-
+    
     this.input.keyboard.on('keyup-D', () => {
       this.room.send("RIGHT",{pressed:false});
+      this.inputPayload.right = false;
     })
+    
+  
+    
   }
 
   update(time, delta) {
@@ -198,12 +205,12 @@ export class GameScene extends Phaser.Scene {
     if (!this.room) {
       return
     }
-
+    
     const { scrollY } = this.room.state.bgSchema
     if (scrollY) {
       this.bg.tilePositionY = Phaser.Math.Linear(this.bg.tilePositionY, scrollY, 0.2)
     }
-	
+    
     for (let id in this.playerEntities) {
       const entity = this.playerEntities[id];
       if (entity !== undefined && entity !== null) {
@@ -211,14 +218,17 @@ export class GameScene extends Phaser.Scene {
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
         if (this.inputPayload.up) {
-          this.playerEntities[id].anims.play("ship_frente_d0");
+          this.playerEntities[id].anims.play(`ship_frente_d${this.playerEntities[id].dano}`);
         } else if (this.inputPayload.down) {
           this.playerEntities[id].anims.play("ship_frente_d0");
         } else if (this.inputPayload.left) {
           this.playerEntities[id].anims.play("ship_esquerda");
         } else if (this.inputPayload.right) {
           this.playerEntities[id].anims.play("ship_direita");
+        } else if(this.inputPayload.dano) {
+          this.playerEntities[id].dano++;
         }
+        console.log(this.playerEntities[id].dano);
       }
     }
 
@@ -241,38 +251,30 @@ export class GameScene extends Phaser.Scene {
       }
     }
     
-    //simulação sons
-    this.inputPayload.explosion = this.cursorKeys.E.isDown
-    //if(this.inputPayload.explosion) this.somExplosao.play(); //simulação som explosão E
 
     /*this.physics.collide(Object.values(this.playerEntities), Object.values(this.enemiesEntities), CollisorPlayerEnemy.bind(this));
     this.physics.collide(Object.values(this.bulletsEntities), Object.values(this.enemiesEntities), CollisorBulletEnemy.bind(this));
     this.physics.collide(Object.values(this.playerEntities), Object.values(this.bulletsEntities), CollisorPlayerBullet.bind(this));
     */
-    if (
-      this.inputPayload.left ||
-      this.inputPayload.right ||
-      this.inputPayload.up ||
-      this.inputPayload.down ||
-      this.inputPayload.shot ||
-      this.inputPayload.nuke ||
-      this.inputPayload.dano ||
-      this.inputPayload.explosion
-    ) {
-      this.room.send("pressedKeys", this.inputPayload)
-    }  
-
     
-
-    this.inputPayload.dano = false;
-
-    //Seta o input da bomba de volta pra false pra dps do evento key down
-    // Assim só é enviado uma bomba por tecla pressionada
-    this.inputPayload.nuke = false;
+   
+   //Seta o input da bomba de volta pra false pra dps do evento key down
+   // Assim só é enviado uma bomba por tecla pressionada
+   this.inputPayload.nuke = false;
     this.inputPayload.shot = false
-    this.cursorKeys.R.on('down', () => { this.inputPayload.dano = true });
-    if(this.inputPayload.explosion) this.somExplosao.play(); //simulação som explosão E
-    //if(this.inputPayload.dano) this.somDano.play(); //simulação som dano R
+    
+    this.cursorKeys.R.on('down', () => { 
+      this.inputPayload.dano = true;
+      this.room.send("DANO",{pressed:true});
+      
+    });
+    this.inputPayload.dano = false;
+    this.cursorKeys.R.on('up', () => { 
+      this.inputPayload.dano = false;
+      this.room.send("DANO",{pressed:false});
+
+    });
+
   }
 }
 
