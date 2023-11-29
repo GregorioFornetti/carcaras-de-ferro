@@ -152,17 +152,44 @@ export class GameScene extends Phaser.Scene {
 
     //Eventos Input
     this.input.keyboard.on('keydown-M', () => {
-      this.inputPayload.nuke = true;
+      this.room.send("NUKE",{});
     })
 
     this.input.keyboard.on('keydown-SPACE', () => {
-      this.inputPayload.shot = true
+      this.room.send("FIRE",{});
     })
 
-    this.cursorKeys.R.on('down', () => { 
-      this.inputPayload.dano = true 
-    });
+    this.input.keyboard.on('keydown-W', () => {
+      this.room.send("UP",{pressed:true});
+    })
 
+    this.input.keyboard.on('keyup-W', () => {
+      this.room.send("UP",{pressed:false});
+    })
+
+    this.input.keyboard.on('keydown-S', () => {
+      this.room.send("DOWN",{pressed:true});
+    })
+
+    this.input.keyboard.on('keyup-S', () => {
+      this.room.send("DOWN",{pressed:false});
+    })
+
+    this.input.keyboard.on('keydown-A', () => {
+      this.room.send("LEFT",{pressed:true});
+    })
+
+    this.input.keyboard.on('keyup-A', () => {
+      this.room.send("LEFT",{pressed:false});
+    })
+
+    this.input.keyboard.on('keydown-D', () => {
+      this.room.send("RIGHT",{pressed:true});
+    })
+
+    this.input.keyboard.on('keyup-D', () => {
+      this.room.send("RIGHT",{pressed:false});
+    })
   }
 
   update(time, delta) {
@@ -213,13 +240,7 @@ export class GameScene extends Phaser.Scene {
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
     }
-
-    // envia o input para o servidor com o nome "pressedKeys"
-    this.inputPayload.left = this.cursorKeys.A.isDown
-    this.inputPayload.right = this.cursorKeys.D.isDown
-    this.inputPayload.up = this.cursorKeys.W.isDown
-    this.inputPayload.down = this.cursorKeys.S.isDown
-
+    
     //simulação sons
     this.inputPayload.explosion = this.cursorKeys.E.isDown
     //if(this.inputPayload.explosion) this.somExplosao.play(); //simulação som explosão E
@@ -249,6 +270,9 @@ export class GameScene extends Phaser.Scene {
     // Assim só é enviado uma bomba por tecla pressionada
     this.inputPayload.nuke = false;
     this.inputPayload.shot = false
+    this.cursorKeys.R.on('down', () => { this.inputPayload.dano = true });
+    if(this.inputPayload.explosion) this.somExplosao.play(); //simulação som explosão E
+    //if(this.inputPayload.dano) this.somDano.play(); //simulação som dano R
   }
 }
 
