@@ -100,6 +100,10 @@ export function PlayerOnRemove(player, id) {
   const entity = this.playerEntities[id]
 
   if (entity) {
+    //animacao sprites e som
+    entity.somExplosao.play();
+    entity.anims.play("explosao"); 
+
     console.log(`Jogador ${id} desconectado!`)
 
     delete this.playerEntities[id]
