@@ -215,7 +215,8 @@ export class MyRoom extends Room {
 
       // Loop de atualização automática dos inimigos
       for (const enemyId in this.currentEnemies) {
-        this.currentEnemies[enemyId].update(deltaTime)
+        let action = this.currentEnemies[enemyId].update(deltaTime)
+		
       }
     }
 

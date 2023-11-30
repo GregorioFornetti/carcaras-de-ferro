@@ -2,6 +2,8 @@ import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
 import { GAME_HEIGHT, GAME_WIDTH, COMBATENTE_HEALTH, COMBATENTE_HEIGHT, COMBATENTE_INTERMEDIARY1_VERTICAL_POS, COMBATENTE_INTERMEDIARY2_VERTICAL_POS, COMBATENTE_MAX_VERTICAL_POS, COMBATENTE_MIN_VERTICAL_POS, COMBATENTE_VERTICAL_SPEED, COMBATENTE_WIDTH, COMBATENTE_SCORE, COMBATENTE_MAX_HORIZONTAL_SPEED, COMBATENTE_MIN_HORIZONTAL_SPEED, COMBATENTE_HORIZONTAL_MOVEMENT_SIZE } from '../../constants.js';
 
+import {Bullet} from '../bullet/bullet.js';
+
 export class EnemyCombatenteSchema extends schema.Schema {
 
 }
@@ -11,6 +13,7 @@ schema.defineTypes(EnemyCombatenteSchema, {
 	y: "number",
 	xInit: "number",
 	yFinal: "number",
+	health: "number",
 });
 
 export class EnemyCombatente extends Enemy {
@@ -18,6 +21,8 @@ export class EnemyCombatente extends Enemy {
 	static spawn(roomState) {	
 		const enemy = new EnemyCombatente(roomState);
 		enemy.enemyAttributes.y = -EnemyCombatente.HEIGHT/2;
+		
+		enemy.enemyAttributes. health = EnemyCombatente.MAX_HEALTH;
 		
 		let r = Math.random();
 		
@@ -48,6 +53,9 @@ export class EnemyCombatente extends Enemy {
 	static get POSICAO_PARADA_INTERMEDIARIA1() {return COMBATENTE_INTERMEDIARY1_VERTICAL_POS};
 	static get POSICAO_PARADA_INTERMEDIARIA2() {return COMBATENTE_INTERMEDIARY2_VERTICAL_POS};
 	static get POSICAO_PARADA_MAXIMA() {return COMBATENTE_MAX_VERTICAL_POS};
+	
+	static get MAX_HEALTH() {return 4};
+	static get SCORE() {return 400};
 	
 	static get TEMPO_MEIO_PONTO() {return 3};
 	
