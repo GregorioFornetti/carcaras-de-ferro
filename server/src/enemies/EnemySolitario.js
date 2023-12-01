@@ -38,7 +38,7 @@ export class EnemySolitario extends Enemy {
 	update(deltaTime) {
 		this.enemyAttributes.y += this.speed * (deltaTime / 1000);
 		
-		if (this.enemyAttributes.y > (GAME_HEIGHT + SOLITARIO_HEIGHT) / 2)
+		if (this.enemyAttributes.y > (GAME_HEIGHT + SOLITARIO_HEIGHT))
 			this.destroy();
 	}
 }
