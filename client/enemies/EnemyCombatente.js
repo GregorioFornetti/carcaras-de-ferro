@@ -1,7 +1,7 @@
 export function EnemyCombatenteOnAdd(enemy, id) {
-	this.enemiesEntities[id] = this.physics.add.image(enemy.x, enemy.y, 'ship_0015');
+	this.enemiesEntities[id] = this.physics.add.sprite(enemy.x, enemy.y, 'ship_0015');
 	this.physics.add.existing(this.enemiesEntities[id]);
-	
+
 	enemy.onChange(() => {
 		//this.enemiesEntities[id].x = enemy.x;
 		//this.enemiesEntities[id].y = enemy.y;
@@ -11,7 +11,19 @@ export function EnemyCombatenteOnAdd(enemy, id) {
 	})
 }
 
-export function EnemyCombatenteOnRemove(enemy, id) {
+export function EnemyCombatenteOnRemove(enemy, id) {	
+	/** Animação de destruição do enemy */
+	/*
+	this.somExplosao.play();
+	let enemyAnimation = this.physics.add.sprite(enemy.x, enemy.y, "explosao");
+	enemyAnimation.anims.create({
+		key: "explosao",
+		frames: this.anims.generateFrameNumbers("explosao", { start: 0, end: 7 }),
+		repeat: 0, // Não se repete, reproduz uma vez
+		hideOnComplete: true,
+	  });
+	enemyAnimation.anims.play("explosao");
+	*/
 	this.enemiesEntities[id].destroy();
 	delete this.enemiesEntities[id];
 }

@@ -45,7 +45,7 @@ export class GameScene extends Phaser.Scene {
     this.somDisparoJogador = null;
     this.somExplosao = null;
     this.somDano = null;
-    this.danoP;
+    this.danoP = 0;
   }
 
   // Carrega os assets a serem utilizados no jogo
@@ -106,6 +106,7 @@ export class GameScene extends Phaser.Scene {
     } catch (e) {
       console.error(e);
     }
+    
 		
     this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
     this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
@@ -149,7 +150,6 @@ export class GameScene extends Phaser.Scene {
     this.somDisparoJogador = this.sound.add('disparo2');
     this.somExplosao = this.sound.add('explosao');
     this.somDano = this.sound.add('dano');
-
     //Eventos Input
     this.input.keyboard.on('keydown-M', () => {
       this.room.send("NUKE",{});
@@ -158,7 +158,7 @@ export class GameScene extends Phaser.Scene {
     this.input.keyboard.on('keydown-SPACE', () => {
       this.room.send("FIRE",{});
     })
-
+    
     this.input.keyboard.on('keydown-W', () => {
       this.room.send("UP",{pressed:true});
     })
@@ -170,42 +170,42 @@ export class GameScene extends Phaser.Scene {
     this.input.keyboard.on('keydown-S', () => {
       this.room.send("DOWN",{pressed:true});
     })
-
+    
     this.input.keyboard.on('keyup-S', () => {
       this.room.send("DOWN",{pressed:false});
     })
-
+    
     this.input.keyboard.on('keydown-A', () => {
       this.room.send("LEFT",{pressed:true});
-      this.inputPayload.left = true;
+      this.playerEntities[this.room.sessionId].anims.play(`ship_esquerda_d${this.danoP}`);
     })
-
+    
     this.input.keyboard.on('keyup-A', () => {
       this.room.send("LEFT",{pressed:false});
-      this.inputPayload.left = false;
+      this.playerEntities[this.room.sessionId].anims.playReverse(`ship_esquerda_d${this.danoP}`);
     })
-
+    
     this.input.keyboard.on('keydown-D', () => {
       this.room.send("RIGHT",{pressed:true});
-      this.inputPayload.right = true;
+      this.playerEntities[this.room.sessionId].anims.play(`ship_direita_d${this.danoP}`);
     })
-    
     this.input.keyboard.on('keyup-D', () => {
       this.room.send("RIGHT",{pressed:false});
-      this.inputPayload.right = false;
+      this.playerEntities[this.room.sessionId].anims.playReverse(`ship_direita_d${this.danoP}`);
     })
     
-  
-    
+    this.input.keyboard.on('keydown-R', () => { 
+      this.playerEntities[this.room.sessionId].dano++;
+      this.danoP++;
+      this.room.send("DANO",{pressed:true});
+    });
   }
 
   update(time, delta) {
-
     // Sai do loop se a sala não estiver conectada
     if (!this.room) {
       return
     }
-    
     const { scrollY } = this.room.state.bgSchema
     if (scrollY) {
       this.bg.tilePositionY = Phaser.Math.Linear(this.bg.tilePositionY, scrollY, 0.2)
@@ -217,18 +217,6 @@ export class GameScene extends Phaser.Scene {
         const { serverX, serverY } = entity.data.values;
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
-        if (this.inputPayload.up) {
-          this.playerEntities[id].anims.play(`ship_frente_d${this.playerEntities[id].dano}`);
-        } else if (this.inputPayload.down) {
-          this.playerEntities[id].anims.play("ship_frente_d0");
-        } else if (this.inputPayload.left) {
-          this.playerEntities[id].anims.play("ship_esquerda");
-        } else if (this.inputPayload.right) {
-          this.playerEntities[id].anims.play("ship_direita");
-        } else if(this.inputPayload.dano) {
-          this.playerEntities[id].dano++;
-        }
-        console.log(this.playerEntities[id].dano);
       }
     }
 
@@ -239,7 +227,6 @@ export class GameScene extends Phaser.Scene {
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
-      
     }
 
     for (let id in this.enemiesEntities) {
@@ -263,18 +250,7 @@ export class GameScene extends Phaser.Scene {
    this.inputPayload.nuke = false;
     this.inputPayload.shot = false
     
-    this.cursorKeys.R.on('down', () => { 
-      this.inputPayload.dano = true;
-      this.room.send("DANO",{pressed:true});
-      
-    });
-    this.inputPayload.dano = false;
-    this.cursorKeys.R.on('up', () => { 
-      this.inputPayload.dano = false;
-      this.room.send("DANO",{pressed:false});
-
-    });
-
+       
   }
 }
 

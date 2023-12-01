@@ -183,9 +183,8 @@ export class MyRoom extends Room {
       } else if (message.down) { 
         player.y = Math.min(player.y + speed, MAX_Y)
       }
-      console.log(player.dano);
+
       if (client.dano) {
-        client.dano = false;
         if (player.dano == 0) {
           player.dano++;
           player.currentAnimation = `ship_frente_d${player.dano}`;
@@ -194,6 +193,11 @@ export class MyRoom extends Room {
           player.dano++;
           player.currentAnimation = `ship_frente_d${player.dano}`;
         } 
+        else if (player.dano == 2) {
+          player.dano++;
+          player.currentAnimation = `explosao`;
+        } 
+        client.dano = false;
       }
     }
     /* FIM PLAYER */
