@@ -19,7 +19,7 @@ export function EnemyDesavisadosOnAdd(enemy, id) {
 
 
 export function EnemyDesavisadosOnRemove(enemy, id) {
-	if (enemy.x >= GAME_WIDTH && enemy.x <= GAME_WIDTH) {
+	if (enemy.x <= GAME_WIDTH && enemy.x >= 45) {
 		this.somExplosao.play();
 		let enemyAnimation = this.physics.add.sprite(enemy.x, enemy.y, "explosao");
 		enemyAnimation.anims.create({
