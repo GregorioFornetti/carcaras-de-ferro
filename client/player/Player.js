@@ -74,6 +74,7 @@ export function PlayerOnAdd(player, id) {
     frames: this.anims.generateFrameNumbers("explosao", { start: 0, end: 7 }),
     frameRate: 10,
     repeat: 0, 
+    hideOnComplete: true,
   });
   
   player.onChange(() => {
@@ -93,7 +94,7 @@ export function PlayerOnAdd(player, id) {
         repeat: 4,
         yoyo: true,
         onStart: function () { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(animation); },
-        onComplete: function () { this.targets[0].clearTint(); }
+        onComplete: function () { this.targets[0].clearTint();  }
       });    
     }
     playerHtml.innerHTML = `Jogador ${playersSize+1}: ${player.score}`

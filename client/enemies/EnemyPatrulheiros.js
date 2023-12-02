@@ -29,7 +29,7 @@ export function EnemyPatrulheirosOnRemove(enemy, id) {
 		hideOnComplete: true,
 	  });
 	enemyAnimation.anims.play("explosao");
-	  */
+	*/
 	this.enemiesEntities[id].destroy();
 	delete this.enemiesEntities[id];
 }
