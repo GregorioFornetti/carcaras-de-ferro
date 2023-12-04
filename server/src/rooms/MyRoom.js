@@ -103,6 +103,12 @@ export class MyRoom extends Room {
     this.onMessage("DANO", (client, message) => {
       this.currentPlayers[client.sessionId].dano = message.pressed;
     });
+    
+    this.onMessage("changeAnimation", (clientId, animationKey) => {
+      const player = this.state.playersSchema.get(clientId.sessionId)
+      // Atualizar o estado do jogador no servidor
+      this.currentPlayers[clientId.sessionId].currentAnimation = animationKey;
+    });
   }
 
   /* Define o que será feito quando um jogador conectar na sala

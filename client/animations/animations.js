@@ -1,0 +1,47 @@
+export const createPlayerAnimations = (anims) => {
+    /** Animações da movimentação Player */
+        // d0 = sem dano
+        // d1 = tomou 1° dano
+        // d2 = tomou 2° dano = explosão
+    for (let i = 0; i < 3; i++) {
+      const animationKey = `ship_frente_d${i}_${i+1}`;
+      const frameIndex = i * 8;
+      anims.create({
+        key: animationKey,
+        frames: [{ key: `ship_${i+1}_animado`, frame: frameIndex }],
+        frameRate: 10,
+      });
+    }
+  
+    for (let i = 0; i < 3; i++) {
+      const animationKey = `ship_direita_d${i}_${i+1}`;
+      const frameRange = { start: i * 4, end: i * 4 + 3 };
+      anims.create({
+        key: animationKey,
+        frames: anims.generateFrameNumbers(`ship_${i+1}_animado`, frameRange),
+        frameRate: 10,
+        repeat: 0,
+      });
+    }
+  
+    for (let i = 0; i < 3; i++) {
+      const animationKey = `ship_esquerda_d${i}_${i+1}`;
+      const frameRange = { start: i * 4 + 4, end: i * 4 + 7 };
+      anims.create({
+        key: animationKey,
+        frames: anims.generateFrameNumbers(`ship_${i+1}_animado`, frameRange),
+        frameRate: 10,
+        repeat: 0,
+      });
+    }
+  
+    anims.create({
+      key: "explosao",
+      frames: anims.generateFrameNumbers("explosao", { start: 0, end: 7 }),
+      frameRate: 10,
+      repeat: 0,
+      hideOnComplete: true,
+    });
+  
+};
+  

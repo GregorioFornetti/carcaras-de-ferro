@@ -17,6 +17,7 @@ import { UpdateSprites } from "./updateSprites.js";
 import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
 import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
+import { createPlayerAnimations } from './animations/animations.js';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -91,6 +92,11 @@ export class GameScene extends Phaser.Scene {
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
 
     this.load.image("bomba", "./Artes/Assets/Tiles/tile_0012.png")
+    this.load.on('complete', () => {
+      // cria as animações
+      createPlayerAnimations(this.anims);
+    });
+    
   }
 
   /* Cria os objetos do jogo, além de efetivamente conectar na sala do Colyseus
@@ -151,6 +157,9 @@ export class GameScene extends Phaser.Scene {
     this.somExplosao = this.sound.add('explosao');
     this.somDano = this.sound.add('dano');
     //Eventos Input
+
+    let playersSize = Object.keys(this.playerEntities).length
+
     this.input.keyboard.on('keydown-M', () => {
       this.room.send("NUKE",{});
     })
@@ -177,21 +186,28 @@ export class GameScene extends Phaser.Scene {
     
     this.input.keyboard.on('keydown-A', () => {
       this.room.send("LEFT",{pressed:true});
-      this.playerEntities[this.room.sessionId].anims.play(`ship_esquerda_d${this.danoP}`);
+      let animationKey = `ship_esquerda_d${this.danoP}_${playersSize+1}`;
+      this.room.send("changeAnimation", animationKey);
+      this.playerEntities[this.room.sessionId].anims.play(animationKey, true);
     })
     
     this.input.keyboard.on('keyup-A', () => {
       this.room.send("LEFT",{pressed:false});
-      this.playerEntities[this.room.sessionId].anims.playReverse(`ship_esquerda_d${this.danoP}`);
+      let animationKey = `ship_esquerda_d${this.danoP}_${playersSize+1}`;
+      this.playerEntities[this.room.sessionId].anims.playReverse(animationKey);
     })
     
     this.input.keyboard.on('keydown-D', () => {
       this.room.send("RIGHT",{pressed:true});
-      this.playerEntities[this.room.sessionId].anims.play(`ship_direita_d${this.danoP}`);
+      let animationKey = `ship_direita_d${this.danoP}_${playersSize+1}`;
+      this.room.send("changeAnimation", animationKey);
+      this.playerEntities[this.room.sessionId].anims.play(animationKey, true);
     })
+
     this.input.keyboard.on('keyup-D', () => {
+      let animationKey = `ship_direita_d${this.danoP}_${playersSize+1}`;
       this.room.send("RIGHT",{pressed:false});
-      this.playerEntities[this.room.sessionId].anims.playReverse(`ship_direita_d${this.danoP}`);
+      this.playerEntities[this.room.sessionId].anims.playReverse(animationKey);
     })
     
     this.input.keyboard.on('keydown-R', () => { 
