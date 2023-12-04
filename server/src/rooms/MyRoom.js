@@ -218,7 +218,7 @@ export class MyRoom extends Room {
 				if (action.action == 'SHOOT') {
 					let newBullet = Bullet.spawn(this.state, action.entity, action.speed * Math.sin((action.angle * Math.PI) / 180), "SERVER", action.offsetX, action.offsetY);
 					this.currentBullets[newBullet.id] = newBullet;
-					//this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
+					this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bulletEnemy")
 				}
 			}
 		}
