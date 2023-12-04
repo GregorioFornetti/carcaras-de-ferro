@@ -1,6 +1,11 @@
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
+
 import {GAME_WIDTH, GAME_HEIGHT, FORTALEZA_HEALTH, FORTALEZA_SCORE, FORTALEZA_SPEED, FORTALEZA_HEIGHT, FORTALEZA_WIDTH} from '../../constants.js';
+import { Bullet, BulletSchema } from "../bullet/Bullet.js"
+
+const MIN_SHOOT_TIME = 2
+const MAX_SHOOT_TIME = 5
 
 export class EnemyFortalezaSchema extends schema.Schema {
     
@@ -35,6 +40,9 @@ export class EnemyFortaleza extends Enemy {
         this.width = FORTALEZA_WIDTH
         this.height = FORTALEZA_HEIGHT
         this.score = FORTALEZA_SCORE
+        
+        this.timerShoot = (Math.random() * (MAX_SHOOT_TIME - MIN_SHOOT_TIME) + MIN_SHOOT_TIME)
+        this.shoot = false
 
     }
 
@@ -45,6 +53,17 @@ export class EnemyFortaleza extends Enemy {
         if (this.enemyAttributes.y > GAME_HEIGHT){
             this.destroy();
         }
+
+        // Disparo - aqui é somente feito o controle do timer e bool que ativa o disparo no MyRoom
+        if (this.timerShoot <= 0){
+            this.shoot = true
+            this.timerShoot = (Math.random() * (MAX_SHOOT_TIME - MIN_SHOOT_TIME) + MIN_SHOOT_TIME)
+        } else {
+            this.timerShoot -= deltaTime/1000
+        }
+
+
+
        
     }
 
