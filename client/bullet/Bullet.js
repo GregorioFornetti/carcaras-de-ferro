@@ -6,7 +6,6 @@ export function BulletOnAdd(bullet, id) {
 	)
 	
 	if (bullet.owner !== undefined && bullet.owner == "SERVER") {
-		console.log (bullet);
 		this.somDisparoInimigo.play();
 	} else {
 		this.somDisparoJogador.play();
