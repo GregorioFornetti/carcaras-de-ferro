@@ -17,6 +17,7 @@ schema.defineTypes(BulletSchema, {
   x: "number",
   y: "number",
   destroyed: "boolean",
+  owner: "string",
 })
 
 export class Bullet {
@@ -25,13 +26,15 @@ export class Bullet {
     this.speed = bulletSpeed
   }
 
-  static spawn(roomState, player, bulletSpeed, sessionId) {
-    const bullet = new Bullet(roomState, bulletSpeed)
-    bullet.bulletAttributes.x = player.x
-    bullet.bulletAttributes.y = player.y - 20
+  static spawn(roomState, entity, bulletSpeed, sessionId, offsetX, offsetY) {
+	const bullet = new Bullet(roomState, bulletSpeed)
+    bullet.bulletAttributes.x = entity.x + offsetX
+    bullet.bulletAttributes.y = entity.y + offsetY
+	bullet.bulletAttributes.owner = sessionId
     bullet.owner = sessionId
 
     return bullet
+	
   }
 
   init(bulletState, BulletSchema) {

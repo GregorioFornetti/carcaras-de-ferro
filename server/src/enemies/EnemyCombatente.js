@@ -2,7 +2,7 @@ import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
 import { GAME_HEIGHT, GAME_WIDTH, COMBATENTE_HEALTH, COMBATENTE_HEIGHT, COMBATENTE_INTERMEDIARY1_VERTICAL_POS, COMBATENTE_INTERMEDIARY2_VERTICAL_POS, COMBATENTE_MAX_VERTICAL_POS, COMBATENTE_MIN_VERTICAL_POS, COMBATENTE_VERTICAL_SPEED, COMBATENTE_WIDTH, COMBATENTE_SCORE, COMBATENTE_MAX_HORIZONTAL_SPEED, COMBATENTE_MIN_HORIZONTAL_SPEED, COMBATENTE_HORIZONTAL_MOVEMENT_SIZE } from '../../constants.js';
 
-import {Bullet} from '../bullet/bullet.js';
+import {Bullet, BulletSchema} from '../bullet/bullet.js';
 
 export class EnemyCombatenteSchema extends schema.Schema {
 
@@ -62,17 +62,22 @@ export class EnemyCombatente extends Enemy {
 	
 	static get HEIGHT () {return COMBATENTE_HEIGHT;}
 	static get WIDTH () {return COMBATENTE_WIDTH;}
+	static get MIN_SHOOT_TIME() {return 0.5;}
+	static get MAX_SHOOT_TIME() {return 2;}
 	
 	constructor(roomState) {
 		super();
+		this.room = roomState
 		this.init(roomState.enemiesCombatenteSchema, EnemyCombatenteSchema);
 		this.verticalSpeed = COMBATENTE_VERTICAL_SPEED;
-		this.health = COMBATENTE_HEALTH
-		this.score = COMBATENTE_SCORE
+		this.health = COMBATENTE_HEALTH;
+		this.score = COMBATENTE_SCORE;
 		if (Math.random() < 0.5)
 			this.horizontalSpeed = -EnemyCombatente.VELOCIDADE_HORIZONTAL_MAXIMA;
 		else
 			this.horizontalSpeed = EnemyCombatente.VELOCIDADE_HORIZONTAL_MAXIMA;
+		
+		this.timerBullet = Math.random() * (EnemyCombatente.MAX_SHOOT_TIME - EnemyCombatente.MIN_SHOOT_TIME) + EnemyCombatente.MIN_SHOOT_TIME;
 		
 		this.state = 1;
 	}
@@ -92,9 +97,30 @@ export class EnemyCombatente extends Enemy {
 					this.horizontalSpeed *= -1;
 				
 				this.enemyAttributes.x += this.horizontalSpeed * (deltaTime / 1000);
+				
+				if (this.timerBullet <= 0) {
+					
+					const pos = {
+						x: this.enemyAttributes.x,
+						y: this.enemyAttributes.y + 40,
+					}
+					
+					this.timerBullet = Math.random() * (EnemyCombatente.MAX_SHOOT_TIME - EnemyCombatente.MIN_SHOOT_TIME) + EnemyCombatente.MIN_SHOOT_TIME;
+					return {
+						'action': 'SHOOT',
+						'angle': 270,
+						'speed': 5,
+						'offsetX': 0,
+						'offsetY': 20,
+						'entity': this.enemyAttributes,
+					};
+				} else {
+					this.timerBullet -= deltaTime / 1000;
+				}
+				
 				break;
 			default:
 				break;
 		}
-	}	
+	}
 }

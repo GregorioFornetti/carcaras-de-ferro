@@ -79,12 +79,12 @@ export class MyRoom extends Room {
     this.onMessage("FIRE", (client, message) => {
       const player = this.state.playersSchema.get(client.sessionId)
       this.currentPlayers[client.sessionId].fire = true
-      const bullet = new BulletSchema()
-      bullet.x = player.x
-      bullet.y = player.y - 20
-      bullet.speed = 5
-      bullet.destroyed = false
-      let newBullet = Bullet.spawn(this.state, player, 5, client.sessionId)
+      //const bullet = new BulletSchema()
+      //bullet.x = player.x
+      //bullet.y = player.y - 20
+      //bullet.speed = 5
+      //bullet.destroyed = false
+      let newBullet = Bullet.spawn(this.state, player, 5, client.sessionId, 0, -20)
       this.currentBullets[newBullet.id] = newBullet
       this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
     })
@@ -200,25 +200,29 @@ export class MyRoom extends Room {
     /* FIM PLAYER */
 
     //** Movimentação do Mapa */
-    this.velocidadeMapa = 1
-    this.state.bgSchema.scrollY -= this.velocidadeMapa
+	this.velocidadeMapa = 1
+	this.state.bgSchema.scrollY -= this.velocidadeMapa
 
-    if (this.currentEnemies.length != 0) {
-      for (const enemyId in this.currentEnemies) {
-        if (this.currentEnemies[enemyId].dead) {
-          this.collisor.removeForCollission(this.currentEnemies[enemyId], "bullet")
-          delete this.currentEnemies[enemyId]
-        }
-      }
-      // this.currentEnemies = this.currentEnemies.filter((enemy) => !enemy.dead)
-
-
-      // Loop de atualização automática dos inimigos
-      for (const enemyId in this.currentEnemies) {
-        let action = this.currentEnemies[enemyId].update(deltaTime)
-		
-      }
-    }
+		if (this.currentEnemies.length != 0) {
+			for (const enemyId in this.currentEnemies) {
+				if (this.currentEnemies[enemyId].dead) {
+					this.collisor.removeForCollission(this.currentEnemies[enemyId], "bullet")
+					delete this.currentEnemies[enemyId]
+				}
+			}
+	
+		// Loop de atualização automática dos inimigos
+		for (const enemyId in this.currentEnemies) {
+			let action = this.currentEnemies[enemyId].update(deltaTime)
+			if (action !== undefined) {
+				if (action.action == 'SHOOT') {
+					let newBullet = Bullet.spawn(this.state, action.entity, action.speed * Math.sin((action.angle * Math.PI) / 180), "SERVER", action.offsetX, action.offsetY);
+					this.currentBullets[newBullet.id] = newBullet;
+					//this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
+				}
+			}
+		}
+	}
 
     if (this.currentBullets.length != 0) {
       // Loop de atualização automática das balas
@@ -264,6 +268,7 @@ export class MyRoom extends Room {
     if (spawn_retorno != null) {
       for (let enemy of spawn_retorno) {
         this.currentEnemies[enemy.id] = enemy
+		
       }
       for (let enemy of spawn_retorno) {
         this.collisor.registerForCollission(enemy, enemy.enemyAttributes, "enemy")
