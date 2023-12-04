@@ -222,6 +222,7 @@ export class MyRoom extends Room {
           if (enemy.shoot == true){
             const bullet = new BulletSchema()
             let newBullet = Bullet.spawn(this.state, enemy.enemyAttributes, -5, "inimigo")
+            newBullet.bulletAttributes.size = 5
             this.currentBullets[newBullet.id] = newBullet
             this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bulletEnemy")
             enemy.shoot = false
