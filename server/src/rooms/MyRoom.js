@@ -41,11 +41,9 @@ export class MyRoom extends Room {
     this.collisor.registerActionForCollission("bullet", "enemy", (bullet, enemy) => {
       bullet.destroy()
       const score = enemy.hit()
-      if (bullet.owner != "inimigo"){
-        const player = this.state.playersSchema.get(bullet.owner)
-        if (score) {
-          player.score += score
-        }
+      const player = this.state.playersSchema.get(bullet.owner)
+      if (score) {
+        player.score += score
       }
     })
 
@@ -222,11 +220,10 @@ export class MyRoom extends Room {
         //Disparo Fortaleza
         if (enemy instanceof EnemyFortaleza){
           if (enemy.shoot == true){
-            console.log("tiro fortaleza")
             const bullet = new BulletSchema()
             let newBullet = Bullet.spawn(this.state, enemy.enemyAttributes, -5, "inimigo")
             this.currentBullets[newBullet.id] = newBullet
-            this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
+            this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bulletEnemy")
             enemy.shoot = false
           }
         }
