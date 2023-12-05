@@ -195,7 +195,7 @@ export class GameScene extends Phaser.Scene {
       this.room.send("LEFT",{pressed:false});
       let animationKey = `ship_esquerda_d${this.danoP}_${playersSize+1}`;
       //suaviza animação
-      this.playerEntities[this.room.sessionId].anims.reverse(animationKey);
+      let progress = this.playerEntities[this.room.sessionId].anims.getProgress();
       if(progress == 1) this.playerEntities[this.room.sessionId].anims.playReverse(animationKey);
       else this.playerEntities[this.room.sessionId].anims.reverse(animationKey);
     })
