@@ -188,26 +188,32 @@ export class GameScene extends Phaser.Scene {
       this.room.send("LEFT",{pressed:true});
       let animationKey = `ship_esquerda_d${this.danoP}_${playersSize+1}`;
       this.room.send("changeAnimation", animationKey);
-      this.playerEntities[this.room.sessionId].anims.play(animationKey, true);
+      this.playerEntities[this.room.sessionId].anims.play(animationKey);
     })
     
     this.input.keyboard.on('keyup-A', () => {
       this.room.send("LEFT",{pressed:false});
       let animationKey = `ship_esquerda_d${this.danoP}_${playersSize+1}`;
-      this.playerEntities[this.room.sessionId].anims.playReverse(animationKey);
+      //suaviza animação
+      this.playerEntities[this.room.sessionId].anims.reverse(animationKey);
+      if(progress == 1) this.playerEntities[this.room.sessionId].anims.playReverse(animationKey);
+      else this.playerEntities[this.room.sessionId].anims.reverse(animationKey);
     })
     
     this.input.keyboard.on('keydown-D', () => {
       this.room.send("RIGHT",{pressed:true});
       let animationKey = `ship_direita_d${this.danoP}_${playersSize+1}`;
       this.room.send("changeAnimation", animationKey);
-      this.playerEntities[this.room.sessionId].anims.play(animationKey, true);
+      this.playerEntities[this.room.sessionId].anims.play(animationKey);
     })
 
     this.input.keyboard.on('keyup-D', () => {
       let animationKey = `ship_direita_d${this.danoP}_${playersSize+1}`;
       this.room.send("RIGHT",{pressed:false});
-      this.playerEntities[this.room.sessionId].anims.playReverse(animationKey);
+      //suaviza animação
+      let progress = this.playerEntities[this.room.sessionId].anims.getProgress();
+      if(progress == 1) this.playerEntities[this.room.sessionId].anims.playReverse(animationKey);
+      else this.playerEntities[this.room.sessionId].anims.reverse(animationKey);
     })
     
     this.input.keyboard.on('keydown-R', () => { 
