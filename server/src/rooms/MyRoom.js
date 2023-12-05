@@ -153,6 +153,7 @@ export class MyRoom extends Room {
     // PROVISORIO
     for (let iclient in this.currentPlayers) {
       let client = this.currentPlayers[iclient]
+      let index = Object.keys(this.currentPlayers).indexOf(iclient);
       const player = this.state.playersSchema.get(iclient)
       const message = this.currentPlayers[iclient]
       const speed = 5
@@ -193,11 +194,11 @@ export class MyRoom extends Room {
       if (client.dano) {
         if (player.dano == 0) {
           player.dano++;
-          player.currentAnimation = `ship_frente_d${player.dano}`;
+          player.currentAnimation = `ship_frente_d${player.dano}_${index+1}`;
         } 
         else if (player.dano == 1) {
           player.dano++;
-          player.currentAnimation = `ship_frente_d${player.dano}`;
+          player.currentAnimation = `ship_frente_d${player.dano}_${index+1}`;
         } 
         else if (player.dano == 2) {
           player.dano++;

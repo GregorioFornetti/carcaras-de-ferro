@@ -4,13 +4,15 @@ export const createPlayerAnimations = (anims) => {
         // d1 = tomou 1° dano
         // d2 = tomou 2° dano = explosão
     for (let i = 0; i < 3; i++) {
-      const animationKey = `ship_frente_d${i}_${i+1}`;
-      const frameIndex = i * 8;
-      anims.create({
-        key: animationKey,
-        frames: [{ key: `ship_${i+1}_animado`, frame: frameIndex }],
-        frameRate: 10,
-      });
+        for (let x = 1; x < 4; x++) {
+            const animationKey = `ship_frente_d${i}_${x}`;
+            const frameIndex = i * 8;
+            anims.create({
+                key: animationKey,
+                frames: [{ key: `ship_${x}_animado`, frame: frameIndex }],
+                frameRate: 10,
+            });
+        }
     }
   
     for (let i = 0; i < 3; i++) {

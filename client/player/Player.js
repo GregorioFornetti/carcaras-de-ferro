@@ -17,7 +17,7 @@ export function PlayerOnAdd(player, id) {
   player.onChange(() => {
     this.playerEntities[id].setData('serverX', player.x);
 		this.playerEntities[id].setData('serverY', player.y);
-    
+    let animation = player.currentAnimation;
     /** simulação de dano utilizando keyboard (R) e atributo "dano" do player */
     if(player.dano > danoP) { // danoP = variavel auxiliar para verificar se o dano foi alterado
       if(player.dano == 3) this.somExplosao.play();
