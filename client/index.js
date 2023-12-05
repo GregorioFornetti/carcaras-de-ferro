@@ -186,28 +186,22 @@ export class GameScene extends Phaser.Scene {
     
     this.input.keyboard.on('keydown-A', () => {
       this.room.send("LEFT",{pressed:true});
-      let animationKey = `ship_esquerda_d${this.danoP}_${playersSize+1}`;
-      this.room.send("changeAnimation", animationKey);
-      this.playerEntities[this.room.sessionId].anims.play(animationKey, true);
+      
     })
     
     this.input.keyboard.on('keyup-A', () => {
       this.room.send("LEFT",{pressed:false});
-      let animationKey = `ship_esquerda_d${this.danoP}_${playersSize+1}`;
-      this.playerEntities[this.room.sessionId].anims.playReverse(animationKey);
+      
     })
     
     this.input.keyboard.on('keydown-D', () => {
       this.room.send("RIGHT",{pressed:true});
-      let animationKey = `ship_direita_d${this.danoP}_${playersSize+1}`;
-      this.room.send("changeAnimation", animationKey);
-      this.playerEntities[this.room.sessionId].anims.play(animationKey, true);
+      
     })
 
     this.input.keyboard.on('keyup-D', () => {
-      let animationKey = `ship_direita_d${this.danoP}_${playersSize+1}`;
       this.room.send("RIGHT",{pressed:false});
-      this.playerEntities[this.room.sessionId].anims.playReverse(animationKey);
+      
     })
     
     this.input.keyboard.on('keydown-R', () => { 
@@ -233,6 +227,32 @@ export class GameScene extends Phaser.Scene {
         const { serverX, serverY } = entity.data.values;
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+
+        const threshold = 5;
+        if (entity.x - serverX > threshold) {  // Indo para esquerda
+          let animationKey = `ship_esquerda_d${this.danoP}_${entity.playerSize}`;
+          if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
+            entity.anims.play(animationKey);
+          }
+          entity.stoped = false
+        } else if (entity.x - serverX < -threshold) { // Indo para direita
+          let animationKey = `ship_direita_d${this.danoP}_${entity.playerSize}`;
+          if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
+            entity.anims.play(animationKey);
+          }
+          entity.stoped = false
+        } else {
+          if (entity.anims.currentAnim && !entity.stoped) {
+            let animationKey = entity.anims.currentAnim.key;
+            let progress = entity.anims.getProgress();
+            if(progress == 1) {
+              entity.anims.playReverse(animationKey);
+            } else {
+              entity.anims.reverse(animationKey);
+            }
+            entity.stoped = true
+          }
+        }
       }
     }
 

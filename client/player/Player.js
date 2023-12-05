@@ -13,6 +13,8 @@ export function PlayerOnAdd(player, id) {
     player.y + playersSize * 100,
     `ship_${playersSize + 1}_animado`
   )
+
+  this.playerEntities[id].playerSize = playersSize + 1
   
   player.onChange(() => {
     this.playerEntities[id].setData('serverX', player.x);
