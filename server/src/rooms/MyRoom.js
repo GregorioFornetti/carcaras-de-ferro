@@ -6,7 +6,7 @@ import { Room } from "@colyseus/core"
 import { MyRoomState } from "./schema/MyRoomState.js"
 import { EnemyDesavisados } from "../enemies/EnemyDesavisados.js"
 import { PlayerSchema } from "../player/PlayerSchema.js"
-import { Bullet, BulletSchema } from "../bullet/Bullet.js"
+import { Bullet } from "../bullet/Bullet.js"
 import { Bomba, BombaSchema } from "../bomba/Bomba.js";
 import { BackgroundSchema } from "../map/BackgroundSchema.js";
 import { EnemySolitario } from "../enemies/EnemySolitario.js";

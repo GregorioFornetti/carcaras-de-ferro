@@ -2,7 +2,7 @@ import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
 
 import {GAME_WIDTH, GAME_HEIGHT, FORTALEZA_HEALTH, FORTALEZA_SCORE, FORTALEZA_SPEED, FORTALEZA_HEIGHT, FORTALEZA_WIDTH} from '../../constants.js';
-import { Bullet, BulletSchema } from "../bullet/Bullet.js"
+
 
 const MIN_SHOOT_TIME = 2
 const MAX_SHOOT_TIME = 5
