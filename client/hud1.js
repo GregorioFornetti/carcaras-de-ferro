@@ -72,5 +72,10 @@ export default class HUD1 extends Phaser.Scene {
            
             this.currentPlayers[id].flow = this.scoresConfig[currentPlayerNumber].flow
         }, this);
+
+        game.events.on('playerScoreChange', (id, score) => {
+            this.currentPlayers[id].score = score
+            this.currentPlayers[id].scoreText.setText(this.currentPlayers[id].score)
+        })
     }
 }

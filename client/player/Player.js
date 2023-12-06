@@ -98,6 +98,7 @@ export function PlayerOnAdd(player, id) {
       });    
     }
     playerHtml.innerHTML = `Jogador ${playersSize+1}: ${player.score}`
+    this.events.emit('playerScoreChange', id, player.score)
   })
 }
 
