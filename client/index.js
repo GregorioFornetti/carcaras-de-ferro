@@ -17,10 +17,11 @@ import { UpdateSprites } from "./updateSprites.js";
 import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
 import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
+import HUD1 from "./hud1.js";
 
 export class GameScene extends Phaser.Scene {
   constructor() {
-    super()
+    super("GameScene")
     this.client = new Colyseus.Client(/*"https://b63f-2804-14d-90a7-896c-c472-30ce-4266-b797.ngrok-free.app");*/"ws://localhost:8080");
     this.room = null
     this.playerEntities = {}
@@ -273,7 +274,7 @@ const config = {
   scale: {
     mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
   },
-  scene: [GameScene],
+  scene: [GameScene, HUD1],
 }
 
 // Inicializa o Phaser

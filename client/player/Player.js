@@ -1,4 +1,5 @@
 export function PlayerOnAdd(player, id) {
+  this.events.emit('newPlayer', id)
   let playersSize = Object.keys(this.playerEntities).length
   let danoP = player.dano;
   
