@@ -10,6 +10,7 @@ export class BulletSchema extends schema.Schema {
     this.y = 50
     this.destroyed = false
     this.owner = ""
+    this.size = 1
   }
 }
 
@@ -17,6 +18,7 @@ schema.defineTypes(BulletSchema, {
   x: "number",
   y: "number",
   destroyed: "boolean",
+  size: "number",
 })
 
 export class Bullet {

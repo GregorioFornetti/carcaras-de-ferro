@@ -219,6 +219,18 @@ export class MyRoom extends Room {
       // Loop de atualização automática dos inimigos
       for (const enemyId in this.currentEnemies) {
         this.currentEnemies[enemyId].update(deltaTime)
+        const enemy = this.currentEnemies[enemyId]
+        //Disparo Fortaleza
+        if (enemy instanceof EnemyFortaleza){
+          if (enemy.shoot == true){
+            const bullet = new BulletSchema()
+            let newBullet = Bullet.spawn(this.state, enemy.enemyAttributes, -5, "inimigo")
+            newBullet.bulletAttributes.size = 5
+            this.currentBullets[newBullet.id] = newBullet
+            this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bulletEnemy")
+            enemy.shoot = false
+          }
+        }
       }
     }
 

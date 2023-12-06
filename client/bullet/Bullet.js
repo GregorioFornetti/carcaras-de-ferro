@@ -4,6 +4,7 @@ export function BulletOnAdd(bullet, id) {
     bullet.y,
     "bullet"
   )
+  this.bulletsEntities[id].setScale(bullet.size)
   this.somDisparoJogador.play();
 
   //this.bulletsEntities[id].setData('owner', bullet.owner);
