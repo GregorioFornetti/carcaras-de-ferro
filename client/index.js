@@ -46,6 +46,8 @@ export class GameScene extends Phaser.Scene {
     this.somExplosao = null;
     this.somDano = null;
     this.danoP = 0;
+	
+	  this.somDisparoInimigo = null;
   }
 
   // Carrega os assets a serem utilizados no jogo
@@ -148,6 +150,7 @@ export class GameScene extends Phaser.Scene {
 
     // Sons
     this.somDisparoJogador = this.sound.add('disparo2');
+	this.somDisparoInimigo = this.sound.add('disparo2');
     this.somExplosao = this.sound.add('explosao');
     this.somDano = this.sound.add('dano');
     //Eventos Input

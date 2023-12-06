@@ -79,12 +79,12 @@ export class MyRoom extends Room {
     this.onMessage("FIRE", (client, message) => {
       const player = this.state.playersSchema.get(client.sessionId)
       this.currentPlayers[client.sessionId].fire = true
-      const bullet = new BulletSchema()
-      bullet.x = player.x
-      bullet.y = player.y - 20
-      bullet.speed = 5
-      bullet.destroyed = false
-      let newBullet = Bullet.spawn(this.state, player, 5, client.sessionId)
+      //const bullet = new BulletSchema()
+      //bullet.x = player.x
+      //bullet.y = player.y - 20
+      //bullet.speed = 5
+      //bullet.destroyed = false
+      let newBullet = Bullet.spawn(this.state, player, 5, client.sessionId, 0, -20)
       this.currentBullets[newBullet.id] = newBullet
       this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
     })
@@ -234,6 +234,27 @@ export class MyRoom extends Room {
       }
     }
 
+		if (this.currentEnemies.length != 0) {
+			for (const enemyId in this.currentEnemies) {
+				if (this.currentEnemies[enemyId].dead) {
+					this.collisor.removeForCollission(this.currentEnemies[enemyId], "bullet")
+					delete this.currentEnemies[enemyId]
+				}
+			}
+	
+      // Loop de atualização automática dos inimigos
+      for (const enemyId in this.currentEnemies) {
+        let action = this.currentEnemies[enemyId].update(deltaTime)
+        if (action !== undefined) {
+          if (action.action == 'SHOOT') {
+            let newBullet = Bullet.spawn(this.state, action.entity, action.speed * Math.sin((action.angle * Math.PI) / 180), "SERVER", action.offsetX, action.offsetY);
+            this.currentBullets[newBullet.id] = newBullet;
+            this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bulletEnemy")
+          }
+        }
+      }
+		}
+
     if (this.currentBullets.length != 0) {
       // Loop de atualização automática das balas
       for (let bullet of Object.values(this.currentBullets)) {
@@ -244,7 +265,7 @@ export class MyRoom extends Room {
         bullet.update(deltaTime)
       }
     }
-
+  
     if (this.currentBombas.length != 0) {
       this.currentBombas = this.currentBombas.filter(
         (bomba) => !bomba.destroyed
@@ -255,7 +276,7 @@ export class MyRoom extends Room {
         bomba.update(deltaTime)
       }
     }
-
+  
     // Explodir bomba e inimigos
     if (this.timerBomba > 0 && this.timerBomba <= this.tempoVidaBomba) {
       this.timerBomba -= deltaTime/1000;
@@ -273,32 +294,32 @@ export class MyRoom extends Room {
       }
       this.timerBomba = this.tempoVidaBomba + 1
     }
-    
+      
     let spawn_retorno = this.spawnCentral.update(deltaTime);
     if (spawn_retorno != null) {
       for (let enemy of spawn_retorno) {
         this.currentEnemies[enemy.id] = enemy
+    
       }
       for (let enemy of spawn_retorno) {
         this.collisor.registerForCollission(enemy, enemy.enemyAttributes, "enemy")
       }
     }
-
+  
     // Aplica os efeitos de colisões de objetos, se existirem 
     this.collisor.update()
-
+  
     // Faz limpeza de objetos destruidos
     for (let i in this.currentEnemies) {
       if (this.currentEnemies[i].dead) {
         this.collisor.removeForCollission(this.currentEnemies[i], "enemy")
       }
     }
-
+  
     for (let i in this.currentBullets) {
       if (this.currentBullets[i].destroyed) {
         this.collisor.removeForCollission(this.currentBullets[i], "bullet")
       }
     }
-
-  }
+	}
 }
