@@ -21,7 +21,7 @@ import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 export class GameScene extends Phaser.Scene {
   constructor() {
     super()
-    this.client = new Colyseus.Client(/*"https://b63f-2804-14d-90a7-896c-c472-30ce-4266-b797.ngrok-free.app");*/"ws://localhost:8080");
+    this.client = new Colyseus.Client("http://localhost:8080");
     this.room = null
     this.playerEntities = {}
     this.inputPayload = {

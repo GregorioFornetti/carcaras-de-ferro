@@ -5,7 +5,7 @@
 import { Room } from "@colyseus/core"
 import { MyRoomState } from "./schema/MyRoomState.js"
 import { EnemyDesavisados } from "../enemies/EnemyDesavisados.js"
-import { PlayerSchema } from "../player/PlayerSchema.js"
+import { PlayerSchema, Player } from "../player/PlayerSchema.js"
 import { Bullet, BulletSchema } from "../bullet/Bullet.js"
 import { Bomba, BombaSchema } from "../bomba/Bomba.js";
 import { BackgroundSchema } from "../map/BackgroundSchema.js";
@@ -46,6 +46,16 @@ export class MyRoom extends Room {
         player.score += score
       }
     })
+    this.collisor.registerActionForCollission("player", "enemy", (player, enemy) => {
+      player.hit()
+      enemy.destroy()
+      console.log("player collided with enemy!, health in: ", player.playerAtributes.health)
+    })
+    this.collisor.registerActionForCollission("player", "bulletEnemy", (player, enemy) => {
+      player.hit()
+      enemy.destroy()
+      console.log("player collided with enemy!, health in: ", player.playerAtributes.health)
+    })
 
     this.spawnCentral = new Spawner(this.state)
     
@@ -61,48 +71,33 @@ export class MyRoom extends Room {
     })
 
     this.onMessage("UP", (client, message) => {
-      this.currentPlayers[client.sessionId].up = message.pressed
+      this.currentPlayers[client.sessionId].setMovement("up", message.pressed)
     })
 
     this.onMessage("DOWN", (client, message) => {
-      this.currentPlayers[client.sessionId].down = message.pressed
+      this.currentPlayers[client.sessionId].setMovement("down", message.pressed)
     })
 
     this.onMessage("LEFT", (client, message) => {
-      this.currentPlayers[client.sessionId].left = message.pressed
+      this.currentPlayers[client.sessionId].setMovement("left", message.pressed)
     })
 
     this.onMessage("RIGHT", (client, message) => {
-      this.currentPlayers[client.sessionId].right = message.pressed
+      this.currentPlayers[client.sessionId].setMovement("right", message.pressed)
     })
     
     this.onMessage("FIRE", (client, message) => {
-      const player = this.state.playersSchema.get(client.sessionId)
-      this.currentPlayers[client.sessionId].fire = true
-      const bullet = new BulletSchema()
-      bullet.x = player.x
-      bullet.y = player.y - 20
-      bullet.speed = 5
-      bullet.destroyed = false
-      let newBullet = Bullet.spawn(this.state, player, 5, client.sessionId)
+      let newBullet = this.currentPlayers[client.sessionId].fire();
       this.currentBullets[newBullet.id] = newBullet
       this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
     })
 
     this.onMessage("NUKE", (client, message) => {
-      const player = this.state.playersSchema.get(client.sessionId)
-      this.currentPlayers[client.sessionId].nuke = true
-      if (player.nBombas > 0) {
-        player.nBombas--
-        const bomba = new BombaSchema()
-        this.currentBombas = this.currentBombas.concat( Bomba.spawn(this.state, player, client.sessionId) )
-        this.timerBomba = this.tempoVidaBomba //inicia o timer
-      }
+      let newBomba = this.currentPlayers[client.sessionId].nuke();
+      this.currentBombas = this.currentBombas.concat(newBomba)
+      this.timerBomba = this.tempoVidaBomba //inicia o timer
     })
     
-    this.onMessage("DANO", (client, message) => {
-      this.currentPlayers[client.sessionId].dano = message.pressed;
-    });
   }
 
   /* Define o que será feito quando um jogador conectar na sala
@@ -111,20 +106,9 @@ export class MyRoom extends Room {
     console.log(client.sessionId, "joined!")
 
     // Cria uma instância do jogador, definido em MyRoomState.js
-    const player = new PlayerSchema()
-
-    // Coloca o jogador na coleção de jogadores da sala
-    this.state.playersSchema.set(client.sessionId, player)
-    // PROVISORIO
-    this.currentPlayers[client.sessionId] = {
-      up: false, 
-      down: false, 
-      left: false, 
-      right: false, 
-      fire: false, 
-      nuke: false, 
-      dano: false
-    }
+    const player = Player.spawn(this.state, client.sessionId)
+    this.collisor.registerForCollission(player, player.playerAtributes, "player")
+    this.currentPlayers[client.id] = player
   }
 
   /* Define o que será feito quando um jogador desconectar da sala
@@ -133,6 +117,8 @@ export class MyRoom extends Room {
     console.log(client.sessionId, "left!")
 
     this.state.playersSchema.delete(client.sessionId)
+    this.collisor.removeForCollission(this.currentPlayers[client.sessionId], "player")
+    delete this.currentPlayers[client.sessionId]
   }
 
   /* Define o que será feito quando a sala for encerrada
@@ -144,61 +130,9 @@ export class MyRoom extends Room {
   // Game loop - essa função será chamada a cada tick ()
   update(deltaTime) {
     // Update do jogador, levando em conta os inputs
-    // PROVISORIO
-    for (let iclient in this.currentPlayers) {
-      let client = this.currentPlayers[iclient]
-      const player = this.state.playersSchema.get(iclient)
-      const message = this.currentPlayers[iclient]
-      const speed = 5
-
-      if (message.left) {
-        player.x -= speed * (deltaTime / 1000);
-        
-      } else if (message.right) {
-        player.x += speed * (deltaTime / 1000);
-
-      }
-
-      if (message.up) { 
-        player.y -= speed * (deltaTime / 1000); 
-
-      } else if (message.down) {
-        player.y += speed * (deltaTime / 1000);
-
-      }
-
-      const MIN_X = 0
-      const MAX_X = GAME_WIDTH
-      const MIN_Y = 0
-      const MAX_Y = GAME_HEIGHT
-
-      if (message.left) {
-        player.x = Math.max(player.x - speed, MIN_X)
-      } else if (message.right) {
-        player.x = Math.min(player.x + speed, MAX_X)
-      }
-
-      if (message.up) { 
-        player.y = Math.max(player.y - speed, MIN_Y)
-      } else if (message.down) { 
-        player.y = Math.min(player.y + speed, MAX_Y)
-      }
-
-      if (client.dano) {
-        if (player.dano == 0) {
-          player.dano++;
-          player.currentAnimation = `ship_frente_d${player.dano}`;
-        } 
-        else if (player.dano == 1) {
-          player.dano++;
-          player.currentAnimation = `ship_frente_d${player.dano}`;
-        } 
-        else if (player.dano == 2) {
-          player.dano++;
-          player.currentAnimation = `explosao`;
-        } 
-        client.dano = false;
-      }
+    // E se o player morrer? Alterar no collisor
+    for (let player in this.currentPlayers) {
+      this.currentPlayers[player].update(deltaTime)
     }
     /* FIM PLAYER */
 
