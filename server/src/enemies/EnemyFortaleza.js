@@ -42,7 +42,6 @@ export class EnemyFortaleza extends Enemy {
         this.score = FORTALEZA_SCORE
         
         this.timerShoot = (Math.random() * (MAX_SHOOT_TIME - MIN_SHOOT_TIME) + MIN_SHOOT_TIME)
-        this.shoot = false
 
     }
 
@@ -56,8 +55,17 @@ export class EnemyFortaleza extends Enemy {
 
         // Disparo - aqui é somente feito o controle do timer e bool que ativa o disparo no MyRoom
         if (this.timerShoot <= 0){
-            this.shoot = true
             this.timerShoot = (Math.random() * (MAX_SHOOT_TIME - MIN_SHOOT_TIME) + MIN_SHOOT_TIME)
+            return {
+                'action': 'SHOOT',
+                'angle': 270,
+                'speedY': 5,
+                'speedX': 0,
+                'offsetX': 0,
+                'offsetY': 60,
+                'size': 5,
+                'entity': this.enemyAttributes,
+            };
         } else {
             this.timerShoot -= deltaTime/1000
         }

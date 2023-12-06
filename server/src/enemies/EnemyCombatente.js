@@ -109,9 +109,11 @@ export class EnemyCombatente extends Enemy {
 					return {
 						'action': 'SHOOT',
 						'angle': 270,
-						'speed': 5,
+						'speedY': 5,
+						'speedX': 0,
 						'offsetX': 0,
 						'offsetY': 20,
+						'size': 1,
 						'entity': this.enemyAttributes,
 					};
 				} else {

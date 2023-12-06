@@ -84,7 +84,12 @@ export class MyRoom extends Room {
       //bullet.y = player.y - 20
       //bullet.speed = 5
       //bullet.destroyed = false
-      let newBullet = Bullet.spawn(this.state, player, 5, client.sessionId, 0, -20)
+      let newBullet = Bullet.spawn(
+        this.state, 
+        player, 
+        client.sessionId,
+        0, 5, 0, -5
+      )
       this.currentBullets[newBullet.id] = newBullet
       this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
     })
@@ -206,34 +211,6 @@ export class MyRoom extends Room {
     this.velocidadeMapa = 1
     this.state.bgSchema.scrollY -= this.velocidadeMapa
 
-    if (this.currentEnemies.length != 0) {
-      for (const enemyId in this.currentEnemies) {
-        if (this.currentEnemies[enemyId].dead) {
-          this.collisor.removeForCollission(this.currentEnemies[enemyId], "bullet")
-          delete this.currentEnemies[enemyId]
-        }
-      }
-      // this.currentEnemies = this.currentEnemies.filter((enemy) => !enemy.dead)
-
-
-      // Loop de atualização automática dos inimigos
-      for (const enemyId in this.currentEnemies) {
-        this.currentEnemies[enemyId].update(deltaTime)
-        const enemy = this.currentEnemies[enemyId]
-        //Disparo Fortaleza
-        if (enemy instanceof EnemyFortaleza){
-          if (enemy.shoot == true){
-            const bullet = new BulletSchema()
-            let newBullet = Bullet.spawn(this.state, enemy.enemyAttributes, -5, "inimigo")
-            newBullet.bulletAttributes.size = 5
-            this.currentBullets[newBullet.id] = newBullet
-            this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bulletEnemy")
-            enemy.shoot = false
-          }
-        }
-      }
-    }
-
 		if (this.currentEnemies.length != 0) {
 			for (const enemyId in this.currentEnemies) {
 				if (this.currentEnemies[enemyId].dead) {
@@ -247,7 +224,16 @@ export class MyRoom extends Room {
         let action = this.currentEnemies[enemyId].update(deltaTime)
         if (action !== undefined) {
           if (action.action == 'SHOOT') {
-            let newBullet = Bullet.spawn(this.state, action.entity, action.speed * Math.sin((action.angle * Math.PI) / 180), "SERVER", action.offsetX, action.offsetY);
+            let newBullet = Bullet.spawn(
+              this.state, 
+              action.entity,
+              "SERVER",
+              action.speedX * Math.sin((action.angle * Math.PI) / 180),
+              action.speedY * Math.sin((action.angle * Math.PI) / 180),
+              action.offsetX, 
+              action.offsetY
+            );
+            newBullet.bulletAttributes.size = action.size
             this.currentBullets[newBullet.id] = newBullet;
             this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bulletEnemy")
           }
