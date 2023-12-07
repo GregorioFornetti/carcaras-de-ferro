@@ -41,25 +41,29 @@ export default class HUD1 extends Phaser.Scene {
                 sprite: 'ship_2',
                 x: 20,
                 y: 5,
-                flow: 'left'
+                flow: 'left',
+                color: 0xDE4B1E
             },
             {
                 sprite: 'ship_1',
                 x: 20,
                 y: 35,
-                flow: 'left'
+                flow: 'left',
+                color: 0x679378
             },
             {
                 sprite: 'ship_3',
                 x: GAME_WIDTH - 25,
                 y: 5,
-                flow: 'right'
+                flow: 'right',
+                color: 0x11A5D4
             },
             {
                 sprite: 'ship_4',
                 x: GAME_WIDTH - 25,
                 y: 35,
-                flow: 'right'
+                flow: 'right',
+                color: 0xE2A106
             }
         ]
 
@@ -85,8 +89,8 @@ export default class HUD1 extends Phaser.Scene {
                 this.scoresConfig[currentPlayerNumber].flow
             )
   
-           
             this.currentPlayers[id].flow = this.scoresConfig[currentPlayerNumber].flow
+            this.currentPlayers[id].color = this.scoresConfig[currentPlayerNumber].color
         }, this);
 
         game.events.on('playerScoreChange', (id, score) => {
@@ -104,26 +108,31 @@ export default class HUD1 extends Phaser.Scene {
                 this.currentPlayers[id].score, 
                 this.currentPlayers[id].image.x + shipScoreGap, 
                 this.currentPlayers[id].image.y + this.scoreYExtra, 
-                this.currentPlayers[id].flow
+                this.currentPlayers[id].flow,
+                this.currentPlayers[id].color
             )
         })
     }
 
-    displayScore(score, x, y, flow) {
+    displayScore(score, x, y, flow, color) {
         if (flow === 'left') {
-            return this.displayScoreLeft(score, x, y)
+            return this.displayScoreLeft(score, x, y, color)
         } else if (flow === 'right') {
-            return this.displayScoreRight(score, x, y)
+            return this.displayScoreRight(score, x, y, color)
         }
     }
 
-    displayScoreLeft(score, x, y) {
+    displayScoreLeft(score, x, y, color) {
         let scoreString = score.toString()
         let scoreSprites = []
         let scoreSpritesX = x
     
         for (let i = 0; i < scoreString.length; i++) {
-            scoreSprites.push(this.add.image(scoreSpritesX, y, 'number_' + scoreString[i]).setScale(this.scoreScale))
+            scoreSprites.push(
+                this.add.image(scoreSpritesX, y, 'number_' + scoreString[i])
+                .setScale(this.scoreScale)
+                .setTint(color)
+            )
             scoreSpritesX += this.scoreNumbersGap
         }
     
@@ -131,13 +140,17 @@ export default class HUD1 extends Phaser.Scene {
     }
     
 
-    displayScoreRight(score, x, y) {
+    displayScoreRight(score, x, y, color) {
         let scoreString = score.toString()
         let scoreSprites = []
         let scoreSpritesX = x
     
         for (let i = scoreString.length - 1; i >= 0; i--) {
-            scoreSprites.push(this.add.image(scoreSpritesX, y, 'number_' + scoreString[i]).setScale(this.scoreScale))
+            scoreSprites.push(
+                this.add.image(scoreSpritesX, y, 'number_' + scoreString[i])
+                .setScale(this.scoreScale)
+                .setTint(color)
+            )
             scoreSpritesX -= this.scoreNumbersGap
         }
     
