@@ -47,3 +47,10 @@ export const PATRULHEIRO_HEIGHT = 32
 export const PATRULHEIRO_WIDTH = 32
 export const PATRULHEIRO_SCORE = 100
 export const PATRULHEIRO_SPEED = 50
+
+//Caçador
+export const CACADOR_HEALTH = 1
+export const CACADOR_HEIGHT = 32
+export const CACADOR_WIDTH = 32
+export const CACADOR_SCORE = 500
+export const CACADOR_SPEED = 250
