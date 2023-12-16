@@ -1,5 +1,6 @@
 import * as schema from "@colyseus/schema"
 import { Bullet, BulletSchema } from "../bullet/Bullet.js"
+import {Bomba } from "../bomba/Bomba.js"
 import { GAME_HEIGHT, GAME_WIDTH } from "../../constants.js"
 
 export class PlayerSchema extends schema.Schema {
@@ -27,7 +28,7 @@ schema.defineTypes(PlayerSchema, {
 })
 
 export class Player {
-  construtor(roomState, sessionId) {
+  constructor(roomState, sessionId) {
     this.init(roomState.playersSchema, PlayerSchema, sessionId)
     this.state = roomState
   }
@@ -66,8 +67,6 @@ export class Player {
     bullet.destroyed = false
     let newBullet = Bullet.spawn(this.state, this.playerAtributes, 5, this.id)
     return newBullet
-    /*this.currentBullets[newBullet.id] = newBullet
-    this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")*/
   }
 
   nuke() {
@@ -75,8 +74,6 @@ export class Player {
     if (this.playerAtributes.nBombas > 0) {
       this.playerAtributes.nBombas--
       return Bomba.spawn(this.state, this.playerAtributes, this.id)
-      /*this.currentBombas = this.currentBombas.concat( Bomba.spawn(this.state, player, client.sessionId) )
-      this.timerBomba = this.tempoVidaBomba //inicia o timer*/
     }
   }
   // Definição de dano de player. O retorno indica se o jogador perdeu vida (não, se estiver immortal)
@@ -87,6 +84,9 @@ export class Player {
     setTimeout(() => {
       this.playerAtributes.immortal = false
     }, 3000)
+    if (this.playerAtributes.health === 0) {
+      this.dead = true
+    }
     return true
   }
 
@@ -95,10 +95,7 @@ export class Player {
   }
 
   update(deltaTime) {
-    if (this.playerAtributes.health === 0 || this.dead) { 
-      this.dead = true;
-      return
-    }
+    if (this.dead) return
 
     if (this.movement.left) {
       this.playerAtributes.x -= this.speed * (deltaTime / 1000);

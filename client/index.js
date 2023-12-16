@@ -214,9 +214,14 @@ export class GameScene extends Phaser.Scene {
     for (let id in this.playerEntities) {
       const entity = this.playerEntities[id];
       if (entity !== undefined && entity !== null) {
-        const { serverX, serverY } = entity.data.values;
+        const { serverX, serverY, health } = entity.data.values;
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+        entity.health = health
+        if (entity.health === 0) {
+          entity.anims.play("explosao")
+          delete this.playerEntities[id]
+        }
       }
     }
 
