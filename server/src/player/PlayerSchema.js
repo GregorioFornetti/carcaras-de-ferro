@@ -65,7 +65,7 @@ export class Player {
     bullet.y = this.playerAtributes.y - 20
     bullet.speed = 5
     bullet.destroyed = false
-    let newBullet = Bullet.spawn(this.state, this.playerAtributes, 5, this.id)
+    let newBullet = Bullet.spawn(this.state, this.playerAtributes, this.id, 0, bullet.speed, 0, -6)
     return newBullet
   }
 

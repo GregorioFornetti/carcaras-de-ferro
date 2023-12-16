@@ -10,6 +10,7 @@ export class BulletSchema extends schema.Schema {
     this.y = 50
     this.destroyed = false
     this.owner = ""
+    this.size = 1
   }
 }
 
@@ -17,21 +18,26 @@ schema.defineTypes(BulletSchema, {
   x: "number",
   y: "number",
   destroyed: "boolean",
+  size: "number",
+  owner: "string",
 })
 
 export class Bullet {
-  constructor(roomState, bulletSpeed) {
+  constructor(roomState, bulletSpeedX=0, bulletSpeedY=0) {
     this.init(roomState.bulletSchema, BulletSchema, 5)
-    this.speed = bulletSpeed
+
+    this.bulletSpeedX = bulletSpeedX
+    this.bulletSpeedY = bulletSpeedY
   }
 
-  static spawn(roomState, player, bulletSpeed, sessionId) {
-    const bullet = new Bullet(roomState, bulletSpeed)
-    bullet.bulletAttributes.x = player.x
-    bullet.bulletAttributes.y = player.y - 20
+  static spawn(roomState, entity, sessionId, bulletSpeedX=0, bulletSpeedY=0, offsetX=0, offsetY=0) {
+    const bullet = new Bullet(roomState, bulletSpeedX, bulletSpeedY)
+    bullet.bulletAttributes.x = entity.x + offsetX
+    bullet.bulletAttributes.y = entity.y + offsetY
     bullet.owner = sessionId
 
     return bullet
+	
   }
 
   init(bulletState, BulletSchema) {
@@ -45,7 +51,8 @@ export class Bullet {
   }
 
   update(deltaTime) {
-    this.bulletAttributes.y -= this.speed
+    this.bulletAttributes.y -= this.bulletSpeedY
+    this.bulletAttributes.x -= this.bulletSpeedX
 
     if (this.bulletAttributes.y < -20) {
       this.destroy()

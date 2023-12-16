@@ -17,10 +17,11 @@ import { UpdateSprites } from "./updateSprites.js";
 import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
 import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
+import HUD1 from "./hud1.js";
 
 export class GameScene extends Phaser.Scene {
   constructor() {
-    super()
+    super("GameScene")
     this.client = new Colyseus.Client("http://localhost:8080");
     this.room = null
     this.playerEntities = {}
@@ -46,6 +47,8 @@ export class GameScene extends Phaser.Scene {
     this.somExplosao = null;
     this.somDano = null;
     this.danoP = 0;
+	
+	  this.somDisparoInimigo = null;
   }
 
   // Carrega os assets a serem utilizados no jogo
@@ -148,6 +151,7 @@ export class GameScene extends Phaser.Scene {
 
     // Sons
     this.somDisparoJogador = this.sound.add('disparo2');
+	  this.somDisparoInimigo = this.sound.add('disparo2');
     this.somExplosao = this.sound.add('explosao');
     this.somDano = this.sound.add('dano');
     //Eventos Input
@@ -275,7 +279,7 @@ const config = {
   scale: {
     mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
   },
-  scene: [GameScene],
+  scene: [GameScene, HUD1],
 }
 
 // Inicializa o Phaser

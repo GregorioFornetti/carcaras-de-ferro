@@ -172,9 +172,25 @@ export class MyRoom extends Room {
     if (this.currentEnemies.length != 0) {
       // Loop de atualização automática dos inimigos
       for (const enemyId in this.currentEnemies) {
-        this.currentEnemies[enemyId].update(deltaTime)
+        let action = this.currentEnemies[enemyId].update(deltaTime)
+        if (action !== undefined) {
+          if (action.action == 'SHOOT') {
+            let newBullet = Bullet.spawn(
+              this.state, 
+              action.entity,
+              "SERVER",
+              action.speedX * Math.sin((action.angle * Math.PI) / 180),
+              action.speedY * Math.sin((action.angle * Math.PI) / 180),
+              action.offsetX, 
+              action.offsetY
+            );
+            newBullet.bulletAttributes.size = action.size
+            this.currentBullets[newBullet.id] = newBullet;
+            this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bulletEnemy")
+          }
+        }
       }
-    }
+		}
 
     if (this.currentBullets.length != 0) {
       // Loop de atualização automática das balas
@@ -182,14 +198,14 @@ export class MyRoom extends Room {
         bullet.update(deltaTime)
       }
     }
-
+  
     if (this.currentBombas.length != 0) {
       // Loop de atualizacao automatica das bombas
       for (let bomba of this.currentBombas.filter(b => !b.destroyed)) {
         bomba.update(deltaTime)
       }
     }
-
+  
     // Explodir bomba e inimigos
     if (this.timerBomba > 0 && this.timerBomba <= this.tempoVidaBomba) {
       this.timerBomba -= deltaTime/1000;
@@ -209,7 +225,7 @@ export class MyRoom extends Room {
       }
       this.timerBomba = this.tempoVidaBomba + 1
     }
-    
+      
     let spawn_retorno = this.spawnCentral.update(deltaTime);
     if (spawn_retorno != null) {
       for (let enemy of spawn_retorno) {
@@ -217,7 +233,7 @@ export class MyRoom extends Room {
         this.collisor.registerForCollission(enemy, enemy.enemyAttributes, "enemy")
       }
     }
-
+  
     // Aplica os efeitos de colisões de objetos, se existirem 
     this.collisor.update()
   }

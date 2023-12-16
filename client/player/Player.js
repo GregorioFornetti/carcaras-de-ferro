@@ -1,13 +1,8 @@
 export function PlayerOnAdd(player, id) {
+  this.events.emit('newPlayer', id)
   let playersSize = Object.keys(this.playerEntities).length
   let danoP = player.dano;
   
-  const playersHtmlContainer = document.getElementById('players')
-  const playerHtml = document.createElement('div')
-  playerHtml.id = `player-${id}`
-
-  playersHtmlContainer.appendChild(playerHtml)
-
   this.playerEntities[id] = this.physics.add.sprite(
     player.x + playersSize * 100,
     player.y + playersSize * 100,
@@ -97,7 +92,8 @@ export function PlayerOnAdd(player, id) {
         onComplete: function() { this.targets[0].clearTint(); }
       });    
     }
-    playerHtml.innerHTML = `Jogador ${playersSize+1}: ${player.score}`
+
+    this.events.emit('playerScoreChange', id, player.score)
   })
 }
 
