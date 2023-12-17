@@ -66,20 +66,17 @@ export class MyRoom extends Room {
       }  
     })
     this.collisor.registerActionForCollission("player", "bulletEnemy", (player, enemyBullet) => {
-      /*
-      Ative para colisão com as balas dos inimigos
       let didhit = player.hit()
       if (didhit) { // se o player está imortal, não destroi os inimigos na colisão
         enemyBullet.destroy()
-        this.collisor.removeForCollission(enemy, "enemy")
-        delete this.currentEnemies[enemy.id]
+        this.collisor.removeForCollission(enemyBullet, "bulletEnemy")
+        delete this.currentBullets[enemyBullet.id]
         console.log("player collided with enemy bullet!, health in: ", player.playerAtributes.health)
         if (player.dead) {
           console.log("player died! :( Removing from collisor")
           this.collisor.removeForCollission(player, "player")
         }
       }
-      */
     })
 
     this.spawnCentral = new Spawner(this.state)

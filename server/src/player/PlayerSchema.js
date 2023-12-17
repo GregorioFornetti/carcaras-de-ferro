@@ -48,7 +48,7 @@ export class Player {
     this.width = 32
     this.height = 32
     this.dead = false
-    this.speed = 5
+    this.speed = 3
   }
 
   static spawn(roomState, sessionId, spawnX=50, spawnY=50) {

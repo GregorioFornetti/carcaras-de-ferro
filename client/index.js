@@ -25,22 +25,12 @@ export class GameScene extends Phaser.Scene {
     this.client = new Colyseus.Client("http://localhost:8080");
     this.room = null
     this.playerEntities = {}
-    this.inputPayload = {
-      left: false,
-      right: false,
-      up: false,
-      down: false,
-      shot: false,
-      dano: false, // simular som do dano 
-      nuke: false
-    }
     this.bg = null //background (mapa do jogo)
     this.cursorKeys = null
     this.enemiesEntities = {}
     this.bulletsEntities = {}
   
     this.bombasEntities = {}
-    this.nuke = false
 
     //Sons
     this.somDisparoJogador = null;
@@ -197,12 +187,6 @@ export class GameScene extends Phaser.Scene {
       this.room.send("RIGHT",{pressed:false});
       this.playerEntities[this.room.sessionId].anims.playReverse(`ship_direita_d${this.danoP}`);
     })
-    
-    this.input.keyboard.on('keydown-R', () => { 
-      this.playerEntities[this.room.sessionId].dano++;
-      this.danoP++;
-      this.room.send("DANO",{pressed:true});
-    });
   }
 
   update(time, delta) {
@@ -245,21 +229,7 @@ export class GameScene extends Phaser.Scene {
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
-    }
-    
-
-    /*this.physics.collide(Object.values(this.playerEntities), Object.values(this.enemiesEntities), CollisorPlayerEnemy.bind(this));
-    this.physics.collide(Object.values(this.bulletsEntities), Object.values(this.enemiesEntities), CollisorBulletEnemy.bind(this));
-    this.physics.collide(Object.values(this.playerEntities), Object.values(this.bulletsEntities), CollisorPlayerBullet.bind(this));
-    */
-    
-   
-   //Seta o input da bomba de volta pra false pra dps do evento key down
-   // Assim só é enviado uma bomba por tecla pressionada
-   this.inputPayload.nuke = false;
-    this.inputPayload.shot = false
-    
-       
+    }        
   }
 }
 
