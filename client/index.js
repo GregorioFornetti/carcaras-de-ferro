@@ -44,7 +44,7 @@ export class GameScene extends Phaser.Scene {
   // Carrega os assets a serem utilizados no jogo
   // Aqui serão carregadas as imagens, sons, etc.
   preload() {
-    this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE,M,E,R") //simulação - > E (explosão), R (Dano)
+    this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE,M,E,R,ENTER") //simulação - > E (explosão), R (Dano)
 
     this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
@@ -186,6 +186,9 @@ export class GameScene extends Phaser.Scene {
     this.input.keyboard.on('keyup-D', () => {
       this.room.send("RIGHT",{pressed:false});
       this.playerEntities[this.room.sessionId].anims.playReverse(`ship_direita_d${this.danoP}`);
+    })
+    this.input.keyboard.on('keydown-ENTER', () => {
+      this.room.send("STARTGAME",{});
     })
   }
 

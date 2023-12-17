@@ -37,6 +37,8 @@ export class MyRoom extends Room {
     this.tempoVidaBomba = 2;
     this.timerBomba = this.tempoVidaBomba + 1; //recebe esse valor para o timer nao iniciar automaticamente
 
+    this.freeze = true
+    this.roomOwner = undefined
     this.collisor = new Collisor()
     this.collisor.registerActionForCollission("bullet", "enemy", (bullet, enemy) => {
       bullet.destroy()
@@ -93,34 +95,44 @@ export class MyRoom extends Room {
     })
 
     this.onMessage("UP", (client, message) => {
+      if (this.currentPlayers[client.sessionId].dead || this.freeze) return
       this.currentPlayers[client.sessionId].setMovement("up", message.pressed)
     })
 
     this.onMessage("DOWN", (client, message) => {
+      if (this.currentPlayers[client.sessionId].dead || this.freeze) return
       this.currentPlayers[client.sessionId].setMovement("down", message.pressed)
     })
 
     this.onMessage("LEFT", (client, message) => {
+      if (this.currentPlayers[client.sessionId].dead || this.freeze) return
       this.currentPlayers[client.sessionId].setMovement("left", message.pressed)
     })
 
     this.onMessage("RIGHT", (client, message) => {
+      if (this.currentPlayers[client.sessionId].dead || this.freeze) return
       this.currentPlayers[client.sessionId].setMovement("right", message.pressed)
     })
     
     this.onMessage("FIRE", (client, message) => {
-      if (this.currentPlayers[client.sessionId].dead) return
+      if (this.currentPlayers[client.sessionId].dead || this.freeze) return
       let newBullet = this.currentPlayers[client.sessionId].fire();
       this.currentBullets[newBullet.id] = newBullet
       this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
     })
 
     this.onMessage("NUKE", (client, message) => {
-      if (this.currentPlayers[client.sessionId].dead) return
+      if (this.currentPlayers[client.sessionId].dead || this.freeze) return
       let newBomba = this.currentPlayers[client.sessionId].nuke();
       if (newBomba !== undefined) {
         this.currentBombas = this.currentBombas.concat(newBomba)
         this.timerBomba = this.tempoVidaBomba //inicia o timer
+      }
+    })
+
+    this.onMessage("STARTGAME", (client, message) => {
+      if (client.id === this.roomOwner) {
+        this.freeze = false
       }
     })
     
@@ -132,9 +144,15 @@ export class MyRoom extends Room {
     console.log(client.sessionId, "joined!")
 
     // Cria uma instância do jogador, definido em MyRoomState.js
-    const player = Player.spawn(this.state, client.sessionId)
+    const player = Player.spawn(this.state, client.sessionId,
+      Math.random()*(GAME_WIDTH/2) + 100,
+      3*(GAME_HEIGHT)/4
+      )
     this.collisor.registerForCollission(player, player.playerAtributes, "player")
     this.currentPlayers[client.id] = player
+    if (this.roomOwner === undefined) {
+      this.roomOwner = client.id
+    }
   }
 
   /* Define o que será feito quando um jogador desconectar da sala
@@ -155,6 +173,7 @@ export class MyRoom extends Room {
 
   // Game loop - essa função será chamada a cada tick ()
   update(deltaTime) {
+    if (this.freeze) return
     // Update do jogador, levando em conta os inputs
     // E se o player morrer? Alterar no collisor
     for (let player in this.currentPlayers) {
