@@ -22,25 +22,15 @@ import HUD1 from "./hud1.js";
 export class GameScene extends Phaser.Scene {
   constructor() {
     super("GameScene")
-    this.client = new Colyseus.Client(/*"https://b63f-2804-14d-90a7-896c-c472-30ce-4266-b797.ngrok-free.app");*/"ws://localhost:8080");
+    this.client = new Colyseus.Client("http://localhost:8080");
     this.room = null
     this.playerEntities = {}
-    this.inputPayload = {
-      left: false,
-      right: false,
-      up: false,
-      down: false,
-      shot: false,
-      dano: false, // simular som do dano 
-      nuke: false
-    }
     this.bg = null //background (mapa do jogo)
     this.cursorKeys = null
     this.enemiesEntities = {}
     this.bulletsEntities = {}
   
     this.bombasEntities = {}
-    this.nuke = false
 
     //Sons
     this.somDisparoJogador = null;
@@ -54,7 +44,7 @@ export class GameScene extends Phaser.Scene {
   // Carrega os assets a serem utilizados no jogo
   // Aqui serão carregadas as imagens, sons, etc.
   preload() {
-    this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE,M,E,R") //simulação - > E (explosão), R (Dano)
+    this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE,M,E,R,ENTER") //simulação - > E (explosão), R (Dano)
 
     this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
@@ -197,12 +187,9 @@ export class GameScene extends Phaser.Scene {
       this.room.send("RIGHT",{pressed:false});
       this.playerEntities[this.room.sessionId].anims.playReverse(`ship_direita_d${this.danoP}`);
     })
-    
-    this.input.keyboard.on('keydown-R', () => { 
-      this.playerEntities[this.room.sessionId].dano++;
-      this.danoP++;
-      this.room.send("DANO",{pressed:true});
-    });
+    this.input.keyboard.on('keydown-ENTER', () => {
+      this.room.send("STARTGAME",{});
+    })
   }
 
   update(time, delta) {
@@ -218,9 +205,14 @@ export class GameScene extends Phaser.Scene {
     for (let id in this.playerEntities) {
       const entity = this.playerEntities[id];
       if (entity !== undefined && entity !== null) {
-        const { serverX, serverY } = entity.data.values;
+        const { serverX, serverY, health } = entity.data.values;
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+        entity.health = health
+        if (entity.health === 0) {
+          entity.anims.play("explosao")
+          delete this.playerEntities[id]
+        }
       }
     }
 
@@ -240,21 +232,7 @@ export class GameScene extends Phaser.Scene {
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
-    }
-    
-
-    /*this.physics.collide(Object.values(this.playerEntities), Object.values(this.enemiesEntities), CollisorPlayerEnemy.bind(this));
-    this.physics.collide(Object.values(this.bulletsEntities), Object.values(this.enemiesEntities), CollisorBulletEnemy.bind(this));
-    this.physics.collide(Object.values(this.playerEntities), Object.values(this.bulletsEntities), CollisorPlayerBullet.bind(this));
-    */
-    
-   
-   //Seta o input da bomba de volta pra false pra dps do evento key down
-   // Assim só é enviado uma bomba por tecla pressionada
-   this.inputPayload.nuke = false;
-    this.inputPayload.shot = false
-    
-       
+    }        
   }
 }
 

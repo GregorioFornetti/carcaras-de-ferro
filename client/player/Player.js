@@ -8,6 +8,7 @@ export function PlayerOnAdd(player, id) {
     player.y + playersSize * 100,
     `ship_${playersSize + 1}_animado`
     )
+  this.playerEntities[id].health = player.health;
     
   /** Animações da movimentação Player */
   // d0 = sem dano
@@ -67,28 +68,28 @@ export function PlayerOnAdd(player, id) {
   this.playerEntities[id].anims.create({
     key: "explosao",
     frames: this.anims.generateFrameNumbers("explosao", { start: 0, end: 7 }),
-    frameRate: 10,
-    repeat: 0, 
+    frameRate: 20,
+    repeat: 0,
   });
   
   player.onChange(() => {
     this.playerEntities[id].setData('serverX', player.x);
 		this.playerEntities[id].setData('serverY', player.y);
+    this.playerEntities[id].setData('immortal', player.immortal);
+    this.playerEntities[id].setData('health', player.health);
     var animation = player.currentAnimation;
     
     /** simulação de dano utilizando keyboard (R) e atributo "dano" do player */
-    if(player.dano > danoP) { // danoP = variavel auxiliar para verificar se o dano foi alterado
-      if(player.dano == 3) this.somExplosao.play();
-      else this.somDano.play(); 
-      danoP = player.dano; 
+    if(this.playerEntities[id].health !== this.playerEntities[id].data.values.health) {
+      this.somExplosao.play()
       this.tweens.add({
         targets: this.playerEntities[id],
         alpha: 0,
         duration: 300,
         repeat: 4,
         yoyo: true,
-        onStart: function () { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(animation); },
-        onComplete: function () { this.targets[0].clearTint(); }
+        onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(animation); },
+        onComplete: function() { this.targets[0].clearTint(); }
       });    
     }
 
@@ -101,10 +102,6 @@ export function PlayerOnRemove(player, id) {
   const entity = this.playerEntities[id]
 
   if (entity) {
-    //animacao sprites e som
-    entity.somExplosao.play();
-    entity.anims.play("explosao"); 
-
     console.log(`Jogador ${id} desconectado!`)
 
     delete this.playerEntities[id]

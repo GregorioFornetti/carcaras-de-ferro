@@ -5,8 +5,8 @@
 import { Room } from "@colyseus/core"
 import { MyRoomState } from "./schema/MyRoomState.js"
 import { EnemyDesavisados } from "../enemies/EnemyDesavisados.js"
-import { PlayerSchema } from "../player/PlayerSchema.js"
-import { Bullet } from "../bullet/Bullet.js"
+import { PlayerSchema, Player } from "../player/PlayerSchema.js"
+import { Bullet, BulletSchema } from "../bullet/Bullet.js"
 import { Bomba, BombaSchema } from "../bomba/Bomba.js";
 import { BackgroundSchema } from "../map/BackgroundSchema.js";
 import { EnemySolitario } from "../enemies/EnemySolitario.js";
@@ -37,13 +37,47 @@ export class MyRoom extends Room {
     this.tempoVidaBomba = 2;
     this.timerBomba = this.tempoVidaBomba + 1; //recebe esse valor para o timer nao iniciar automaticamente
 
+    this.freeze = true
+    this.roomOwner = undefined
     this.collisor = new Collisor()
     this.collisor.registerActionForCollission("bullet", "enemy", (bullet, enemy) => {
       bullet.destroy()
+      this.collisor.removeForCollission(bullet, "bullet")
+      delete this.currentBullets[bullet.id]
       const score = enemy.hit()
       const player = this.state.playersSchema.get(bullet.owner)
       if (score) {
         player.score += score
+      }
+      if (enemy.dead) {
+        this.collisor.removeForCollission(enemy, "enemy")
+        delete this.currentEnemies[enemy.id]
+      }
+    })
+    this.collisor.registerActionForCollission("player", "enemy", (player, enemy) => {
+      let didhit = player.hit()
+      if (didhit) { // se o player está imortal, não destroi os inimigos na colisão
+        enemy.destroy()
+        this.collisor.removeForCollission(enemy, "enemy")
+        delete this.currentEnemies[enemy.id]
+        console.log("player collided with enemy!, health in: ", player.playerAtributes.health)
+        if (player.dead) {
+          console.log("player died! :( Removing from collisor")
+          this.collisor.removeForCollission(player, "player")
+        }
+      }  
+    })
+    this.collisor.registerActionForCollission("player", "bulletEnemy", (player, enemyBullet) => {
+      let didhit = player.hit()
+      if (didhit) { // se o player está imortal, não destroi os inimigos na colisão
+        enemyBullet.destroy()
+        this.collisor.removeForCollission(enemyBullet, "bulletEnemy")
+        delete this.currentBullets[enemyBullet.id]
+        console.log("player collided with enemy bullet!, health in: ", player.playerAtributes.health)
+        if (player.dead) {
+          console.log("player died! :( Removing from collisor")
+          this.collisor.removeForCollission(player, "player")
+        }
       }
     })
 
@@ -61,53 +95,47 @@ export class MyRoom extends Room {
     })
 
     this.onMessage("UP", (client, message) => {
-      this.currentPlayers[client.sessionId].up = message.pressed
+      if (this.currentPlayers[client.sessionId].dead || this.freeze) return
+      this.currentPlayers[client.sessionId].setMovement("up", message.pressed)
     })
 
     this.onMessage("DOWN", (client, message) => {
-      this.currentPlayers[client.sessionId].down = message.pressed
+      if (this.currentPlayers[client.sessionId].dead || this.freeze) return
+      this.currentPlayers[client.sessionId].setMovement("down", message.pressed)
     })
 
     this.onMessage("LEFT", (client, message) => {
-      this.currentPlayers[client.sessionId].left = message.pressed
+      if (this.currentPlayers[client.sessionId].dead || this.freeze) return
+      this.currentPlayers[client.sessionId].setMovement("left", message.pressed)
     })
 
     this.onMessage("RIGHT", (client, message) => {
-      this.currentPlayers[client.sessionId].right = message.pressed
+      if (this.currentPlayers[client.sessionId].dead || this.freeze) return
+      this.currentPlayers[client.sessionId].setMovement("right", message.pressed)
     })
     
     this.onMessage("FIRE", (client, message) => {
-      const player = this.state.playersSchema.get(client.sessionId)
-      this.currentPlayers[client.sessionId].fire = true
-      //const bullet = new BulletSchema()
-      //bullet.x = player.x
-      //bullet.y = player.y - 20
-      //bullet.speed = 5
-      //bullet.destroyed = false
-      let newBullet = Bullet.spawn(
-        this.state, 
-        player, 
-        client.sessionId,
-        0, 5, 0, -5
-      )
+      if (this.currentPlayers[client.sessionId].dead || this.freeze) return
+      let newBullet = this.currentPlayers[client.sessionId].fire();
       this.currentBullets[newBullet.id] = newBullet
       this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
     })
 
     this.onMessage("NUKE", (client, message) => {
-      const player = this.state.playersSchema.get(client.sessionId)
-      this.currentPlayers[client.sessionId].nuke = true
-      if (player.nBombas > 0) {
-        player.nBombas--
-        const bomba = new BombaSchema()
-        this.currentBombas = this.currentBombas.concat( Bomba.spawn(this.state, player, client.sessionId) )
+      if (this.currentPlayers[client.sessionId].dead || this.freeze) return
+      let newBomba = this.currentPlayers[client.sessionId].nuke();
+      if (newBomba !== undefined) {
+        this.currentBombas = this.currentBombas.concat(newBomba)
         this.timerBomba = this.tempoVidaBomba //inicia o timer
       }
     })
+
+    this.onMessage("STARTGAME", (client, message) => {
+      if (client.id === this.roomOwner) {
+        this.freeze = false
+      }
+    })
     
-    this.onMessage("DANO", (client, message) => {
-      this.currentPlayers[client.sessionId].dano = message.pressed;
-    });
   }
 
   /* Define o que será feito quando um jogador conectar na sala
@@ -116,19 +144,14 @@ export class MyRoom extends Room {
     console.log(client.sessionId, "joined!")
 
     // Cria uma instância do jogador, definido em MyRoomState.js
-    const player = new PlayerSchema()
-
-    // Coloca o jogador na coleção de jogadores da sala
-    this.state.playersSchema.set(client.sessionId, player)
-    // PROVISORIO
-    this.currentPlayers[client.sessionId] = {
-      up: false, 
-      down: false, 
-      left: false, 
-      right: false, 
-      fire: false, 
-      nuke: false, 
-      dano: false
+    const player = Player.spawn(this.state, client.sessionId,
+      Math.random()*(GAME_WIDTH/2) + 100,
+      3*(GAME_HEIGHT)/4
+      )
+    this.collisor.registerForCollission(player, player.playerAtributes, "player")
+    this.currentPlayers[client.id] = player
+    if (this.roomOwner === undefined) {
+      this.roomOwner = client.id
     }
   }
 
@@ -138,6 +161,8 @@ export class MyRoom extends Room {
     console.log(client.sessionId, "left!")
 
     this.state.playersSchema.delete(client.sessionId)
+    this.collisor.removeForCollission(this.currentPlayers[client.sessionId], "player")
+    delete this.currentPlayers[client.sessionId]
   }
 
   /* Define o que será feito quando a sala for encerrada
@@ -148,62 +173,11 @@ export class MyRoom extends Room {
 
   // Game loop - essa função será chamada a cada tick ()
   update(deltaTime) {
+    if (this.freeze) return
     // Update do jogador, levando em conta os inputs
-    // PROVISORIO
-    for (let iclient in this.currentPlayers) {
-      let client = this.currentPlayers[iclient]
-      const player = this.state.playersSchema.get(iclient)
-      const message = this.currentPlayers[iclient]
-      const speed = 5
-
-      if (message.left) {
-        player.x -= speed * (deltaTime / 1000);
-        
-      } else if (message.right) {
-        player.x += speed * (deltaTime / 1000);
-
-      }
-
-      if (message.up) { 
-        player.y -= speed * (deltaTime / 1000); 
-
-      } else if (message.down) {
-        player.y += speed * (deltaTime / 1000);
-
-      }
-
-      const MIN_X = 0
-      const MAX_X = GAME_WIDTH
-      const MIN_Y = 0
-      const MAX_Y = GAME_HEIGHT
-
-      if (message.left) {
-        player.x = Math.max(player.x - speed, MIN_X)
-      } else if (message.right) {
-        player.x = Math.min(player.x + speed, MAX_X)
-      }
-
-      if (message.up) { 
-        player.y = Math.max(player.y - speed, MIN_Y)
-      } else if (message.down) { 
-        player.y = Math.min(player.y + speed, MAX_Y)
-      }
-
-      if (client.dano) {
-        if (player.dano == 0) {
-          player.dano++;
-          player.currentAnimation = `ship_frente_d${player.dano}`;
-        } 
-        else if (player.dano == 1) {
-          player.dano++;
-          player.currentAnimation = `ship_frente_d${player.dano}`;
-        } 
-        else if (player.dano == 2) {
-          player.dano++;
-          player.currentAnimation = `explosao`;
-        } 
-        client.dano = false;
-      }
+    // E se o player morrer? Alterar no collisor
+    for (let player in this.currentPlayers) {
+      this.currentPlayers[player].update(deltaTime)
     }
     /* FIM PLAYER */
 
@@ -211,14 +185,7 @@ export class MyRoom extends Room {
     this.velocidadeMapa = 1
     this.state.bgSchema.scrollY -= this.velocidadeMapa
 
-		if (this.currentEnemies.length != 0) {
-			for (const enemyId in this.currentEnemies) {
-				if (this.currentEnemies[enemyId].dead) {
-					this.collisor.removeForCollission(this.currentEnemies[enemyId], "bullet")
-					delete this.currentEnemies[enemyId]
-				}
-			}
-	
+    if (this.currentEnemies.length != 0) {
       // Loop de atualização automática dos inimigos
       for (const enemyId in this.currentEnemies) {
         let action = this.currentEnemies[enemyId].update(deltaTime)
@@ -244,21 +211,13 @@ export class MyRoom extends Room {
     if (this.currentBullets.length != 0) {
       // Loop de atualização automática das balas
       for (let bullet of Object.values(this.currentBullets)) {
-        if (bullet.destroyed) {
-          this.collisor.removeForCollission(bullet, "bullet")
-          delete this.currentBullets[bullet.id]
-        }
         bullet.update(deltaTime)
       }
     }
   
     if (this.currentBombas.length != 0) {
-      this.currentBombas = this.currentBombas.filter(
-        (bomba) => !bomba.destroyed
-      )
-      
       // Loop de atualizacao automatica das bombas
-      for (let bomba of this.currentBombas) {
+      for (let bomba of this.currentBombas.filter(b => !b.destroyed)) {
         bomba.update(deltaTime)
       }
     }
@@ -273,6 +232,8 @@ export class MyRoom extends Room {
         const score = this.currentEnemies[enemyId].onNuke()
         if (score) {
           player.score += score
+          this.collisor.removeForCollission(this.currentEnemies[enemyId], "enemy")
+          delete this.currentEnemies[enemyId]
         }
       }
       for (let bomba of this.currentBombas) {
@@ -285,27 +246,11 @@ export class MyRoom extends Room {
     if (spawn_retorno != null) {
       for (let enemy of spawn_retorno) {
         this.currentEnemies[enemy.id] = enemy
-    
-      }
-      for (let enemy of spawn_retorno) {
         this.collisor.registerForCollission(enemy, enemy.enemyAttributes, "enemy")
       }
     }
   
     // Aplica os efeitos de colisões de objetos, se existirem 
     this.collisor.update()
-  
-    // Faz limpeza de objetos destruidos
-    for (let i in this.currentEnemies) {
-      if (this.currentEnemies[i].dead) {
-        this.collisor.removeForCollission(this.currentEnemies[i], "enemy")
-      }
-    }
-  
-    for (let i in this.currentBullets) {
-      if (this.currentBullets[i].destroyed) {
-        this.collisor.removeForCollission(this.currentBullets[i], "bullet")
-      }
-    }
-	}
+  }
 }
