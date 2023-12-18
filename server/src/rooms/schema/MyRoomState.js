@@ -30,7 +30,7 @@ export class MyRoomState extends schema.Schema {
         this.enemiesPatrulheirosSchema = new schema.MapSchema();
         this.enemiesCombatenteSchema = new schema.MapSchema();
         this.enemiesFortalezaSchema = new schema.MapSchema();
-        this.enemiesFortalezaSchema = new schema.MapSchema();
+        this.enemiesCacadorSchema = new schema.MapSchema();
     }
 }
 

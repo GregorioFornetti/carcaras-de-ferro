@@ -22,9 +22,18 @@ export class EnemyCacador extends Enemy {
         
         const enemy = new EnemyCacador(roomState)
 
-        
+        //escolhe um player para caçar
+        const numPlayers = roomState.playersSchema.size
+        //const idPlayer = Math.floor(Math.random() * (numPlayers - 1) + 1)
+        const idPlayer = 1
+        const player = roomState.playersSchema.get(idPlayer)
+
+        enemy.enemyAttributes.y = 0
+        enemy.enemyAttributes.x = player.x
+        enemy.enemyAttributes.health = this.health
+        enemy.enemyAttributes.rotation = 90
     
-        return enemy
+        return [enemy]
     }
 
     constructor(roomState) {
@@ -41,6 +50,7 @@ export class EnemyCacador extends Enemy {
 
     update(deltaTime) {
 
+        this.enemyAttributes.y += this.speed * (deltaTime / 1000);
        
     }
 
