@@ -13,6 +13,8 @@ import { EnemySolitarioSchema } from "../../enemies/EnemySolitario.js";
 import { EnemyPatrulheirosSchema } from "../../enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteSchema } from "../../enemies/EnemyCombatente.js";
 import { EnemyFortalezaSchema } from "../../enemies/EnemyFortaleza.js";
+import { ItemBombSchema } from "../../items/ItemBomb.js";
+import { ItemLifeSchema } from "../../items/ItemLife.js";
 
 
 export class MyRoomState extends schema.Schema {
@@ -29,6 +31,9 @@ export class MyRoomState extends schema.Schema {
         this.enemiesPatrulheirosSchema = new schema.MapSchema();
         this.enemiesCombatenteSchema = new schema.MapSchema();
         this.enemiesFortalezaSchema = new schema.MapSchema();
+
+        this.itemBombSchema = new schema.MapSchema();
+        this.itemLifeSchema = new schema.MapSchema();
     }
 }
 
@@ -42,5 +47,7 @@ schema.defineTypes(MyRoomState, {
     enemiesFortalezaSchema: { map: EnemyFortalezaSchema },
     bulletSchema: { map: BulletSchema },
     bombaSchema: { map: BombaSchema },
+    itemBombSchema: { map: ItemBombSchema },
+    itemLifeSchema: { map: ItemLifeSchema },
     bgSchema: BackgroundSchema
 })

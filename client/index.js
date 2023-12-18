@@ -18,6 +18,8 @@ import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
 import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 import HUD1 from "./hud1.js";
+import { ItemLifeOnAdd, ItemLifeOnRemove } from "./items/ItemLife.js";
+import { ItemBombOnAdd, ItemBombOnRemove } from "./items/ItemBomb.js";
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -29,8 +31,9 @@ export class GameScene extends Phaser.Scene {
     this.cursorKeys = null
     this.enemiesEntities = {}
     this.bulletsEntities = {}
-  
     this.bombasEntities = {}
+    this.itemBombEntities = {}
+    this.itemLifeEntities = {}
 
     //Sons
     this.somDisparoJogador = null;
@@ -84,6 +87,10 @@ export class GameScene extends Phaser.Scene {
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
 
     this.load.image("bomba", "./Artes/Assets/Tiles/tile_0012.png")
+
+    this.load.image("item_bomb", "./Artes/Assets/Tiles/tile_0012.png")
+
+    this.load.image("item_life", "./Artes/Assets/Tiles/tile_0024.png")
   }
 
   /* Cria os objetos do jogo, além de efetivamente conectar na sala do Colyseus
@@ -115,6 +122,7 @@ export class GameScene extends Phaser.Scene {
 
     this.room.state.enemiesFortalezaSchema.onAdd(EnemyFortalezaOnAdd.bind(this));
     this.room.state.enemiesFortalezaSchema.onRemove(EnemyFortalezaOnRemove.bind(this));
+
     //** Scroll do Mapa **
     this.room.state.bgSchema.listen(
       "scrollY",
@@ -134,6 +142,14 @@ export class GameScene extends Phaser.Scene {
     // Bomba states changes
     this.room.state.bombaSchema.onAdd(BombaOnAdd.bind(this))
     this.room.state.bombaSchema.onRemove(BombaOnRemove.bind(this))
+
+    // ItemBomb states changes
+    this.room.state.itemBombSchema.onAdd(ItemBombOnAdd.bind(this))
+    this.room.state.itemBombSchema.onRemove(ItemBombOnRemove.bind(this))
+
+    // ItemLife states changes
+    this.room.state.itemLifeSchema.onAdd(ItemLifeOnAdd.bind(this))
+    this.room.state.itemLifeSchema.onRemove(ItemLifeOnRemove.bind(this))
 
     const width = GAME_WIDTH;
     const height = GAME_HEIGHT;
@@ -232,7 +248,25 @@ export class GameScene extends Phaser.Scene {
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
-    }        
+    }
+    
+    for (let id in this.itemBombEntities) {
+      const entity = this.itemBombEntities[id];
+      if (entity !== undefined && entity !== null) {
+        const { serverX, serverY } = entity.data.values;
+        entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+        entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+      }
+    }
+
+    for (let id in this.itemLifeEntities) {
+      const entity = this.itemLifeEntities[id];
+      if (entity !== undefined && entity !== null) {
+        const { serverX, serverY } = entity.data.values;
+        entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+        entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+      }
+    }
   }
 }
 
