@@ -211,12 +211,13 @@ export class GameScene extends Phaser.Scene {
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
         entity.health = health
+
         if (entity.health === 0) {
           entity.anims.play("explosao")
           delete this.playerEntities[id]
         }
 
-        const threshold = 5;
+        const threshold = 2;
         if (entity.x - serverX > threshold) {  // Indo para esquerda
           let animationKey = `ship_esquerda_d${this.danoP}_${entity.playerSize}`;
           if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
