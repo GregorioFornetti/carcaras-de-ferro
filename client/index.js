@@ -18,6 +18,7 @@ import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
 import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 import HUD1 from "./hud1.js";
+import HUD3 from "./hud3.js";
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -252,7 +253,7 @@ const config = {
   scale: {
     mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
   },
-  scene: [GameScene, HUD1],
+  scene: [GameScene, HUD1, HUD3],
 }
 
 // Inicializa o Phaser

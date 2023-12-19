@@ -1,8 +1,9 @@
 
 import { GAME_WIDTH } from "./constants.js";
 
+import ScoreHUD from "./ScoreHUD.js";
 
-export default class HUD1 extends Phaser.Scene {
+export default class HUD1 extends ScoreHUD {
 
     constructor () {
         super({ key: 'HUD1', active: true });
@@ -86,7 +87,10 @@ export default class HUD1 extends Phaser.Scene {
                 this.currentPlayers[id].score, 
                 this.scoresConfig[currentPlayerNumber].x + shipScoreGap, 
                 this.scoresConfig[currentPlayerNumber].y + this.scoreYExtra, 
-                this.scoresConfig[currentPlayerNumber].flow
+                this.scoresConfig[currentPlayerNumber].flow,
+                this.scoresConfig[currentPlayerNumber].color,
+                this.scoreScale,
+                this.scoreNumbersGap
             )
   
             this.currentPlayers[id].flow = this.scoresConfig[currentPlayerNumber].flow
@@ -103,57 +107,15 @@ export default class HUD1 extends Phaser.Scene {
                 shipScoreGap = -shipScoreGap  // Por algum motivo o texto da direita fica mais para direita por padrão, então tem que compensar
             }
 
-            console.log(this.currentPlayers[id].x + shipScoreGap)
             this.currentPlayers[id].scoreImages = this.displayScore(
                 this.currentPlayers[id].score, 
                 this.currentPlayers[id].image.x + shipScoreGap, 
                 this.currentPlayers[id].image.y + this.scoreYExtra, 
                 this.currentPlayers[id].flow,
-                this.currentPlayers[id].color
+                this.currentPlayers[id].color,
+                this.scoreScale,
+                this.scoreNumbersGap
             )
         })
-    }
-
-    displayScore(score, x, y, flow, color) {
-        if (flow === 'left') {
-            return this.displayScoreLeft(score, x, y, color)
-        } else if (flow === 'right') {
-            return this.displayScoreRight(score, x, y, color)
-        }
-    }
-
-    displayScoreLeft(score, x, y, color) {
-        let scoreString = score.toString()
-        let scoreSprites = []
-        let scoreSpritesX = x
-    
-        for (let i = 0; i < scoreString.length; i++) {
-            scoreSprites.push(
-                this.add.image(scoreSpritesX, y, 'number_' + scoreString[i])
-                .setScale(this.scoreScale)
-                .setTint(color)
-            )
-            scoreSpritesX += this.scoreNumbersGap
-        }
-    
-        return scoreSprites
-    }
-    
-
-    displayScoreRight(score, x, y, color) {
-        let scoreString = score.toString()
-        let scoreSprites = []
-        let scoreSpritesX = x
-    
-        for (let i = scoreString.length - 1; i >= 0; i--) {
-            scoreSprites.push(
-                this.add.image(scoreSpritesX, y, 'number_' + scoreString[i])
-                .setScale(this.scoreScale)
-                .setTint(color)
-            )
-            scoreSpritesX -= this.scoreNumbersGap
-        }
-    
-        return scoreSprites
     }
 }
