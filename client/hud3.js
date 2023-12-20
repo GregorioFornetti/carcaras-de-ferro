@@ -1,14 +1,13 @@
 
-import { GAME_WIDTH } from "./constants.js";
-
 import ScoreHUD from "./ScoreHUD.js";
+
+import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js";
 
 
 export default class HUD3 extends ScoreHUD {
 
     constructor () {
         super({ key: 'HUD3', active: true });
-        this.score = 0;
     }
     
     preload() {
@@ -34,7 +33,19 @@ export default class HUD3 extends ScoreHUD {
     create () {
         let game = this.scene.get('GameScene');
         game.events.on('gameover', (info) => {
-            console.log(info)
+            console.log('oiiiiii')
+            // Fade-in: Adiciona um background preto com transparência crescente
+            const background = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000);
+            background.setOrigin(0, 0);
+            background.alpha = 0;
+
+            this.tweens.add({
+                targets: background,
+                alpha: 0.7,
+                duration: 2000,
+                ease: 'Linear',
+                
+            });
         });
     }
 }
