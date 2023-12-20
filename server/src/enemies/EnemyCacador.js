@@ -24,14 +24,23 @@ export class EnemyCacador extends Enemy {
 
         //escolhe um player para caçar
         const numPlayers = roomState.playersSchema.size
-        //const idPlayer = Math.floor(Math.random() * (numPlayers - 1) + 1)
-        const idPlayer = 1
-        const player = roomState.playersSchema.get(idPlayer)
+        const randomP = Math.floor(Math.random() * (numPlayers) + 1); //escolhe valor de 1 ate numPlayers aleatoriamente, esse sera o jogador escolhido
+        let i = 1
+        roomState.playersSchema.forEach((value, key) => {
+            //itera entre todos os players
+            if (i == randomP) {
+                enemy.player = value
+            }
+            i++
+        });
 
-        enemy.enemyAttributes.y = 0
-        enemy.enemyAttributes.x = player.x
-        enemy.enemyAttributes.health = this.health
+        enemy.enemyAttributes.y = 10
+        enemy.enemyAttributes.x = enemy.player.x
+        enemy.enemyAttributes.health = CACADOR_HEALTH
         enemy.enemyAttributes.rotation = 90
+
+
+        console.log("spawn caçador para o player " + randomP)
     
         return [enemy]
     }
@@ -44,13 +53,13 @@ export class EnemyCacador extends Enemy {
         this.speedY = CACADOR_SPEED
         this.health = CACADOR_HEALTH
         this.score = CACADOR_SCORE
-       
+        this.player = null
 
     }
 
     update(deltaTime) {
 
-        this.enemyAttributes.y += this.speed * (deltaTime / 1000);
+        this.enemyAttributes.y += this.speedY * (deltaTime / 1000);
        
     }
 
