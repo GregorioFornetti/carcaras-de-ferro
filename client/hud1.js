@@ -3,6 +3,8 @@ import { GAME_WIDTH } from "./constants.js";
 
 import ScoreHUD from "./ScoreHUD.js";
 
+import playerConfigs from "./player/playerConfigs.js";
+
 export default class HUD1 extends ScoreHUD {
 
     constructor () {
@@ -39,32 +41,28 @@ export default class HUD1 extends ScoreHUD {
         this.scoreYExtra = 10
         this.scoresConfig = [
             {
-                sprite: 'ship_2',
+                ...playerConfigs[0],
                 x: 20,
                 y: 5,
                 flow: 'left',
-                color: 0xDE4B1E
             },
             {
-                sprite: 'ship_1',
+                ...playerConfigs[1],
                 x: 20,
                 y: 35,
-                flow: 'left',
-                color: 0x679378
+                flow: 'left'
             },
             {
-                sprite: 'ship_3',
+                ...playerConfigs[2],
                 x: GAME_WIDTH - 25,
                 y: 5,
-                flow: 'right',
-                color: 0x11A5D4
+                flow: 'right'
             },
             {
-                sprite: 'ship_4',
+                ...playerConfigs[3],
                 x: GAME_WIDTH - 25,
                 y: 35,
                 flow: 'right',
-                color: 0xE2A106
             }
         ]
 
