@@ -235,6 +235,15 @@ export class GameScene extends Phaser.Scene {
       }
     }        
   }
+
+  isGameover() {
+    for (let id in this.playerEntities) {
+      if (this.playerEntities[id].health > 0) {
+        return false
+      }
+    }
+    return true
+  }
 }
 
 // Configurações do Phaser gerais

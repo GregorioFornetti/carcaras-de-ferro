@@ -90,7 +90,13 @@ export function PlayerOnAdd(player, id) {
         yoyo: true,
         onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(animation); },
         onComplete: function() { this.targets[0].clearTint(); }
-      });    
+      });
+
+      this.playerEntities[id].health = this.playerEntities[id].data.values.health;
+
+      if (this.isGameover()) {
+        this.events.emit('gameover')
+      }
     }
 
     this.events.emit('playerScoreChange', id, player.score)
