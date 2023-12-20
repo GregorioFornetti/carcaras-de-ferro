@@ -65,13 +65,14 @@ export default class HUD3 extends ScoreHUD {
                     // Logo, podemos mostrar os placares finais
 
                     let current_y = this.PLAYER_SCORE_INITIAL_Y;
+                    let total_score = 0
 
                     for (let i = 0; i < playerConfigs.length; i++) {
                         const currentPlayerInfo = info[`player_${i+1}`];
                         if (currentPlayerInfo) {
                             const playerConfig = playerConfigs[i]
 
-                            const playerImage = this.add.image(
+                            this.add.image(
                                 this.PLAYER_SCORE_INITIAL_X,
                                 current_y,
                                 playerConfig.sprite
@@ -86,9 +87,19 @@ export default class HUD3 extends ScoreHUD {
                                 this.PLAYER_SCORE_SCALE,
                                 this.PLAYER_SCORE_GAP_BETWEEN_NUMBERS
                             );
+                            total_score += playerScore;
                         }
                         current_y += this.GAP_BETWEEN_PLAYERS;
                     }
+
+                    this.displayScoreLeft(
+                        total_score,
+                        this.PLAYER_SCORE_INITIAL_X + this.PLAYER_GAP_BETWEEN_SCORE_AND_SPRITE,
+                        current_y + this.PLAYER_SCORE_EXTRA_Y,
+                        0xFFFFFF,
+                        this.PLAYER_SCORE_SCALE,
+                        this.PLAYER_SCORE_GAP_BETWEEN_NUMBERS
+                    );
                 }
             });
         });
