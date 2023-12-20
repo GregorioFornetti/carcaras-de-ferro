@@ -33,8 +33,8 @@ export default class HUD3 extends ScoreHUD {
 
     create () {
         let game = this.scene.get('GameScene');
-        game.events.on('gameover', () => {
-            console.log('ACABOU O JOGO !')
+        game.events.on('gameover', (info) => {
+            console.log(info)
         });
     }
 }

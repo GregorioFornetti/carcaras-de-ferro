@@ -9,6 +9,7 @@ export function PlayerOnAdd(player, id) {
     `ship_${playersSize + 1}_animado`
     )
   this.playerEntities[id].health = player.health;
+  this.playerEntities[id].number = playersSize + 1;
     
   /** Animações da movimentação Player */
   // d0 = sem dano
@@ -95,10 +96,11 @@ export function PlayerOnAdd(player, id) {
       this.playerEntities[id].health = this.playerEntities[id].data.values.health;
 
       if (this.isGameover()) {
-        this.events.emit('gameover')
+        this.events.emit('gameover', this.generateGameoverInfo())
       }
     }
 
+    this.playerEntities[id].score = player.score
     this.events.emit('playerScoreChange', id, player.score)
   })
 }

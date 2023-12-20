@@ -205,14 +205,17 @@ export class GameScene extends Phaser.Scene {
     
     for (let id in this.playerEntities) {
       const entity = this.playerEntities[id];
-      if (entity !== undefined && entity !== null) {
+      if (entity !== undefined && entity !== null && !entity.dead) {
         const { serverX, serverY, health } = entity.data.values;
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
         entity.health = health
         if (entity.health === 0) {
           entity.anims.play("explosao")
-          delete this.playerEntities[id]
+          entity.dead = true
+          entity.on('animationcomplete', () => {
+            entity.visible = false
+          })
         }
       }
     }
@@ -243,6 +246,16 @@ export class GameScene extends Phaser.Scene {
       }
     }
     return true
+  }
+
+  generateGameoverInfo() {
+    const info = {}
+    for (let id in this.playerEntities) {
+      info[`player_${this.playerEntities[id].number}`] = {
+        'score': this.playerEntities[id].score,
+      }
+    }
+    return info
   }
 }
 
