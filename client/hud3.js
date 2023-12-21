@@ -10,6 +10,9 @@ export default class HUD3 extends ScoreHUD {
 
     init() {
         this.isGameover = false
+        this.onScoreAnimation = false
+        this.scoresInfo = []
+        this.time = 0
     }
 
     constructor () {
@@ -29,6 +32,9 @@ export default class HUD3 extends ScoreHUD {
         this.PLAYER_SCORE_GAP_BETWEEN_NUMBERS = 20
         this.PLAYER_SCORE_SCALE = 2
         this.PLAYER_SCORE_EXTRA_Y = 25
+
+        this.SCORE_ANIMATION_DURATION = 2000  // Em milissegundos
+        this.NEXT_SCORE_ANIMATION_DELAY = 2000  // Em milissegundos
     }
     
     preload() {
@@ -66,49 +72,65 @@ export default class HUD3 extends ScoreHUD {
                 targets: background,
                 alpha: this.FADE_IN_FINAL_TRANSPARENCY,
                 duration: this.FADE_IN_DURATION,
-                ease: 'Linear',
-                oncomplete: () => {
-                    // Acabou de fazer o fade-in do background escurecido
-                    // Logo, podemos mostrar os placares finais
+                ease: 'Linear'
+            }).on('complete', () => {
+                // Acabou de fazer o fade-in do background escurecido
+                // Logo, podemos mostrar os placares finais
 
-                    let current_y = this.PLAYER_SCORE_INITIAL_Y;
-                    let total_score = 0
+                let current_y = this.PLAYER_SCORE_INITIAL_Y;
+                let total_score = 0
+                for (let i = 0; i < playerConfigs.length; i++) {
+                    const currentPlayerInfo = info[`player_${i+1}`];
+                    if (currentPlayerInfo) {
+                        const playerConfig = playerConfigs[i]
 
-                    for (let i = 0; i < playerConfigs.length; i++) {
-                        const currentPlayerInfo = info[`player_${i+1}`];
-                        if (currentPlayerInfo) {
-                            const playerConfig = playerConfigs[i]
+                        this.add.image(
+                            this.PLAYER_SCORE_INITIAL_X,
+                            current_y,
+                            playerConfig.sprite
+                        ).setScale(this.PLAYER_SPRITE_SCALE);
 
-                            this.add.image(
-                                this.PLAYER_SCORE_INITIAL_X,
-                                current_y,
-                                playerConfig.sprite
-                            ).setScale(this.PLAYER_SPRITE_SCALE);
+                        const playerScore = currentPlayerInfo.score;
+                        let scoreSprites = this.displayScoreLeft(
+                            0,
+                            this.PLAYER_SCORE_INITIAL_X + this.PLAYER_GAP_BETWEEN_SCORE_AND_SPRITE,
+                            current_y + this.PLAYER_SCORE_EXTRA_Y,
+                            playerConfig.color,
+                            this.PLAYER_SCORE_SCALE,
+                            this.PLAYER_SCORE_GAP_BETWEEN_NUMBERS
+                        );
+                        total_score += playerScore;
 
-                            const playerScore = currentPlayerInfo.score;
-                            this.displayScoreLeft(
-                                playerScore,
-                                this.PLAYER_SCORE_INITIAL_X + this.PLAYER_GAP_BETWEEN_SCORE_AND_SPRITE,
-                                current_y + this.PLAYER_SCORE_EXTRA_Y,
-                                playerConfig.color,
-                                this.PLAYER_SCORE_SCALE,
-                                this.PLAYER_SCORE_GAP_BETWEEN_NUMBERS
-                            );
-                            total_score += playerScore;
-                        }
-                        current_y += this.GAP_BETWEEN_PLAYERS;
+                        this.scoresInfo.push({
+                            x: this.PLAYER_SCORE_INITIAL_X,
+                            y: current_y,
+                            sprites: scoreSprites,
+                            color: playerConfig.color,
+                            score: playerScore
+                        });
                     }
-
-                    this.displayScoreLeft(
-                        total_score,
-                        this.PLAYER_SCORE_INITIAL_X + this.PLAYER_GAP_BETWEEN_SCORE_AND_SPRITE,
-                        current_y + this.PLAYER_SCORE_EXTRA_Y,
-                        0xFFFFFF,
-                        this.PLAYER_SCORE_SCALE,
-                        this.PLAYER_SCORE_GAP_BETWEEN_NUMBERS
-                    );
+                    current_y += this.GAP_BETWEEN_PLAYERS;
                 }
-            });
+
+                let scoreSprites = this.displayScoreLeft(
+                    0,
+                    this.PLAYER_SCORE_INITIAL_X + this.PLAYER_GAP_BETWEEN_SCORE_AND_SPRITE,
+                    current_y + this.PLAYER_SCORE_EXTRA_Y,
+                    0xFFFFFF,
+                    this.PLAYER_SCORE_SCALE,
+                    this.PLAYER_SCORE_GAP_BETWEEN_NUMBERS
+                );
+
+                this.scoresInfo.push({
+                    x: this.PLAYER_SCORE_INITIAL_X,
+                    y: current_y,
+                    sprites: scoreSprites,
+                    color: 0xFFFFFF,
+                    score: total_score
+                });
+
+                this.onScoreAnimation = true
+            })
         });
 
         game.events.off('ask-restart')
@@ -117,5 +139,47 @@ export default class HUD3 extends ScoreHUD {
                 this.events.emit('ask-restart')
             }
         })
+    }
+
+    update (time, delta) {
+        if (this.isGameover && this.onScoreAnimation) {
+            this.time += delta
+
+            // Código para animar os placares
+            // Eles irão crescer de 0 até o valor final do score do jogador
+            for (let i = 0; i < this.scoresInfo.length; i++) {
+                let scoreInfo = this.scoresInfo[i]
+
+                let score = scoreInfo.score
+                let scoreSprites = scoreInfo.sprites
+                let color = scoreInfo.color
+                let x = scoreInfo.x
+                let y = scoreInfo.y
+
+                for (let sprite of scoreSprites) {
+                    sprite.destroy()
+                }
+
+                let scoreAnimationProgress = 0
+                if (this.ALL_SCORES_ANIMATIONS_IN_THE_SAME_TIME) {
+                    scoreAnimationProgress = Math.min(this.time / this.SCORE_ANIMATION_DURATION, 1)
+                } else {
+                    scoreAnimationProgress = Math.min((this.time - i * this.NEXT_SCORE_ANIMATION_DELAY) / this.SCORE_ANIMATION_DURATION, 1)
+                    scoreAnimationProgress = Math.max(scoreAnimationProgress, 0)
+                }
+
+                let scoreAnimation = Math.floor(score * scoreAnimationProgress).toString()
+                scoreSprites = this.displayScoreLeft(
+                    scoreAnimation,
+                    x + this.PLAYER_GAP_BETWEEN_SCORE_AND_SPRITE,
+                    y + this.PLAYER_SCORE_EXTRA_Y,
+                    color,
+                    this.PLAYER_SCORE_SCALE,
+                    this.PLAYER_SCORE_GAP_BETWEEN_NUMBERS
+                )
+
+                this.scoresInfo[i].sprites = scoreSprites
+            }
+        }
     }
 }
