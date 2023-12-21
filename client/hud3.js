@@ -8,6 +8,10 @@ import playerConfigs from "./player/playerConfigs.js";
 
 export default class HUD3 extends ScoreHUD {
 
+    init() {
+        this.isGameover = false
+    }
+
     constructor () {
         super({ key: 'HUD3', active: true });
 
@@ -52,6 +56,7 @@ export default class HUD3 extends ScoreHUD {
 
         game.events.off('gameover')
         game.events.on('gameover', (info) => {
+            this.isGameover = true
             // Fade-in: Adiciona um background preto com transparência crescente
             const background = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000);
             background.setOrigin(0, 0);
@@ -105,5 +110,12 @@ export default class HUD3 extends ScoreHUD {
                 }
             });
         });
+
+        game.events.off('ask-restart')
+        this.input.keyboard.on('keydown-ENTER', () => {
+            if (this.isGameover) {
+                this.events.emit('ask-restart')
+            }
+        })
     }
 }

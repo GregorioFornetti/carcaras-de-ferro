@@ -22,6 +22,7 @@ import HUD3 from "./hud3.js";
 
 
 let roomId = null
+let oldId = null
 
 export class GameScene extends Phaser.Scene {
 
@@ -103,8 +104,10 @@ export class GameScene extends Phaser.Scene {
     try {
       if (roomId === null) {
         this.room = await this.client.joinOrCreate("my_room");
+        oldId = this.room.sessionId
       } else {
-        this.room = await this.client.joinById(roomId);
+        this.room = await this.client.joinById(roomId, { oldId: oldId });
+        oldId = this.room.sessionId
       }
       console.log(`Conectado com sucesso com id de cliente {${this.room.sessionId}}`);
 
@@ -202,18 +205,18 @@ export class GameScene extends Phaser.Scene {
     this.input.keyboard.on('keydown-ENTER', () => {
       this.room.send("STARTGAME",{});
     })
-
-    this.input.keyboard.on('keydown-E', () => {
-      this.room.send('RESTARTGAME',{})
-    })
     
     this.room.onMessage("RESTARTGAME", (newRoomId) => {
+      // Recebeu do SERVIDOR que o jogo deve ser reiniciado, então já é um consenso que o jogo deve ser reiniciado
       roomId = newRoomId
       this.room.leave()
-      this.scene.manager.scenes.forEach(scene => {
-        console.log(scene.scene.key)
-        scene.scene.restart();
-      });
+      game.destroy()
+      document.getElementById("phaser-example").innerHTML = ""
+      game = new Phaser.Game(config)
+    })
+
+    this.scene.get('HUD3').events.on('ask-restart', () => {
+      this.room.send("RESTARTGAME");
     })
   }
 
@@ -303,4 +306,4 @@ const config = {
 }
 
 // Inicializa o Phaser
-const game = new Phaser.Game(config)
+let game = new Phaser.Game(config)

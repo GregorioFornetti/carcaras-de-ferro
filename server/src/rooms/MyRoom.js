@@ -27,6 +27,9 @@ export class MyRoom extends Room {
   // Define o que será feito quando a sala for criada
   // Aqui será definido os callbacks de eventos da sala
   onCreate(options) {
+    if (options) {
+      this.oldOwner = options['oldOwner']
+    }
     this.setState(new MyRoomState())
 
     this.currentPlayers = {}
@@ -137,14 +140,19 @@ export class MyRoom extends Room {
     })
     
     this.onMessage("RESTARTGAME", async (client, message) => {
-      const newRoom = await matchMaker.createRoom("my_room", { maxClients: 4 })
-      this.broadcast("RESTARTGAME", newRoom.roomId)
+      if (client.id === this.roomOwner) {
+        const newRoom = await matchMaker.createRoom("my_room", { oldOwner: this.roomOwner })
+        this.broadcast("RESTARTGAME", newRoom.roomId)
+      }
     })
   }
 
   /* Define o que será feito quando um jogador conectar na sala
    */
   onJoin(client, options) {
+    let oldId = options['oldId']
+    console.log(oldId)
+    console.log(this.oldOwner)
     console.log(client.sessionId, "joined!")
 
     // Cria uma instância do jogador, definido em MyRoomState.js
@@ -154,7 +162,12 @@ export class MyRoom extends Room {
       )
     this.collisor.registerForCollission(player, player.playerAtributes, "player")
     this.currentPlayers[client.id] = player
-    if (this.roomOwner === undefined) {
+
+    // Se for a primeira vez com a sala criada, o dono será o primeiro a entrar
+    // Caso a sala seja recriada para reiniciar o jogo, os jogadores dela irão enviar os ids deles
+    // e nesse caso o dono será o antigo dono da sala (ao invés de ser o primeiro a entrar)
+    if ((this.roomOwner === undefined && this.oldOwner === undefined) || 
+        (this.roomOwner === undefined && this.oldOwner === oldId)) {
       this.roomOwner = client.id
     }
   }
