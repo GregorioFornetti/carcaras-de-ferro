@@ -49,6 +49,8 @@ export default class HUD3 extends ScoreHUD {
 
     create () {
         let game = this.scene.get('GameScene');
+
+        game.events.off('gameover')
         game.events.on('gameover', (info) => {
             // Fade-in: Adiciona um background preto com transparência crescente
             const background = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000);

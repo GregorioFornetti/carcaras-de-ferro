@@ -2,7 +2,7 @@
    o que deve acontecer quando um jogador realizar uma ação
    e como isso deve ser atualizado para todos os outros jogadores
 */
-import { Room } from "@colyseus/core"
+import { Room, matchMaker} from "@colyseus/core"
 import { MyRoomState } from "./schema/MyRoomState.js"
 import { EnemyDesavisados } from "../enemies/EnemyDesavisados.js"
 import { PlayerSchema, Player } from "../player/PlayerSchema.js"
@@ -136,6 +136,10 @@ export class MyRoom extends Room {
       }
     })
     
+    this.onMessage("RESTARTGAME", async (client, message) => {
+      const newRoom = await matchMaker.createRoom("my_room", { maxClients: 4 })
+      this.broadcast("RESTARTGAME", newRoom.roomId)
+    })
   }
 
   /* Define o que será feito quando um jogador conectar na sala

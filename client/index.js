@@ -20,9 +20,12 @@ import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 import HUD1 from "./hud1.js";
 import HUD3 from "./hud3.js";
 
+
+let roomId = null
+
 export class GameScene extends Phaser.Scene {
-  constructor() {
-    super("GameScene")
+
+  init() {
     this.client = new Colyseus.Client("http://localhost:8080");
     this.room = null
     this.playerEntities = {}
@@ -40,6 +43,10 @@ export class GameScene extends Phaser.Scene {
     this.danoP = 0;
 	
 	  this.somDisparoInimigo = null;
+  }
+
+  constructor() {
+    super("GameScene")
   }
 
   // Carrega os assets a serem utilizados no jogo
@@ -94,7 +101,11 @@ export class GameScene extends Phaser.Scene {
   async create() {
     console.log("Conectando na sala...")
     try {
-      this.room = await this.client.joinOrCreate("my_room");
+      if (roomId === null) {
+        this.room = await this.client.joinOrCreate("my_room");
+      } else {
+        this.room = await this.client.joinById(roomId);
+      }
       console.log(`Conectado com sucesso com id de cliente {${this.room.sessionId}}`);
 
     } catch (e) {
@@ -190,6 +201,19 @@ export class GameScene extends Phaser.Scene {
     })
     this.input.keyboard.on('keydown-ENTER', () => {
       this.room.send("STARTGAME",{});
+    })
+
+    this.input.keyboard.on('keydown-E', () => {
+      this.room.send('RESTARTGAME',{})
+    })
+    
+    this.room.onMessage("RESTARTGAME", (newRoomId) => {
+      roomId = newRoomId
+      this.room.leave()
+      this.scene.manager.scenes.forEach(scene => {
+        console.log(scene.scene.key)
+        scene.scene.restart();
+      });
     })
   }
 

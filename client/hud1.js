@@ -70,7 +70,10 @@ export default class HUD1 extends ScoreHUD {
 
         let game = this.scene.get('GameScene');
 
+        game.events.off('newPlayer')  // Para não ficar com vários listeners ao resetar o jogo
         game.events.on('newPlayer', function (id) {
+            console.log('NOVO PLAYER')
+            console.log(id)
             const currentPlayerNumber = Object.keys(this.currentPlayers).length
             this.currentPlayers[id] = {}
 
@@ -95,6 +98,7 @@ export default class HUD1 extends ScoreHUD {
             this.currentPlayers[id].color = this.scoresConfig[currentPlayerNumber].color
         }, this);
 
+        game.events.off('playerDied')  // Para não ficar com vários listeners ao resetar o jogo
         game.events.on('playerScoreChange', (id, score) => {
             this.currentPlayers[id].score = score
             for (let i = 0; i < this.currentPlayers[id].scoreImages.length; i++) {
