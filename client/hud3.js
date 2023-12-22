@@ -18,6 +18,11 @@ export default class HUD3 extends ScoreHUD {
     constructor () {
         super({ key: 'HUD3', active: true });
 
+        this.DEATH_HEART_SCALE = 0.5
+        this.DEATH_HEART_INITIAL_X = 20
+        this.DEATH_HEART_INITIAL_Y = GAME_HEIGHT - 20
+        this.GAP_BETWEEN_DEATH_HEARTS = 40
+
         this.FADE_IN_DURATION = 2000;  // Em milissegundos
         this.FADE_IN_FINAL_TRANSPARENCY = 0.7;
 
@@ -55,6 +60,9 @@ export default class HUD3 extends ScoreHUD {
         this.load.image('number_7', './Artes/Assets/Tiles/tile_0033.png')
         this.load.image('number_8', './Artes/Assets/Tiles/tile_0034.png')
         this.load.image('number_9', './Artes/Assets/Tiles/tile_0035.png')
+
+        // Carregando sprite do coração de morte
+        this.load.image('death_heart', './Artes/Assets_Personalizados/Coracoes/coracao_Preto_Down1.png')
     }
 
     create () {
@@ -137,6 +145,19 @@ export default class HUD3 extends ScoreHUD {
         this.input.keyboard.on('keydown-ENTER', () => {
             if (this.isGameover) {
                 this.events.emit('ask-restart')
+            }
+        })
+
+        game.events.off('current-player-died')
+        game.events.on('current-player-died', () => {
+            this.cameras.main.shake(100, 0.01);
+
+            for (let i = 0; i < 3; i++) {
+                this.add.image(
+                    this.DEATH_HEART_INITIAL_X + i * this.GAP_BETWEEN_DEATH_HEARTS,
+                    this.DEATH_HEART_INITIAL_Y,
+                    'death_heart'
+                ).setScale(this.DEATH_HEART_SCALE)
             }
         })
     }
