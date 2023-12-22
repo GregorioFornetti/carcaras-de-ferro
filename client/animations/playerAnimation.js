@@ -17,25 +17,29 @@ export const createPlayerAnimations = (anims) => {
     }
 
     for (let i = 0; i < 3; i++) {
-        const animationKey = `ship_direita_d${i}_${i + 1}`;
-        const frameRange = { start: i * 4, end: i * 4 + 3 };
-        anims.create({
-            key: animationKey,
-            frames: anims.generateFrameNumbers(`ship_${i + 1}_animado`, frameRange),
-            frameRate: 10,
-            repeat: 0,
-        });
+        for (let x = 1; x < 4; x++) {
+            const animationKey = `ship_direita_d${i}_${x}`;
+            const frameRange = { start: i * 8, end: i * 8 + 3 };
+            anims.create({
+                key: animationKey,
+                frames: anims.generateFrameNumbers(`ship_${x}_animado`, frameRange),
+                frameRate: 10,
+                repeat: 0,
+            });
+        }
     }
 
     for (let i = 0; i < 3; i++) {
-        const animationKey = `ship_esquerda_d${i}_${i + 1}`;
-        const frameRange = { start: i * 4 + 4, end: i * 4 + 7 };
-        anims.create({
-            key: animationKey,
-            frames: anims.generateFrameNumbers(`ship_${i + 1}_animado`, frameRange),
-            frameRate: 10,
-            repeat: 0,
-        });
+        for (let x = 1; x < 4; x++) {
+            const animationKey = `ship_esquerda_d${i}_${x}`;
+            const frameRange = { start: i * 8 + 4, end: i * 8 + 7 };
+            anims.create({
+                key: animationKey,
+                frames: anims.generateFrameNumbers(`ship_${x}_animado`, frameRange),
+                frameRate: 10,
+                repeat: 0,
+            });
+        }
     }
 
     anims.create({

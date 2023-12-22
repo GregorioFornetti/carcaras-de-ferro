@@ -17,6 +17,7 @@ export function PlayerOnAdd(player, id) {
     this.playerEntities[id].setData('health', player.health);
     
     if(this.playerEntities[id].health !== this.playerEntities[id].data.values.health) {
+      let tweenAnimation = `ship_frente_d${3-this.playerEntities[id].data.values.health}_${playersSize+1}`;
       this.somExplosao.play()
       this.tweens.add({
         targets: this.playerEntities[id],
@@ -24,7 +25,7 @@ export function PlayerOnAdd(player, id) {
         duration: 300,
         repeat: 4,
         yoyo: true,
-        onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(this.targets[0].anims.currentAnim.key); },
+        onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(tweenAnimation); },
         onComplete: function() { this.targets[0].clearTint(); }
       });    
     }

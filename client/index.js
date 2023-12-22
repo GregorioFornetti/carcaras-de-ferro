@@ -219,13 +219,13 @@ export class GameScene extends Phaser.Scene {
 
         const threshold = 2;
         if (entity.x - serverX > threshold) {  // Indo para esquerda
-          let animationKey = `ship_esquerda_d${this.danoP}_${entity.playerSize}`;
+          let animationKey = `ship_esquerda_d${3-entity.health}_${entity.playerSize}`;
           if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
             entity.anims.play(animationKey);
           }
           entity.stoped = false
         } else if (entity.x - serverX < -threshold) { // Indo para direita
-          let animationKey = `ship_direita_d${this.danoP}_${entity.playerSize}`;
+          let animationKey = `ship_direita_d${3-entity.health}_${entity.playerSize}`;
           if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
             entity.anims.play(animationKey);
           }
