@@ -30,6 +30,7 @@ export class Bomba {
     this.bombaState.set(this.id, this.bombaAttributes)
     this.destroyed = false
     this.owner = playerId
+    this.timeToExplode = 2  // Em segundos
   }
 
   static spawn(roomState, player, playerId) {
@@ -43,6 +44,7 @@ export class Bomba {
 
   update(deltaTime) {
     
+    this.timeToExplode -= deltaTime / 1000
     this.bombaAttributes.y += speedY
     if (this.bombaAttributes.y > GAME_HEIGHT)
       this.bombaAttributes.y = GAME_HEIGHT

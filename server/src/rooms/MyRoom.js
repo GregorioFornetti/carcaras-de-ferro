@@ -37,8 +37,6 @@ export class MyRoom extends Room {
     this.currentBullets = {}
     this.currentBombas = []
     this.velocidadeMapa = 0;
-    this.tempoVidaBomba = 2;
-    this.timerBomba = this.tempoVidaBomba + 1; //recebe esse valor para o timer nao iniciar automaticamente
 
     this.freeze = true
     this.roomOwner = undefined
@@ -151,9 +149,6 @@ export class MyRoom extends Room {
    */
   onJoin(client, options) {
     let oldId = options['oldId']
-    console.log(oldId)
-    console.log(this.oldOwner)
-    console.log(client.sessionId, "joined!")
 
     // Cria uma instância do jogador, definido em MyRoomState.js
     const player = Player.spawn(this.state, client.sessionId,
@@ -234,29 +229,26 @@ export class MyRoom extends Room {
   
     if (this.currentBombas.length != 0) {
       // Loop de atualizacao automatica das bombas
-      for (let bomba of this.currentBombas.filter(b => !b.destroyed)) {
+      for (let bomba of this.currentBombas) {
         bomba.update(deltaTime)
-      }
-    }
-  
-    // Explodir bomba e inimigos
-    if (this.timerBomba > 0 && this.timerBomba <= this.tempoVidaBomba) {
-      this.timerBomba -= deltaTime/1000;
-    } else if (this.timerBomba < 0) {
-      const bomba = this.currentBombas[0]  // O mais certo seria um timer para cada bomba, mas por enquanto vou só pegar o primeiro
-      const player = this.state.playersSchema.get(bomba.owner)
-      for (let enemyId in this.currentEnemies) {
-        const score = this.currentEnemies[enemyId].onNuke()
-        if (score) {
-          player.score += score
-          this.collisor.removeForCollission(this.currentEnemies[enemyId], "enemy")
-          delete this.currentEnemies[enemyId]
+
+        // Bomba explodiu, detruir inimigos e remover bomba
+        if (bomba.timeToExplode <= 0) {
+          bomba.destroy()
+          const player = this.state.playersSchema.get(bomba.owner)
+          for (let enemyId in this.currentEnemies) {
+            const score = this.currentEnemies[enemyId].onNuke()
+            if (score) {
+              player.score += score
+              this.collisor.removeForCollission(this.currentEnemies[enemyId], "enemy")
+              delete this.currentEnemies[enemyId]
+            }
+          }
         }
       }
-      for (let bomba of this.currentBombas) {
-        bomba.destroy()
-      }
-      this.timerBomba = this.tempoVidaBomba + 1
+
+      // Remover bomba do array de bombas
+      this.currentBombas = this.currentBombas.filter(bomba => !bomba.destroyed)
     }
       
     let spawn_retorno = this.spawnCentral.update(deltaTime);

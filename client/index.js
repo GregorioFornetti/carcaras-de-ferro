@@ -185,7 +185,6 @@ export class GameScene extends Phaser.Scene {
     })
     
     this.input.keyboard.on('keydown-A', () => {
-      this.events.emit('gameover', {'player_1': { 'score': 2500 }, 'player_2': { 'score': 100 }, 'player_3': { 'score': 1000 }, 'player_4': { 'score': 5000 }})
       this.room.send("LEFT",{pressed:true});
       this.playerEntities[this.room.sessionId].anims.play(`ship_esquerda_d${this.danoP}`);
     })
