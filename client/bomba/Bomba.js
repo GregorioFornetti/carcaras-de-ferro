@@ -3,7 +3,7 @@ export function BombaOnAdd(bomba, id) {
 
     this.bombasEntities[id] = this.physics.add.sprite(bomba.x, bomba.y, 'bomba');
     this.bombasEntities[id].setScale(multiTamanho);
-
+    
     bomba.onChange(() => {
         this.bombasEntities[id].y = bomba.y;
         this.bombasEntities[id].tamanho = bomba.tamanho;

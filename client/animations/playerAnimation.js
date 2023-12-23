@@ -67,3 +67,5 @@ export function explosionAnimation(scene, obj, id) {
         animation.anims.play("explosao");
     } else return;
 }
+
+
