@@ -18,6 +18,7 @@ import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
 import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 import HUD1 from "./hud1.js";
+import { createEnemyAnimations, createPlayerAnimations } from "./animations/playerAnimation.js"
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -88,6 +89,12 @@ export class GameScene extends Phaser.Scene {
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
 
     this.load.image("bomba", "./Artes/Assets/Tiles/tile_0012.png")
+
+    this.load.on('complete', () => {
+      // cria as animações
+      createPlayerAnimations(this.anims);
+      createEnemyAnimations(this.anims);
+    });
   }
 
   /* Cria os objetos do jogo, além de efetivamente conectar na sala do Colyseus
@@ -175,21 +182,17 @@ export class GameScene extends Phaser.Scene {
     
     this.input.keyboard.on('keydown-A', () => {
       this.room.send("LEFT",{pressed:true});
-      this.playerEntities[this.room.sessionId].anims.play(`ship_esquerda_d${this.danoP}`);
     })
     
     this.input.keyboard.on('keyup-A', () => {
       this.room.send("LEFT",{pressed:false});
-      this.playerEntities[this.room.sessionId].anims.playReverse(`ship_esquerda_d${this.danoP}`);
     })
     
     this.input.keyboard.on('keydown-D', () => {
       this.room.send("RIGHT",{pressed:true});
-      this.playerEntities[this.room.sessionId].anims.play(`ship_direita_d${this.danoP}`);
     })
     this.input.keyboard.on('keyup-D', () => {
       this.room.send("RIGHT",{pressed:false});
-      this.playerEntities[this.room.sessionId].anims.playReverse(`ship_direita_d${this.danoP}`);
     })
     this.input.keyboard.on('keydown-ENTER', () => {
       this.room.send("STARTGAME",{});
@@ -213,9 +216,36 @@ export class GameScene extends Phaser.Scene {
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
         entity.health = health
+
         if (entity.health === 0) {
           entity.anims.play("explosao")
           delete this.playerEntities[id]
+        }
+
+        const threshold = 2;
+        if (entity.x - serverX > threshold) {  // Indo para esquerda
+          let animationKey = `ship_esquerda_d${3-entity.health}_${entity.playerSize}`;
+          if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
+            entity.anims.play(animationKey);
+          }
+          entity.stoped = false
+        } else if (entity.x - serverX < -threshold) { // Indo para direita
+          let animationKey = `ship_direita_d${3-entity.health}_${entity.playerSize}`;
+          if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
+            entity.anims.play(animationKey);
+          }
+          entity.stoped = false
+        } else {
+          if (entity.anims.currentAnim && !entity.stoped) {
+            let animationKey = entity.anims.currentAnim.key;
+            let progress = entity.anims.getProgress();
+            if(progress == 1) {
+              entity.anims.playReverse(animationKey);
+            } else {
+              entity.anims.reverse(animationKey);
+            }
+            entity.stoped = true
+          }
         }
       }
     }
