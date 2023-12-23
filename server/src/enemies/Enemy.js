@@ -41,10 +41,12 @@ export class Enemy {
             Função que será chamada no gameloop do servidor. Principal função para movimentação dos inimigos.
         */
         throw new Error('You have to implement the method update!');
+
     }
 
     hit() {
         this.health -= 1
+        this.enemyAttributes.health = this.health;
         if (this.health <= 0) {
             return this.destroy()
         }
