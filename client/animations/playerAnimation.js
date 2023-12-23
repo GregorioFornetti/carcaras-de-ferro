@@ -41,7 +41,15 @@ export const createPlayerAnimations = (anims) => {
             });
         }
     }
-
+    anims.create({
+            key: "explosao",
+            frames: anims.generateFrameNumbers("explosao", { start: 0, end: 7 }),
+            frameRate: 10,
+            repeat: 0,
+            hideOnComplete: true,
+        });
+};
+export const createEnemyAnimations = (anims) => {
     anims.create({
         key: "explosao",
         frames: anims.generateFrameNumbers("explosao", { start: 0, end: 7 }),
@@ -49,5 +57,13 @@ export const createPlayerAnimations = (anims) => {
         repeat: 0,
         hideOnComplete: true,
     });
+}
 
-};
+export function explosionAnimation(scene, obj, id) {
+    console.log(obj.health);
+    if(obj.health == 0) {
+        let animation = scene.physics.add.sprite(obj.x, obj.y, "explosao");
+        scene.somExplosao.play();
+        animation.anims.play("explosao");
+    } else return;
+}

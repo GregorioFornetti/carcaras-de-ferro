@@ -32,6 +32,7 @@ export class Enemy {
         this.width = 32
         this.height = 32
         this.score = 0
+        this.health;
     }
 
 

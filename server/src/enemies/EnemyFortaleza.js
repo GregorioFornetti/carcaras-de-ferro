@@ -13,7 +13,8 @@ export class EnemyFortalezaSchema extends schema.Schema {
 
 schema.defineTypes(EnemyFortalezaSchema, {
     x: "number",
-    y: "number"
+    y: "number",
+    health: "number"
 });
 
 

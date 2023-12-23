@@ -9,6 +9,7 @@ export class EnemyPatrulheirosSchema extends schema.Schema {
 schema.defineTypes(EnemyPatrulheirosSchema, {
 	x: "number",
 	y: "number",
+    health: "number"
 });
 
 export class EnemyPatrulheiros extends Enemy {

@@ -19,7 +19,8 @@ export class EnemyDesavisadosSchema extends schema.Schema {
 
 schema.defineTypes(EnemyDesavisadosSchema, {
     x: "number",
-    y: "number"
+    y: "number",
+    health: "number"
 });
 
 export class EnemyDesavisados extends Enemy {
