@@ -3,7 +3,7 @@ export function BombaOnAdd(bomba, id) {
 
     this.bombasEntities[id] = this.physics.add.sprite(bomba.x, bomba.y, 'bomba');
     this.bombasEntities[id].setScale(multiTamanho);
-    
+
     bomba.onChange(() => {
         this.bombasEntities[id].y = bomba.y;
         this.bombasEntities[id].tamanho = bomba.tamanho;
@@ -17,10 +17,11 @@ export function BombaOnAdd(bomba, id) {
 
 
 export function BombaOnRemove(bomba, id) {
+    //animação bae
+    let animation = this.physics.add.sprite(bomba.x, bomba.y-10, "explosao_bomba");
+    animation.anims.play("explosao_bae");
+    this.somExplosaoBAE.play()
+    this.cameras.main.flash(1000);
+
     this.bombasEntities[id].destroy();
-
-    // implementar explosao
-
-
-    this.somExplosao.play()
 }

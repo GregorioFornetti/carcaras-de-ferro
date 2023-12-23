@@ -18,7 +18,7 @@ import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
 import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 import HUD1 from "./hud1.js";
-import { createEnemyAnimations, createPlayerAnimations } from "./animations/animation.js"
+import { createExplosionAnimations, createPlayerAnimations } from "./animations/playerAnimation.js"
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -54,6 +54,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('ship_0015', './Artes/Assets/Ships/ship_0015.png');
     this.load.audio('disparo2', './Efeitos/Disparos/Disparo2.wav');
     this.load.audio('explosao', './Efeitos/Explosão/Explosão1.wav');
+    this.load.audio('explosao_bae', './Efeitos/Explosão/nuclear6.mp3');
     this.load.audio('dano', './Efeitos/Dano/Dano2.wav');
 
     this.load.spritesheet('ship_1_animado', './Artes/Assets_Personalizados/Ships/Spritesheets/ship2.png', {
@@ -81,6 +82,10 @@ export class GameScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 48,
     })
+    this.load.spritesheet("explosao_bae", "./Artes/Assets_Personalizados/Ships/Spritesheets/explosao_BAE.png", {
+      frameWidth: 128,
+      frameHeight: 128,
+    })
 
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
 
@@ -89,7 +94,7 @@ export class GameScene extends Phaser.Scene {
     this.load.on('complete', () => {
       // cria as animações
       createPlayerAnimations(this.anims);
-      createEnemyAnimations(this.anims);
+      createExplosionAnimations(this.anims);
     });
   }
 
@@ -145,11 +150,12 @@ export class GameScene extends Phaser.Scene {
     const width = GAME_WIDTH;
     const height = GAME_HEIGHT;
     this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
-
+    //this.flashCamera = this.cameras.add(width/2, height/2, width, height);
     // Sons
     this.somDisparoJogador = this.sound.add('disparo2');
 	  this.somDisparoInimigo = this.sound.add('disparo2');
     this.somExplosao = this.sound.add('explosao');
+    this.somExplosaoBAE = this.sound.add('explosao_bae');
     this.somDano = this.sound.add('dano');
     //Eventos Input
     this.input.keyboard.on('keydown-M', () => {
@@ -197,6 +203,7 @@ export class GameScene extends Phaser.Scene {
 
   update(time, delta) {
     // Sai do loop se a sala não estiver conectada
+     
     if (!this.room) {
       return
     }
