@@ -18,7 +18,7 @@ import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
 import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 import HUD1 from "./hud1.js";
-import { createEnemyAnimations, createPlayerAnimations } from "./animations/playerAnimation.js"
+import { createEnemyAnimations, createPlayerAnimations } from "./animations/animation.js"
 
 export class GameScene extends Phaser.Scene {
   constructor() {

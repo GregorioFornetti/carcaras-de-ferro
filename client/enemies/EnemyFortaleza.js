@@ -1,4 +1,4 @@
-import { explosionAnimation } from "../animations/playerAnimation.js";
+import { explosionAnimation } from "../animations/animation.js";
 import { GAME_HEIGHT } from "../constants.js";
 const FORTALEZA_SIZE = 3
 

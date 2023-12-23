@@ -1,5 +1,5 @@
 import { GAME_HEIGHT } from "../constants.js";
-import { explosionAnimation } from "../animations/playerAnimation.js";
+import { explosionAnimation } from "../animations/animation.js";
 
 export function EnemyCombatenteOnAdd(enemy, id) {
 	this.enemiesEntities[id] = this.physics.add.sprite(enemy.x, enemy.y, 'ship_0015');
