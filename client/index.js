@@ -149,7 +149,7 @@ export class GameScene extends Phaser.Scene {
     const width = GAME_WIDTH;
     const height = GAME_HEIGHT;
     this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
-
+    //this.flashCamera = this.cameras.add(width/2, height/2, width, height);
     // Sons
     this.somDisparoJogador = this.sound.add('disparo2');
 	  this.somDisparoInimigo = this.sound.add('disparo2');
@@ -201,6 +201,7 @@ export class GameScene extends Phaser.Scene {
 
   update(time, delta) {
     // Sai do loop se a sala não estiver conectada
+     
     if (!this.room) {
       return
     }

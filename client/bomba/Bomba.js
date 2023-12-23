@@ -17,9 +17,11 @@ export function BombaOnAdd(bomba, id) {
 
 
 export function BombaOnRemove(bomba, id) {
-    let animation = this.physics.add.sprite(bomba.x, bomba.y, "explosao_bomba");
+    //animação bae
+    let animation = this.physics.add.sprite(bomba.x, bomba.y-10, "explosao_bomba");
     animation.anims.play("explosao_bae");
-    
     this.somExplosao.play()
+    this.cameras.main.flash(1000);
+    
     this.bombasEntities[id].destroy();
 }
