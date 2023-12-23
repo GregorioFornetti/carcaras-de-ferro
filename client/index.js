@@ -54,6 +54,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('ship_0015', './Artes/Assets/Ships/ship_0015.png');
     this.load.audio('disparo2', './Efeitos/Disparos/Disparo2.wav');
     this.load.audio('explosao', './Efeitos/Explosão/Explosão1.wav');
+    this.load.audio('explosao_bae', './Efeitos/Explosão/nuclear6.mp3');
     this.load.audio('dano', './Efeitos/Dano/Dano2.wav');
 
     this.load.spritesheet('ship_1_animado', './Artes/Assets_Personalizados/Ships/Spritesheets/ship2.png', {
@@ -154,6 +155,7 @@ export class GameScene extends Phaser.Scene {
     this.somDisparoJogador = this.sound.add('disparo2');
 	  this.somDisparoInimigo = this.sound.add('disparo2');
     this.somExplosao = this.sound.add('explosao');
+    this.somExplosaoBAE = this.sound.add('explosao_bae');
     this.somDano = this.sound.add('dano');
     //Eventos Input
     this.input.keyboard.on('keydown-M', () => {
