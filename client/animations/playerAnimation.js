@@ -49,12 +49,19 @@ export const createPlayerAnimations = (anims) => {
             hideOnComplete: true,
         });
 };
-export const createEnemyAnimations = (anims) => {
+export const createExplosionAnimations = (anims) => {
     anims.create({
         key: "explosao",
         frames: anims.generateFrameNumbers("explosao", { start: 0, end: 7 }),
         frameRate: 10,
         repeat: 0,
+        hideOnComplete: true,
+    });
+    anims.create({
+        key: "explosao_bae",
+        frames: anims.generateFrameNumbers(`explosao_bae`, { start: 0, end: 12 }),
+        frameRate: 10,
+        repeat: 0, 
         hideOnComplete: true,
     });
 }

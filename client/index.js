@@ -18,7 +18,7 @@ import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
 import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
 import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 import HUD1 from "./hud1.js";
-import { createEnemyAnimations, createPlayerAnimations } from "./animations/playerAnimation.js"
+import { createExplosionAnimations, createPlayerAnimations } from "./animations/playerAnimation.js"
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -82,8 +82,8 @@ export class GameScene extends Phaser.Scene {
       frameHeight: 48,
     })
     this.load.spritesheet("explosao_bae", "./Artes/Assets_Personalizados/Ships/Spritesheets/explosao_BAE.png", {
-      frameWidth: 32,
-      frameHeight: 48,
+      frameWidth: 128,
+      frameHeight: 128,
     })
 
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
@@ -93,7 +93,7 @@ export class GameScene extends Phaser.Scene {
     this.load.on('complete', () => {
       // cria as animações
       createPlayerAnimations(this.anims);
-      createEnemyAnimations(this.anims);
+      createExplosionAnimations(this.anims);
     });
   }
 
