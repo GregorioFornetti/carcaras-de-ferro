@@ -60,7 +60,7 @@ export const createEnemyAnimations = (anims) => {
 }
 
 export function explosionAnimation(scene, obj, id) {
-    console.log(obj.health);
+    console.log(obj.health)
     if(obj.health == 0) {
         let animation = scene.physics.add.sprite(obj.x, obj.y, "explosao");
         scene.somExplosao.play();
