@@ -34,7 +34,7 @@ export default class HUD1 extends Phaser.Scene {
         this.load.image('coracao_black_down', './Artes/Assets_Personalizados/Coracoes/coracao_Preto_Down1.png')
         
         //Carrgando sprite bomba
-        this.load.image('bomba', './Artes/Assets/Tiles/tile_0012.png')
+        this.load.image('bomba_hud', './Artes/Assets/Tiles/tile_0013.png')
 
     }
 
@@ -137,6 +137,9 @@ export default class HUD1 extends Phaser.Scene {
                 this.displayVida[this.health-1].play('dano')
                 this.health -= 1;
             }
+            if(health == 1) {
+                //
+            }
             if(this.health == 0) {
                 this.displayVida[1].x +=5
                 this.displayVida[2].x +=10
@@ -145,6 +148,22 @@ export default class HUD1 extends Phaser.Scene {
                 this.displayVida[2].play('died');
             }
         }, this);
+
+        this.displayBombas = [
+            this.add.sprite(GAME_WIDTH-15, GAME_HEIGHT - 15, 'bomba_hud').setScale(1.5), 
+            this.add.sprite(GAME_WIDTH-40, GAME_HEIGHT - 15, 'bomba_hud').setScale(1.5)]
+
+        game.events.on('bombChange', function(bomba) {
+            if(bomba == -1 && this.bomb > 0) {
+                this.displayBombas[this.bomb-1].setVisible(false)
+                this.bomb -= 1;
+            }
+            if(bomba == 1) {
+                this.displayBombas[this.bomb-1].setVisible(true)
+                //
+            } 
+        }, this);
+
     }
 
     displayScore(score, x, y, flow, color) {
