@@ -1,5 +1,5 @@
 
-import { GAME_WIDTH } from "./constants.js";
+import { GAME_HEIGHT, GAME_WIDTH } from "./constants.js";
 
 
 export default class HUD1 extends Phaser.Scene {
@@ -27,6 +27,15 @@ export default class HUD1 extends Phaser.Scene {
         this.load.image('number_7', './Artes/Assets/Tiles/tile_0033.png')
         this.load.image('number_8', './Artes/Assets/Tiles/tile_0034.png')
         this.load.image('number_9', './Artes/Assets/Tiles/tile_0035.png')
+
+        //Carregando sprites de vida
+        this.load.image('coracao_red', './Artes/Assets_Personalizados/Coracoes/coracao_Padrao1.png')
+        this.load.image('coracao_black_up', './Artes/Assets_Personalizados/Coracoes/coracao_Preto_Up1.png')
+        this.load.image('coracao_black_down', './Artes/Assets_Personalizados/Coracoes/coracao_Preto_Down1.png')
+        
+        //Carrgando sprite bomba
+        this.load.image('bomba', './Artes/Assets/Ships/Tiles/tile_0012.png')
+
     }
 
     create () {
@@ -112,6 +121,24 @@ export default class HUD1 extends Phaser.Scene {
                 this.currentPlayers[id].color
             )
         })
+
+        this.bomb = 2
+        this.health = 3
+
+        this.anims.create({
+            key: 'dano',
+            frames: [
+                { key: 'coracao_red' },
+                { key: 'coracao_black_up' },
+            ],
+            frameRate: 10,
+            repeat: false
+        });
+       
+        this.displayVida = [
+            this.add.sprite(15, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5), 
+            this.add.sprite(40, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5),
+            this.add.sprite(65, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5)]
     }
 
     displayScore(score, x, y, flow, color) {
