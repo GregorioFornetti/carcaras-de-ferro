@@ -88,6 +88,10 @@ export class GameScene extends Phaser.Scene {
     })
 
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
+    this.load.spritesheet("bullet_light", "./Artes/Assets_Personalizados/Ships/Spritesheets/muzzle-flashes.png", {
+      frameWidth: 8,
+      frameHeight: 8,
+    })
 
     this.load.image("bomba", "./Artes/Assets/Tiles/tile_0012.png")
 

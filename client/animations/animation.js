@@ -64,6 +64,12 @@ export const createExplosionAnimations = (anims) => {
         repeat: 0, 
         hideOnComplete: true,
     });
+    anims.create({
+        key: 'light',
+        frames: anims.generateFrameNumbers('bullet_light', { frames: [ 3 ] }),
+        frameRate: 10,
+        hideOnComplete: true,
+    }); 
 }
 
 export function explosionAnimation(scene, obj, id) {
@@ -73,6 +79,15 @@ export function explosionAnimation(scene, obj, id) {
         scene.somExplosao.play();
         animation.anims.play("explosao");
     } else return;
+}
+
+export function bulletLight(entity, bullet, id) {
+    console.log(entity.playerEntities[bullet.owner])
+    entity.physics.add.sprite(
+        bullet.x,
+        bullet.y+5,
+        'bullet_light',
+    ).setScale(3).play('light')
 }
 
 
