@@ -28,6 +28,7 @@ export function PlayerOnAdd(player, id) {
         onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(tweenAnimation); },
         onComplete: function() { this.targets[0].clearTint(); }
       });    
+      this.events.emit('healthChange', -1);
     }
 
     this.events.emit('playerScoreChange', id, player.score)

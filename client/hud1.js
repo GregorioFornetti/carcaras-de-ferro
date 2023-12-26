@@ -34,7 +34,7 @@ export default class HUD1 extends Phaser.Scene {
         this.load.image('coracao_black_down', './Artes/Assets_Personalizados/Coracoes/coracao_Preto_Down1.png')
         
         //Carrgando sprite bomba
-        this.load.image('bomba', './Artes/Assets/Ships/Tiles/tile_0012.png')
+        this.load.image('bomba', './Artes/Assets/Tiles/tile_0012.png')
 
     }
 
@@ -125,20 +125,26 @@ export default class HUD1 extends Phaser.Scene {
         this.bomb = 2
         this.health = 3
 
-        this.anims.create({
-            key: 'dano',
-            frames: [
-                { key: 'coracao_red' },
-                { key: 'coracao_black_up' },
-            ],
-            frameRate: 10,
-            repeat: false
-        });
+        this.setSpritesAnim(); //define as trocas de sprite vida
        
         this.displayVida = [
             this.add.sprite(15, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5), 
             this.add.sprite(40, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5),
             this.add.sprite(65, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5)]
+        
+        game.events.on('healthChange', function(health) {
+            if(health == -1 && this.health > 0) {
+                this.displayVida[this.health-1].play('dano')
+                this.health -= 1;
+            }
+            if(this.health == 0) {
+                this.displayVida[1].x +=5
+                this.displayVida[2].x +=10
+                this.displayVida[0].play('died');
+                this.displayVida[1].play('died');
+                this.displayVida[2].play('died');
+            }
+        }, this);
     }
 
     displayScore(score, x, y, flow, color) {
@@ -182,5 +188,26 @@ export default class HUD1 extends Phaser.Scene {
         }
     
         return scoreSprites
+    }
+
+    setSpritesAnim() {
+        this.anims.create({
+            key: 'dano',
+            frames: [
+                { key: 'coracao_red' },
+                { key: 'coracao_black_up' },
+            ],
+            frameRate: 10,
+            repeat: false
+        });
+        this.anims.create({
+            key: 'died',
+            frames: [
+                { key: 'coracao_black_up' },
+                { key: 'coracao_black_down' },
+            ],
+            frameRate: 10,
+            repeat: false
+        });
     }
 }
