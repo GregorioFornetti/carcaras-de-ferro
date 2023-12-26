@@ -125,9 +125,19 @@ export default class HUD3 extends ScoreHUD {
                             color: playerConfig.color,
                             score: playerScore
                         });
+                        current_y += this.GAP_BETWEEN_PLAYERS;
                     }
-                    current_y += this.GAP_BETWEEN_PLAYERS;
                 }
+
+                let totalText = this.add.text(
+                    this.PLAYER_SCORE_INITIAL_X - 50,
+                    current_y + 12,
+                    'TOTAL',
+                    {
+                        fontFamily: 'Roboto',
+                        fontSize: '24px'
+                    }
+                );
 
                 let scoreSprites = this.displayScoreLeft(
                     0,
@@ -165,7 +175,7 @@ export default class HUD3 extends ScoreHUD {
 
         game.events.off('ask-restart')
         this.input.keyboard.on('keydown-ENTER', () => {
-            if (this.isGameover) {
+            if (this.isGameover && this.animationEnded) {
                 this.events.emit('ask-restart')
             }
         })
