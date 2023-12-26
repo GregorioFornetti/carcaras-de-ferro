@@ -46,7 +46,6 @@ export class Enemy {
 
     hit() {
         this.health -= 1
-        this.enemyAttributes.health = this.health;
         if (this.health <= 0) {
             return this.destroy()
         }
