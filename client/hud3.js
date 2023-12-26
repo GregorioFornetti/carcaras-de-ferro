@@ -11,8 +11,10 @@ export default class HUD3 extends ScoreHUD {
     init() {
         this.isGameover = false
         this.onScoreAnimation = false
+        this.animationEnded = false
         this.scoresInfo = []
         this.time = 0
+        this.textTime = 0
     }
 
     constructor () {
@@ -40,6 +42,13 @@ export default class HUD3 extends ScoreHUD {
 
         this.SCORE_ANIMATION_DURATION = 2000  // Em milissegundos
         this.NEXT_SCORE_ANIMATION_DELAY = 2000  // Em milissegundos
+
+        this.RESTART_TEXT = 'PRESS [ENTER] TO RESTART'
+        this.RESTART_TEXT_Y = GAME_HEIGHT - 100
+        this.RESTART_TEXT_COLOR = '#ffffff'
+        this.RESTART_TEXT_FONT_SIZE = '16px'
+        this.RESTART_TEXT_FONT_FAMILY = 'Roboto'
+        this.RESTART_TEXT_BLINK_DURATION = 500  // Em milissegundos - Se for 0, não pisca
     }
     
     preload() {
@@ -137,6 +146,19 @@ export default class HUD3 extends ScoreHUD {
                     score: total_score
                 });
 
+                this.text = this.add.text(
+                    0, 
+                    this.RESTART_TEXT_Y, 
+                    this.RESTART_TEXT, {
+                        fontFamily: this.RESTART_TEXT_FONT_FAMILY,
+                        fontSize: this.RESTART_TEXT_FONT_SIZE,
+                        color: this.RESTART_TEXT_COLOR,
+                        align: 'center',
+                        fixedWidth: GAME_WIDTH,
+                    }
+                );
+                this.text.visible = false;
+
                 this.onScoreAnimation = true
             })
         });
@@ -150,8 +172,6 @@ export default class HUD3 extends ScoreHUD {
 
         game.events.off('current-player-died')
         game.events.on('current-player-died', () => {
-            this.cameras.main.shake(100, 0.01);
-
             for (let i = 0; i < 3; i++) {
                 this.add.image(
                     this.DEATH_HEART_INITIAL_X + i * this.GAP_BETWEEN_DEATH_HEARTS,
@@ -163,11 +183,11 @@ export default class HUD3 extends ScoreHUD {
     }
 
     update (time, delta) {
+        // Código para animar os placares
+        // Eles irão crescer de 0 até o valor final do score do jogador
         if (this.isGameover && this.onScoreAnimation) {
             this.time += delta
 
-            // Código para animar os placares
-            // Eles irão crescer de 0 até o valor final do score do jogador
             for (let i = 0; i < this.scoresInfo.length; i++) {
                 let scoreInfo = this.scoresInfo[i]
 
@@ -200,6 +220,20 @@ export default class HUD3 extends ScoreHUD {
                 )
 
                 this.scoresInfo[i].sprites = scoreSprites
+            }
+
+            if (this.time >= this.SCORE_ANIMATION_DURATION + this.NEXT_SCORE_ANIMATION_DELAY * (this.scoresInfo.length - 1)) {
+                this.onScoreAnimation = false
+                this.animationEnded = true
+            }
+        }
+
+        // Quando a animação acabar, pisca o texto de restart
+        if (this.animationEnded) {
+            this.textTime += delta
+            if (this.textTime >= this.RESTART_TEXT_BLINK_DURATION) {
+                this.textTime = 0
+                this.text.visible = !this.text.visible
             }
         }
     }
