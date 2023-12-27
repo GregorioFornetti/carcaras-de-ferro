@@ -1,4 +1,4 @@
-import { explosionAnimation } from "../animations/animation.js";
+import { enemyExplosionAnimation } from "../animations/animation.js";
 import { GAME_HEIGHT } from "../constants.js";
 const FORTALEZA_SIZE = 3
 
@@ -17,7 +17,7 @@ export function EnemyFortalezaOnAdd(enemy, id) {
 
 
 export function EnemyFortalezaOnRemove(enemy, id) {
-	explosionAnimation(this, enemy, id);
+	enemyExplosionAnimation(this, enemy, id);
     this.enemiesEntities[id].destroy();
     delete this.enemiesEntities[id];
 }

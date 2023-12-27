@@ -1,5 +1,5 @@
 import { GAME_HEIGHT, GAME_WIDTH } from "../constants.js";
-import { explosionAnimation } from "../animations/animation.js";
+import { enemyExplosionAnimation } from "../animations/animation.js";
 
 export function EnemyDesavisadosOnAdd(enemy, id) {
     this.enemiesEntities[id] = this.physics.add.sprite(enemy.x, enemy.y, 'ship_0022');
@@ -19,7 +19,7 @@ export function EnemyDesavisadosOnAdd(enemy, id) {
 
 
 export function EnemyDesavisadosOnRemove(enemy, id) {
-	explosionAnimation(this, enemy, id);
+	enemyExplosionAnimation(this, enemy, id);
     this.enemiesEntities[id].destroy();
     delete this.enemiesEntities[id];
 }
