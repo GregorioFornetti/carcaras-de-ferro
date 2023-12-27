@@ -21,7 +21,7 @@ export class EnemyCombatente extends Enemy {
 		const enemy = new EnemyCombatente(roomState);
 		enemy.enemyAttributes.y = -EnemyCombatente.HEIGHT/2;
 		
-		enemy.enemyAttributes. health = EnemyCombatente.MAX_HEALTH;
+		enemy.enemyAttributes.health = COMBATENTE_HEALTH
 		
 		let r = Math.random();
 		
@@ -82,6 +82,7 @@ export class EnemyCombatente extends Enemy {
 	}
 	
 	update(deltaTime) {
+		this.enemyAttributes.health = this.health
 		switch (this.state) {
 			case 1:
 				this.enemyAttributes.y += this.verticalSpeed * (deltaTime / 1000);

@@ -21,17 +21,17 @@ export class EnemyPatrulheiros extends Enemy {
 		
 		enemy1.enemyAttributes.y = -EnemyPatrulheiros.HEIGHT/2 - EnemyPatrulheiros.SEPARACAO_VERTICAL;
 		enemy1.enemyAttributes.x = Math.floor(Math.random() * (GAME_WIDTH - 2*EnemyPatrulheiros.SEPARACAO_HORIZONTAL - EnemyPatrulheiros.WIDTH)) + EnemyPatrulheiros.WIDTH/2;
-		enemy1.enemyAttributes.health = EnemyPatrulheiros.PATRULHEIRO_HEALTH
+		enemy1.enemyAttributes.health = PATRULHEIRO_HEALTH
 		//DEBUGING
 		//enemy1.enemyAttributes.x = Math.floor(0 * (GAME_WIDTH - 2*EnemyPatrulheiros.SEPARACAO_HORIZONTAL - EnemyPatrulheiros.WIDTH)) + EnemyPatrulheiros.WIDTH/2;
 		
 		enemy2.enemyAttributes.y = enemy1.enemyAttributes.y + EnemyPatrulheiros.SEPARACAO_VERTICAL;
 		enemy2.enemyAttributes.x = enemy1.enemyAttributes.x + EnemyPatrulheiros.SEPARACAO_HORIZONTAL;
-		enemy2.enemyAttributes.health = EnemyPatrulheiros.PATRULHEIRO_HEALTH
+		enemy2.enemyAttributes.health = PATRULHEIRO_HEALTH
 		
 		enemy3.enemyAttributes.y = enemy1.enemyAttributes.y;
 		enemy3.enemyAttributes.x = enemy2.enemyAttributes.x + EnemyPatrulheiros.SEPARACAO_HORIZONTAL;
-		enemy3.enemyAttributes.health = EnemyPatrulheiros.PATRULHEIRO_HEALTH
+		enemy3.enemyAttributes.health = PATRULHEIRO_HEALTH
 		
 		return [enemy1, enemy2, enemy3];
 	}

@@ -21,7 +21,7 @@ export class EnemySolitario extends Enemy {
 		enemy.enemyAttributes.x = Math.floor(Math.random() * (GAME_WIDTH - SOLITARIO_WIDTH)) + SOLITARIO_WIDTH/2;
 		//DEBUGING
 		//enemy.enemyAttributes.x = Math.floor(1 * (GAME_WIDTH - EnemySolitario.WIDTH)) + EnemySolitario.WIDTH/2;
-		//enemy.enemyAttributes.health = SOLITARIO_HEALTH;
+		enemy.enemyAttributes.health = SOLITARIO_HEALTH;
 		return [enemy];
 	}
 		
