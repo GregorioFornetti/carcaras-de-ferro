@@ -77,9 +77,10 @@ export default class HUD1 extends Phaser.Scene {
         ]
 
         this.currentPlayers = {}
-
+        
         let game = this.scene.get('GameScene');
-
+        
+        this.setSpritesAnim(); //define as trocas de sprite vida
         game.events.on('newPlayer', function (id) {
             const currentPlayerNumber = Object.keys(this.currentPlayers).length
             this.currentPlayers[id] = {}
@@ -97,9 +98,14 @@ export default class HUD1 extends Phaser.Scene {
                 this.scoresConfig[currentPlayerNumber].y + this.scoreYExtra, 
                 this.scoresConfig[currentPlayerNumber].flow
             )
-  
+                
             this.currentPlayers[id].flow = this.scoresConfig[currentPlayerNumber].flow
             this.currentPlayers[id].color = this.scoresConfig[currentPlayerNumber].color
+            this.currentPlayers[id].health = 3; 
+            this.currentPlayers[id].bomb = 2; 
+            this.currentPlayers[id].healthImages = this.displayHealth(id);
+            this.currentPlayers[id].displayBombas = this.displayBombas(id);
+           
         }, this);
 
         game.events.on('playerScoreChange', (id, score) => {
@@ -122,44 +128,42 @@ export default class HUD1 extends Phaser.Scene {
             )
         })
 
-        this.bomb = 2
-        this.health = 3
 
-        this.setSpritesAnim(); //define as trocas de sprite vida
-       
-        this.displayVida = [
-            this.add.sprite(15, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5), 
-            this.add.sprite(40, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5),
-            this.add.sprite(65, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5)]
         
-        game.events.on('healthChange', function(health) {
-            if(health == -1 && this.health > 0) {
-                this.displayVida[this.health-1].play('dano')
-                this.health -= 1;
-            }
-            if(health == 1) {
+        game.events.on('healthChange', function(id, healthChange) {
+            let playerHeart = this.currentPlayers[id].healthImages[this.currentPlayers[id].health - 1]
+            let x = playerHeart.x
+            let y = playerHeart.y
+            if (healthChange === -1 && this.currentPlayers[id].health > 0) {
+                playerHeart.destroy()
+                playerHeart = this.add.image(x, y,'coracao_black_up').setScale(0.5)
+                this.currentPlayers[id].health -= 1;
+              }
+            if(healthChange == 1) {
                 //
             }
-            if(this.health == 0) {
-                this.displayVida[1].x +=5
-                this.displayVida[2].x +=10
-                this.displayVida[0].play('died');
-                this.displayVida[1].play('died');
-                this.displayVida[2].play('died');
+            if(this.currentPlayers[id].health == 0) {
+                let x = this.currentPlayers[id].healthImages[0].x
+                let x1 = this.currentPlayers[id].healthImages[1].x +=5
+                let x2 = this.currentPlayers[id].healthImages[2].x +=10
+                
+                for (let i = 0; i < this.currentPlayers[id].healthImages.length; i++) {
+                    this.currentPlayers[id].healthImages[i].destroy()
+                }
+
+                this.currentPlayers[id].healthImages[0] = this.add.image(x, y,'coracao_black_down').setScale(0.5)
+                this.currentPlayers[id].healthImages[1] = this.add.image(x1, y,'coracao_black_down').setScale(0.5)
+                this.currentPlayers[id].healthImages[2] = this.add.image(x2, y,'coracao_black_down').setScale(0.5)
             }
         }, this);
 
-        this.displayBombas = [
-            this.add.sprite(GAME_WIDTH-15, GAME_HEIGHT - 15, 'bomba_hud').setScale(1.5), 
-            this.add.sprite(GAME_WIDTH-40, GAME_HEIGHT - 15, 'bomba_hud').setScale(1.5)]
-
-        game.events.on('bombChange', function(bomba) {
-            if(bomba == -1 && this.bomb > 0) {
-                this.displayBombas[this.bomb-1].setVisible(false)
-                this.bomb -= 1;
+        game.events.on('bombChange', function(id, bomba) {
+            if(bomba == -1 && this.currentPlayers[id].bomb > 0) {
+                this.currentPlayers[id].displayBombas[this.currentPlayers[id].bomb-1].setVisible(false)
+                this.currentPlayers[id].bomb -= 1;
             }
             if(bomba == 1) {
-                this.displayBombas[this.bomb-1].setVisible(true)
+                this.currentPlayers[id].displayBombas[this.currentPlayers[id].bomb-1].setVisible(true)
                 //
             } 
         }, this);
@@ -207,6 +211,24 @@ export default class HUD1 extends Phaser.Scene {
         }
     
         return scoreSprites
+    }
+
+    displayHealth() {
+        let healthImages = []
+        healthImages.push(this.add.image(15, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5))
+        healthImages.push(this.add.image(40, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5))
+        healthImages.push(this.add.image(65, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5))
+        /* healthImages.push(this.add.sprite(15, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5))
+        healthImages.push(this.add.sprite(40, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5))
+        healthImages.push(this.add.sprite(65, GAME_HEIGHT - 15, 'coracao_red').setScale(0.5)) */
+        return healthImages
+    }
+    displayBombas() {
+        let displayBombas = []
+        
+        displayBombas.push(this.add.sprite(GAME_WIDTH-15, GAME_HEIGHT - 15, 'bomba_hud').setScale(1.5))
+        displayBombas.push(this.add.sprite(GAME_WIDTH-40, GAME_HEIGHT - 15, 'bomba_hud').setScale(1.5))
+        return displayBombas
     }
 
     setSpritesAnim() {

@@ -13,7 +13,7 @@ export function BombaOnAdd(bomba, id) {
         }
         this.bombasEntities[id].setScale(multiTamanho);
     })
-    this.events.emit('bombChange', -1)
+    this.events.emit('bombChange', bomba.owner, -1)
 }
 
 
