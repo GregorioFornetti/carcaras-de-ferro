@@ -12,7 +12,7 @@ schema.defineTypes(EnemyCacadorSchema, {
     x: "number",
     y: "number",
     health: "number",
-    rotation: "number"
+    angle: "number"
 });
 
 
@@ -34,10 +34,10 @@ export class EnemyCacador extends Enemy {
             i++
         });
 
-        enemy.enemyAttributes.y = 10
+        enemy.enemyAttributes.y = 0
         enemy.enemyAttributes.x = enemy.player.x
         enemy.enemyAttributes.health = CACADOR_HEALTH
-        enemy.enemyAttributes.rotation = 90
+        enemy.enemyAttributes.angle = 180
 
 
         console.log("spawn caçador para o player " + randomP)
@@ -59,7 +59,30 @@ export class EnemyCacador extends Enemy {
 
     update(deltaTime) {
 
+        if (this.enemyAttributes.y > GAME_HEIGHT) {
+            this.destroy();
+            //console.log("cacador destruido")
+        }
+
+        //Determina o angulo
+
+        let enemyY = GAME_HEIGHT - this.enemyAttributes.y
+        let playerY = GAME_HEIGHT - this.player.y
+
+        let eq = (enemyY - playerY) / 
+                 (this.enemyAttributes.x - this.player.x)
+        let rad = Math.atan(eq)
+        this.enemyAttributes.angle = rad * (180 / Math.PI)
+
+        console.log(eq + ", " + this.enemyAttributes.angle)
+
+        //Determina as velocidades
+        //this.speedY = CACADOR_SPEED * Math.sin(rad)
+        //this.speedX = CACADOR_SPEED * Math.cos(rad)
+        
+        //Atualiza posição
         this.enemyAttributes.y += this.speedY * (deltaTime / 1000);
+        //this.enemyAttributes.x += this.speedX * (deltaTime / 1000);
        
     }
 
