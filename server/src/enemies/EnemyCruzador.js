@@ -64,16 +64,30 @@ export class EnemyCruzador extends Enemy {
 
         if (this.timerBullet <= 0 && !this.dead) {
             this.timerBullet = 1
-            return {
-                'action': 'SHOOT',
-                'angle': 270,
-                'speedY': 5,
-                'speedX': 0,
-                'offsetX': 0,
-                'offsetY': 20,
-                'size': 1,
-                'entity': this.enemyAttributes,
-            };
+            if (this.goingRight) {
+                return {
+                    'action': 'SHOOT',
+                    'angle': 270,
+                    'speedY': 10,
+                    'speedX': 10,
+                    'offsetX': 0,
+                    'offsetY': 20,
+                    'size': 1,
+                    'entity': this.enemyAttributes,
+                };
+            } else {
+                return {
+                    'action': 'SHOOT',
+                    'angle': 270,
+                    'speedY': 10,
+                    'speedX': -10,
+                    'offsetX': 0,
+                    'offsetY': 20,
+                    'size': 1,
+                    'entity': this.enemyAttributes,
+                };
+            }
+            
         } else {
             this.timerBullet -= deltaTime/1000
         }
