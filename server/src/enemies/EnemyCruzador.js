@@ -1,7 +1,7 @@
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
 
-import {GAME_WIDTH, GAME_HEIGHT, CRUZADOR_SPEED, CRUZADOR_HEALTH, CRUZADOR_SCORE, CRUZADOR_FIRERATE} from '../../constants.js';
+import {GAME_WIDTH, GAME_HEIGHT, CRUZADOR_SPEED, CRUZADOR_HEALTH, CRUZADOR_SCORE} from '../../constants.js';
 
 export class EnemyCruzadorSchema extends schema.Schema {
     
@@ -42,8 +42,6 @@ export class EnemyCruzador extends Enemy {
         this.score = CRUZADOR_SCORE
         this.goingRight = false
 
-        this.timerShoot = CRUZADOR_FIRERATE
-
     }
 
     update(deltaTime) {
@@ -63,37 +61,6 @@ export class EnemyCruzador extends Enemy {
         }
 
 
-        //Disparo
-        if (this.timerShoot <= 0){
-            this.timerShoot = CRUZADOR_FIRERATE
-            console.log("disparo cruazdor")
-            if (this.goingRight) {
-                return {
-                    'action': 'SHOOT',
-                    'angle': this.enemyAttributes.angle,
-                    'speedY': this.speed*2,
-                    'speedX':  this.speed*2,
-                    'offsetX': 20,
-                    'offsetY': 20,
-                    'size': 3,
-                    'entity': this.enemyAttributes,
-                }
-            } 
-
-            return {
-                'action': 'SHOOT',
-                'angle': this.enemyAttributes.angle,
-                'speedY': this.speed*2,
-                'speedX': this.speed*2,
-                'offsetX': -20,
-                'offsetY': 20,
-                'size': 3,
-                'entity': this.enemyAttributes,
-            }
-
-        } else {
-            this.timerShoot -= deltaTime/1000
-        }
 
 
     }
