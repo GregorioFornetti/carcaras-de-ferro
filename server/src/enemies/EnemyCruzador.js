@@ -1,8 +1,7 @@
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
 
-import {GAME_WIDTH, GAME_HEIGHT, CACADOR_SPEED, CACADOR_HEALTH, CACADOR_SCORE, CRUZADOR_SPEED, CRUZADOR_HEALTH, CRUZADOR_SCORE} from '../../constants.js';
-
+import {GAME_WIDTH, GAME_HEIGHT, CRUZADOR_SPEED, CRUZADOR_HEALTH, CRUZADOR_SCORE, CRUZADOR_FIRERATE} from '../../constants.js';
 
 export class EnemyCruzadorSchema extends schema.Schema {
     
@@ -31,7 +30,6 @@ export class EnemyCruzador extends Enemy {
             enemy.enemyAttributes.angle = -135
         }
         
-        console.log("spawn cruzador")
         return [enemy]
     }
 
@@ -43,6 +41,8 @@ export class EnemyCruzador extends Enemy {
         this.health = CRUZADOR_HEALTH
         this.score = CRUZADOR_SCORE
         this.goingRight = false
+
+        this.timerShoot = CRUZADOR_FIRERATE
 
     }
 
@@ -60,6 +60,39 @@ export class EnemyCruzador extends Enemy {
             this.enemyAttributes.x += this.speed * (deltaTime / 1000)
         } else {
             this.enemyAttributes.x -= this.speed * (deltaTime / 1000)
+        }
+
+
+        //Disparo
+        if (this.timerShoot <= 0){
+            this.timerShoot = CRUZADOR_FIRERATE
+            console.log("disparo cruazdor")
+            if (this.goingRight) {
+                return {
+                    'action': 'SHOOT',
+                    'angle': this.enemyAttributes.angle,
+                    'speedY': this.speed*2,
+                    'speedX':  this.speed*2,
+                    'offsetX': 20,
+                    'offsetY': 20,
+                    'size': 3,
+                    'entity': this.enemyAttributes,
+                }
+            } 
+
+            return {
+                'action': 'SHOOT',
+                'angle': this.enemyAttributes.angle,
+                'speedY': this.speed*2,
+                'speedX': this.speed*2,
+                'offsetX': -20,
+                'offsetY': 20,
+                'size': 3,
+                'entity': this.enemyAttributes,
+            }
+
+        } else {
+            this.timerShoot -= deltaTime/1000
         }
 
 

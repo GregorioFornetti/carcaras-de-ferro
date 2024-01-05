@@ -59,6 +59,6 @@ export const CACADOR_SPEED = 250
 export const CRUZADOR_HEALTH = 1
 export const CRUZADOR_WIDTH = 32
 export const CRUZADOR_HEIGHT = 32
-export const CRUZADOR_SCORE = 250
+export const CRUZADOR_SCORE = 100
 export const CRUZADOR_SPEED = 250
-
+export const CRUZADOR_FIRERATE = 0.5
