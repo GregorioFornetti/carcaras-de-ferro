@@ -42,6 +42,8 @@ export class EnemyCruzador extends Enemy {
         this.score = CRUZADOR_SCORE
         this.goingRight = false
 
+        this.timerBullet = 1
+
     }
 
     update(deltaTime) {
@@ -60,7 +62,21 @@ export class EnemyCruzador extends Enemy {
             this.enemyAttributes.x -= this.speed * (deltaTime / 1000)
         }
 
-
+        if (this.timerBullet <= 0 && !this.dead) {
+            this.timerBullet = 1
+            return {
+                'action': 'SHOOT',
+                'angle': 270,
+                'speedY': 5,
+                'speedX': 0,
+                'offsetX': 0,
+                'offsetY': 20,
+                'size': 1,
+                'entity': this.enemyAttributes,
+            };
+        } else {
+            this.timerBullet -= deltaTime/1000
+        }
 
 
     }
