@@ -198,7 +198,8 @@ export class MyRoom extends Room {
               action.speedX * Math.sin((action.angle * Math.PI) / 180),
               action.speedY * Math.sin((action.angle * Math.PI) / 180),
               action.offsetX, 
-              action.offsetY
+              action.offsetY,
+              action.rotation
             );
             newBullet.bulletAttributes.size = action.size
             this.currentBullets[newBullet.id] = newBullet;

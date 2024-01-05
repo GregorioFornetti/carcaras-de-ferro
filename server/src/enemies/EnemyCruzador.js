@@ -1,7 +1,7 @@
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
 
-import {GAME_WIDTH, GAME_HEIGHT, CRUZADOR_SPEED, CRUZADOR_HEALTH, CRUZADOR_SCORE} from '../../constants.js';
+import {GAME_WIDTH, GAME_HEIGHT, CRUZADOR_SPEED, CRUZADOR_HEALTH, CRUZADOR_SCORE, CRUZADOR_FIRERATE} from '../../constants.js';
 
 export class EnemyCruzadorSchema extends schema.Schema {
     
@@ -42,7 +42,7 @@ export class EnemyCruzador extends Enemy {
         this.score = CRUZADOR_SCORE
         this.goingRight = false
 
-        this.timerBullet = 1
+        this.timerBullet = 1/CRUZADOR_FIRERATE
 
     }
 
@@ -63,15 +63,16 @@ export class EnemyCruzador extends Enemy {
         }
 
         if (this.timerBullet <= 0 && !this.dead) {
-            this.timerBullet = 1
+            this.timerBullet = 1/CRUZADOR_FIRERATE
             if (this.goingRight) {
                 return {
                     'action': 'SHOOT',
                     'angle': 270,
+                    'rotation': 135,
                     'speedY': 10,
                     'speedX': 10,
-                    'offsetX': 0,
-                    'offsetY': 20,
+                    'offsetX': -5,
+                    'offsetY': -5,
                     'size': 1,
                     'entity': this.enemyAttributes,
                 };
@@ -79,10 +80,11 @@ export class EnemyCruzador extends Enemy {
                 return {
                     'action': 'SHOOT',
                     'angle': 270,
+                    'rotation': -135,
                     'speedY': 10,
                     'speedX': -10,
-                    'offsetX': 0,
-                    'offsetY': 20,
+                    'offsetX': 5,
+                    'offsetY': -5,
                     'size': 1,
                     'entity': this.enemyAttributes,
                 };

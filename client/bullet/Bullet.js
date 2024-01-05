@@ -4,6 +4,8 @@ export function BulletOnAdd(bullet, id) {
 		bullet.y,
 		"bullet"
 	)
+
+	this.bulletsEntities[id].angle = bullet.rotation
 	
 	if (bullet.owner !== undefined && bullet.owner == "SERVER") {
 		this.somDisparoInimigo.play();
