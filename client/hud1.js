@@ -7,6 +7,8 @@ export default class HUD extends Phaser.Scene {
     constructor () {
         super({ key: 'HUD1', active: true });
         this.score = 0;
+        this.health = 3;
+        this.bomb = 2;     
     }
     
     preload() {
@@ -91,8 +93,11 @@ export default class HUD extends Phaser.Scene {
                 y: GAME_HEIGHT-15
             },
         ]
-
+        
         this.currentPlayers = {}
+        this.healthImages = []
+        this.healthImages = this.displayHealth()
+        this.displayBombas = this.displayBombas()
         
         let game = this.scene.get('GameScene');
         
@@ -116,30 +121,6 @@ export default class HUD extends Phaser.Scene {
                 
             this.currentPlayers[id].flow = this.scoresConfig[currentPlayerNumber].flow
             this.currentPlayers[id].color = this.scoresConfig[currentPlayerNumber].color
-            this.currentPlayers[id].health = 3; 
-            this.currentPlayers[id].bomb = 2; 
-            this.currentPlayers[id].displayBombas = this.displayBombas()
-            this.currentPlayers[id].healthImages = []
-            this.currentPlayers[id].healthConfig = [
-                {
-                    sprite: 'coracao_red',
-                    x: 15,
-                    y: GAME_HEIGHT-15
-                },
-                {
-                    sprite: 'coracao_red',
-                    x: 40,
-                    y: GAME_HEIGHT-15
-                },
-                {
-                    sprite: 'coracao_red',
-                    x: 65,
-                    y: GAME_HEIGHT-15
-                },
-            ]
-            for(let i = 0; i < 3; i++) 
-                this.currentPlayers[id].healthImages[i] = this.add.image(this.currentPlayers[id].healthConfig[i].x, this.currentPlayers[id].healthConfig[i].y, this.currentPlayers[id].healthConfig[i].sprite).setScale(0.5)
-       
         }, this);
 
         game.events.on('playerScoreChange', (id, score) => {
@@ -164,18 +145,17 @@ export default class HUD extends Phaser.Scene {
      
         game.events.on('healthChange', function(id, healthChange) {
             if(healthChange == -1) {
-                let playerHealth =this.currentPlayers[id].health;
-                this.currentPlayers[id].healthImages[playerHealth - 1].destroy();
-                this.currentPlayers[id].healthImages[playerHealth - 1] =this.add.image(this.currentPlayers[id].healthConfig[playerHealth-1].x,this.currentPlayers[id].healthConfig[playerHealth-1].y, 'coracao_black_up').setScale(0.5)
-                this.currentPlayers[id].health -= 1;
+                let playerHealth =this.health;
+                this.healthImages[playerHealth - 1].destroy();
+                this.healthImages[playerHealth - 1] =this.add.image(this.healthConfig[playerHealth-1].x,this.healthConfig[playerHealth-1].y, 'coracao_black_up').setScale(0.5)
+                this.health -= 1;
             }
         }, this);
 
         game.events.on('bombChange', function(id, bomba) {
-            console.log(this.room.sessionID)+" sessionnn no hud "+id+" id no huddd"
             if(bomba == -1) {
-                this.currentPlayers[id].displayBombas[this.currentPlayers[id].bomb-1].setVisible(false)
-                this.currentPlayers[id].bomb -=1
+                this.displayBombas[this.bomb-1].setVisible(false)
+                this.bomb -=1
             }
         }, this);
 
@@ -229,5 +209,12 @@ export default class HUD extends Phaser.Scene {
         displayBombas.push(this.add.sprite(GAME_WIDTH-15, GAME_HEIGHT - 15, 'nuke').setScale(1.5))
         displayBombas.push(this.add.sprite(GAME_WIDTH-40, GAME_HEIGHT - 15, 'nuke').setScale(1.5))
         return displayBombas
+    }
+
+    displayHealth() {
+        let displayHealth = []
+        for(let i = 0; i < 3; i++) 
+            displayHealth.push(this.add.image(this.healthConfig[i].x, this.healthConfig[i].y, this.healthConfig[i].sprite).setScale(0.5))
+        return displayHealth
     }
 }
