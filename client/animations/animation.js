@@ -1,4 +1,5 @@
 /** Função que cria todas as animações do jogo */
+import {GAME_HEIGHT, GAME_WIDTH} from "../constants.js";
 export const createAnimations = (anims) => {
     /** Animações da movimentação Player */
     // d0 = sem dano
@@ -52,13 +53,6 @@ export const createAnimations = (anims) => {
             hideOnComplete: true,
         });
         anims.create({
-            key: "explosao",
-            frames: anims.generateFrameNumbers("explosao", { start: 0, end: 7 }),
-            frameRate: 10,
-            repeat: 0,
-            hideOnComplete: true,
-        });
-        anims.create({
             key: "explosao_bae",
             frames: anims.generateFrameNumbers(`explosao_bae`, { start: 0, end: 12 }),
             frameRate: 10,
@@ -77,13 +71,24 @@ export function playerExplosionAnimation(scene, obj, id) {
 }
 /** Função que executa a animação de explosão enemy (health == 0)*/
 export function enemyExplosionAnimation(scene, obj, id) {
-    if(obj.height == 0) {
-        let animation = obj.physics.add.sprite(obj.x, obj.y, "explosao");
+    //if(obj.health == 0) {
+    if(obj.y < GAME_HEIGHT && obj.x < GAME_WIDTH - 10) {
+        let animation = scene.physics.add.sprite(obj.x, obj.y, "explosao");
         scene.somExplosao.play();
         animation.anims.play("explosao");
     } else return;
 }
-
+export function enemyDamageAnimation(scene, enemy) {
+    scene.tweens.add({
+        targets: enemy,
+        duration: 200,
+        repeat: 0,
+        yoyo: false,
+        hideOnComplete: false,
+        onStart: function() { this.targets[0].setTint(0xff0000);},
+        onComplete: function() { this.targets[0].clearTint(); }
+    });
+}
 /** Função que executa a animação do Player ao receber dano (mudança de sprite, som e efeito piscando) */
 export function playerDamageAnimation(player, id) {
     let playersSize = Object.keys(this.playerEntities).length
