@@ -46,8 +46,11 @@ export class GameScene extends Phaser.Scene {
   // Aqui serão carregadas as imagens, sons, etc.
   preload() {
     this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE,M,E,R,ENTER") //simulação - > E (explosão), R (Dano)
-
-    this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
+	
+	this.load.image("tiles","./Artes/Mapas/Stub/tsx/tiles_packed.png");
+    this.load.tilemapTiledJSON('myMap',"./Artes/Mapas/Stub/export/map.json");
+	
+    //this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('ship_0022', '../Artes/Assets/Ships/ship_0022.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('ship_0023', './Artes/Assets/Ships/ship_0023.png');
@@ -103,7 +106,10 @@ export class GameScene extends Phaser.Scene {
       console.error(e);
     }
     
-		
+	const map = this.make.tilemap({ key: "myMap", tileWidth: 16, tileHeight: 16});
+	const tileset = map.addTilesetImage("tiles_packed","tiles");
+	this.layer = map.createLayer("Ground", tileset, 0, 0);
+	
     this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
     this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
 
@@ -144,7 +150,7 @@ export class GameScene extends Phaser.Scene {
 
     const width = GAME_WIDTH;
     const height = GAME_HEIGHT;
-    this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
+    //this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
 
     // Sons
     this.somDisparoJogador = this.sound.add('disparo2');
