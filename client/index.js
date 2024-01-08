@@ -129,12 +129,14 @@ export class GameScene extends Phaser.Scene {
     this.room.state.enemiesTanqueSchema.onRemove(EnemyTanqueOnRemove.bind(this));
     
     //** Scroll do Mapa **
-    this.room.state.bgSchema.listen(
+    /*
+	this.room.state.bgSchema.listen(
       "scrollY",
       (currentPosition, previousPosition) => {
         this.bg.setData("scrollY", currentPosition)
       }
     )
+	*/
 
     // Player states changes
     this.room.state.playersSchema.onAdd(PlayerOnAdd.bind(this))
@@ -210,10 +212,13 @@ export class GameScene extends Phaser.Scene {
     if (!this.room) {
       return
     }
+	
+	/*
     const { scrollY } = this.room.state.bgSchema
     if (scrollY) {
       this.bg.tilePositionY = Phaser.Math.Linear(this.bg.tilePositionY, scrollY, 0.2)
     }
+	*/
     
     for (let id in this.playerEntities) {
       const entity = this.playerEntities[id];
