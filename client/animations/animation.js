@@ -78,6 +78,8 @@ export function enemyExplosionAnimation(scene, obj, id) {
         animation.anims.play("explosao");
     } else return;
 }
+
+/** Função que executa a animação do Enemy ao receber dano (efeito vermelho) */
 export function enemyDamageAnimation(scene, enemy) {
     scene.tweens.add({
         targets: enemy,
