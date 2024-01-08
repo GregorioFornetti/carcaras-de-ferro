@@ -8,4 +8,5 @@ export class BackgroundSchema extends schema.Schema {
 }
 schema.defineTypes(BackgroundSchema, {
   scrollY: "number",
+  speed: "number",
 });

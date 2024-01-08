@@ -5,6 +5,7 @@ import { EnemyPatrulheiros } from "./EnemyPatrulheiros.js";
 import { EnemyDesavisados } from "./EnemyDesavisados.js";
 import { EnemyCombatente } from "./EnemyCombatente.js";
 import { EnemyFortaleza } from './EnemyFortaleza.js';
+import { EnemyTanque } from './EnemyTanque.js';
 
 export class Spawner {
 	
@@ -18,8 +19,9 @@ export class Spawner {
 		this.enemies.push ({"enemy": EnemyDesavisados, "weight": 2});
 		this.enemies.push ({"enemy": EnemyCombatente, "weight": 1});
 		this.enemies.push ({"enemy": EnemyFortaleza, "weight": 1});
+		this.enemies.push ({"enemy": EnemyTanque, "weight": 10000000000000000000000000000000});
 		
-		this.spawn_quantities_weights = [1, 1, 1, 1, 1];
+		this.spawn_quantities_weights = [10000000000000000000000000000000, 1, 1, 1, 1];
 		
 		this.timer = Spawner.MAX_TIME;
 	}

@@ -12,6 +12,7 @@ import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySoli
 import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
 import { EnemyFortalezaOnAdd, EnemyFortalezaOnRemove } from "./enemies/EnemyFortaleza.js";
+import { EnemyTanqueOnAdd, EnemyTanqueOnRemove } from "./enemies/EnemyTanque.js";
 //import {CollisorPlayerEnemy,CollisorBulletEnemy,CollisorPlayerBullet} from "./enemies/Collisor.js";
 import { UpdateSprites } from "./updateSprites.js";
 import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
@@ -50,6 +51,8 @@ export class GameScene extends Phaser.Scene {
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('ship_0022', '../Artes/Assets/Ships/ship_0022.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('ship_0023', './Artes/Assets/Ships/ship_0023.png');
+    this.load.image('tile_0029', './Artes/Assets/Tiles/tile_0029.png');
+    this.load.image('tile_0030', './Artes/Assets/Tiles/tile_0030.png');
     this.load.image('ship_0015', './Artes/Assets/Ships/ship_0015.png');
     this.load.audio('disparo2', './Efeitos/Disparos/Disparo2.wav');
     this.load.audio('explosao', './Efeitos/Explosão/Explosão1.wav');
@@ -115,6 +118,10 @@ export class GameScene extends Phaser.Scene {
 
     this.room.state.enemiesFortalezaSchema.onAdd(EnemyFortalezaOnAdd.bind(this));
     this.room.state.enemiesFortalezaSchema.onRemove(EnemyFortalezaOnRemove.bind(this));
+    
+    this.room.state.enemiesTanqueSchema.onAdd(EnemyTanqueOnAdd.bind(this));
+    this.room.state.enemiesTanqueSchema.onRemove(EnemyTanqueOnRemove.bind(this));
+    
     //** Scroll do Mapa **
     this.room.state.bgSchema.listen(
       "scrollY",

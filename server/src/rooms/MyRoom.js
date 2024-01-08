@@ -12,6 +12,7 @@ import { BackgroundSchema } from "../map/BackgroundSchema.js";
 import { EnemySolitario } from "../enemies/EnemySolitario.js";
 import { EnemyPatrulheiros } from "../enemies/EnemyPatrulheiros.js";
 import { EnemyCombatente } from "../enemies/EnemyCombatente.js";
+import { EnemyTanque } from "../enemies/EnemyTanque.js";
 import { Collisor } from "../collisor/Collissor.js"
 
 import { Spawner } from "../enemies/Spawner.js"
@@ -54,6 +55,22 @@ export class MyRoom extends Room {
         delete this.currentEnemies[enemy.id]
       }
     })
+    
+    this.collisor.registerActionForCollission("bullet", "tank", (bullet, enemy) => {
+      bullet.destroy()
+      this.collisor.removeForCollission(bullet, "bullet")
+      delete this.currentBullets[bullet.id]
+      const score = enemy.hit()
+      const player = this.state.playersSchema.get(bullet.owner)
+      if (score) {
+        player.score += score
+      }
+      if (enemy.dead) {
+        this.collisor.removeForCollission(enemy, "tank")
+        delete this.currentEnemies[enemy.id]
+      }
+    })
+    
     this.collisor.registerActionForCollission("player", "enemy", (player, enemy) => {
       let didhit = player.hit()
       if (didhit) { // se o player está imortal, não destroi os inimigos na colisão
@@ -184,6 +201,7 @@ export class MyRoom extends Room {
     //** Movimentação do Mapa */
     this.velocidadeMapa = 1
     this.state.bgSchema.scrollY -= this.velocidadeMapa
+    this.state.bgSchema.speed = this.velocidadeMapa;
 
     if (this.currentEnemies.length != 0) {
       // Loop de atualização automática dos inimigos
@@ -195,8 +213,8 @@ export class MyRoom extends Room {
               this.state, 
               action.entity,
               "SERVER",
-              action.speedX * Math.sin((action.angle * Math.PI) / 180),
-              action.speedY * Math.sin((action.angle * Math.PI) / 180),
+              action.speedX,// * Math.sin((action.angle * Math.PI) / 180),
+              action.speedY,// * Math.sin((action.angle * Math.PI) / 180),
               action.offsetX, 
               action.offsetY
             );
@@ -246,7 +264,10 @@ export class MyRoom extends Room {
     if (spawn_retorno != null) {
       for (let enemy of spawn_retorno) {
         this.currentEnemies[enemy.id] = enemy
-        this.collisor.registerForCollission(enemy, enemy.enemyAttributes, "enemy")
+        if (enemy instanceof EnemyTanque)
+        	this.collisor.registerForCollission(enemy, enemy.enemyAttributes, "tank")
+        else
+        	this.collisor.registerForCollission(enemy, enemy.enemyAttributes, "enemy")
       }
     }
   
