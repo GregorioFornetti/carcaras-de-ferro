@@ -19,7 +19,7 @@ export class EnemyTanque extends Enemy {
 	static spawn(roomState) {	
 		const enemy = new EnemyTanque(roomState);
 		enemy.enemyAttributes.y = -EnemyTanque.HEIGHT/2;
-		enemy.enemyAttributes.x = GAME_WIDTH / 2;
+		enemy.enemyAttributes.x = Math.round(Math.random() * 28) * GAME_WIDTH / 28;
 		
 		let iterator_obj = roomState.playersSchema.$items.entries();
 		let shortestDistance = Number.POSITIVE_INFINITY;
@@ -62,7 +62,7 @@ export class EnemyTanque extends Enemy {
 	update(deltaTime) {
 		this.enemyAttributes.y += this.verticalSpeed * (deltaTime / 1000);
 		
-		this.verticalSpeed = this.room.bgSchema.speed * 60;
+		this.verticalSpeed = this.room.bgSchema.speed * 61.5;
 		
 		const player = this.room.playersSchema.get(this.closestPlayer);
 		this.enemyAttributes.angle = Math.atan2(this.enemyAttributes.y - player.y, this.enemyAttributes.x - player.x + 0.0001) * 180 / Math.PI;
@@ -71,7 +71,7 @@ export class EnemyTanque extends Enemy {
 		
 		if (this.timerBullet <= 0) {
 			
-			console.log (this.closestPlayer);
+			//console.log (this.closestPlayer);
 			let player = this.room.playersSchema.get(this.closestPlayer);
 			
 			this.angle = Math.atan2(this.enemyAttributes.y - player.y, this.enemyAttributes.x - player.x);
