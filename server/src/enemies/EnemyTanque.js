@@ -39,8 +39,8 @@ export class EnemyTanque extends Enemy {
 		return [enemy];
 	}
 	
-	static get MAX_HEALTH() {return 4};
-	static get SCORE() {return 400};
+	static get MAX_HEALTH() {return 3};
+	static get SCORE() {return 150};
 	
 	static get HEIGHT () {return 32;}
 	static get WIDTH () {return 32;}
@@ -68,6 +68,10 @@ export class EnemyTanque extends Enemy {
 		this.enemyAttributes.angle = Math.atan2(this.enemyAttributes.y - player.y, this.enemyAttributes.x - player.x + 0.0001) * 180 / Math.PI;
 		if (this.enemyAttributes.angle < 0)
 			this.enemyAttributes.angle += 360;
+		
+		if (this.enemyAttributes.y > (GAME_HEIGHT + 32)) {
+			this.destroy();
+		}
 		
 		if (this.timerBullet <= 0) {
 			

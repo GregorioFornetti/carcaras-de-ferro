@@ -10,7 +10,7 @@ export function EnemyTanqueOnAdd(enemy, id) {
 	this.enemiesEntities[id].list[1].x = 0;
 	this.enemiesEntities[id].list[1].y = 0;
 	
-	console.log (this.enemiesEntities[id].list);
+	//console.log (this.enemiesEntities[id].list);
 	
 	enemy.onChange(() => {
 		this.enemiesEntities[id].setData('serverX', enemy.x);

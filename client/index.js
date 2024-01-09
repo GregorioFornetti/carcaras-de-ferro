@@ -109,6 +109,12 @@ export class GameScene extends Phaser.Scene {
 	const map = this.make.tilemap({ key: "myMap", tileWidth: 16, tileHeight: 16});
 	const tileset = map.addTilesetImage("tiles_packed","tiles");
 	this.layer = map.createLayer("Ground", tileset, 0, 0);
+	this.layer2 = map.createLayer("Objects", tileset, 0, 0);
+	
+	console.log (map);
+	console.log (tileset);
+	console.log (this.layer);
+	console.log (this.layer2);
 	
     this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
     this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
@@ -212,6 +218,25 @@ export class GameScene extends Phaser.Scene {
     if (!this.room) {
       return
     }
+	
+	
+	if (this.layer.y == 0) {
+		this.layer.y = -3712 + GAME_HEIGHT;
+		this.layer.y += 1;
+		this.layer2.y = -3712 + GAME_HEIGHT;
+		this.layer2.y += 1;
+	} else {
+		this.layer.y += 1;
+		this.layer2.y += 1;
+	}
+	
+	/*
+	
+    const { scrollY } = this.room.state.bgSchema
+    if (scrollY) {
+		this.layer.y = Phaser.Math.Linear(this.layer.y, scrollY, 0.2)
+	}
+	*/
 	
 	/*
     const { scrollY } = this.room.state.bgSchema
