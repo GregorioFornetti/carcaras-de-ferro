@@ -29,7 +29,9 @@ export function PlayerOnAdd(player, id) {
         onComplete: function() { this.targets[0].clearTint(); }
       });    
       
-      this.events.emit('healthChange', id, -1);
+      if (id === this.room.sessionId) {
+        this.events.emit('healthChange', -1);
+      }
     }
     this.events.emit('playerScoreChange', id, player.score)
   })

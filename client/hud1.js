@@ -1,5 +1,5 @@
 
-import { GAME_HEIGHT, GAME_WIDTH } from "./constants.js";
+import { GAME_HEIGHT, GAME_WIDTH, NUM_BOMBAS } from "./constants.js";
 
 
 export default class HUD extends Phaser.Scene {
@@ -8,7 +8,7 @@ export default class HUD extends Phaser.Scene {
         super({ key: 'HUD1', active: true });
         this.score = 0;
         this.health = 3;
-        this.bomb = 2;     
+        this.bomb = NUM_BOMBAS;     
     }
     
     preload() {
@@ -133,7 +133,6 @@ export default class HUD extends Phaser.Scene {
                 shipScoreGap = -shipScoreGap  // Por algum motivo o texto da direita fica mais para direita por padrão, então tem que compensar
             }
 
-            console.log(this.currentPlayers[id].x + shipScoreGap)
             this.currentPlayers[id].scoreImages = this.displayScore(
                 this.currentPlayers[id].score, 
                 this.currentPlayers[id].image.x + shipScoreGap, 
@@ -143,8 +142,8 @@ export default class HUD extends Phaser.Scene {
             )
         });
      
-        game.events.on('healthChange', function(id, healthChange) {
-            if(healthChange == -1) {
+        game.events.on('healthChange', function(healthChange) {
+            if (healthChange == -1) {
                 let playerHealth =this.health;
                 this.healthImages[playerHealth - 1].destroy();
                 this.healthImages[playerHealth - 1] =this.add.image(this.healthConfig[playerHealth-1].x,this.healthConfig[playerHealth-1].y, 'coracao_black_up').setScale(0.5)
@@ -152,10 +151,10 @@ export default class HUD extends Phaser.Scene {
             }
         }, this);
 
-        game.events.on('bombChange', function(id, bomba) {
-            if(bomba == -1) {
+        game.events.on('bombChange', function(bomba) {
+            if (bomba == -1) {
                 this.displayBombas[this.bomb-1].setVisible(false)
-                this.bomb -=1
+                this.bomb -= 1
             }
         }, this);
 
@@ -206,8 +205,9 @@ export default class HUD extends Phaser.Scene {
 
     displayBombas() {
         let displayBombas = []
-        displayBombas.push(this.add.sprite(GAME_WIDTH-15, GAME_HEIGHT - 15, 'nuke').setScale(1.5))
-        displayBombas.push(this.add.sprite(GAME_WIDTH-40, GAME_HEIGHT - 15, 'nuke').setScale(1.5))
+        for (let i = 0; i < NUM_BOMBAS; i++) {
+            displayBombas.push(this.add.sprite(GAME_WIDTH - 15 - (i * 25), GAME_HEIGHT - 15, 'nuke').setScale(1.5))
+        }
         return displayBombas
     }
 

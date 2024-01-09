@@ -13,7 +13,13 @@ export function BombaOnAdd(bomba, id) {
         }
         this.bombasEntities[id].setScale(multiTamanho);
     })
-    this.events.emit('bombChange', bomba.owner, -1)
+
+    console.log(bomba.owner)
+    console.log(this.room.sessionId)
+    if (bomba.owner === this.room.sessionId) {
+        console.log('oi')
+        this.events.emit('bombChange', -1)
+    }
 }
 
 
