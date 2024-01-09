@@ -35,7 +35,7 @@ export class EnemyCacador extends Enemy {
         });
 
         enemy.enemyAttributes.y = 0
-        enemy.enemyAttributes.x = enemy.player.x
+        enemy.enemyAttributes.x = (Math.random() * GAME_WIDTH)//enemy.player.x
         enemy.enemyAttributes.health = CACADOR_HEALTH
         enemy.enemyAttributes.angle = 180
 
@@ -69,20 +69,20 @@ export class EnemyCacador extends Enemy {
         let enemyY = GAME_HEIGHT - this.enemyAttributes.y
         let playerY = GAME_HEIGHT - this.player.y
 
-        let eq = (enemyY - playerY) / 
-                 (this.enemyAttributes.x - this.player.x)
-        let rad = Math.atan(eq)
-        this.enemyAttributes.angle = rad * (180 / Math.PI)
+        const rad = Math.atan2(this.enemyAttributes.y - this.player.y, this.enemyAttributes.x - this.player.x + 0.0001) - (Math.PI/2)
+        this.enemyAttributes.angle =  rad * (180 / Math.PI);
+		if (this.enemyAttributes.angle < 0)
+			this.enemyAttributes.angle += 360;
 
-        console.log(eq + ", " + this.enemyAttributes.angle)
+        //console.log(", " + this.enemyAttributes.angle)
 
         //Determina as velocidades
-        //this.speedY = CACADOR_SPEED * Math.sin(rad)
-        //this.speedX = CACADOR_SPEED * Math.cos(rad)
+        this.speedY = CACADOR_SPEED * Math.cos(rad)
+        this.speedX = CACADOR_SPEED * Math.sin(rad)
         
         //Atualiza posição
-        this.enemyAttributes.y += this.speedY * (deltaTime / 1000);
-        //this.enemyAttributes.x += this.speedX * (deltaTime / 1000);
+        this.enemyAttributes.y -= this.speedY * (deltaTime / 1000);
+        this.enemyAttributes.x += this.speedX * (deltaTime / 1000);
        
     }
 
