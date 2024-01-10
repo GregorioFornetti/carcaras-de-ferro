@@ -53,7 +53,8 @@ export const CACADOR_HEALTH = 1
 export const CACADOR_HEIGHT = 32
 export const CACADOR_WIDTH = 32
 export const CACADOR_SCORE = 500
-export const CACADOR_SPEED = 250
+export const CACADOR_SPEED = 350
+export const CACADOR_LIM_PERSUIT = 120
 
 //Cruzador
 export const CRUZADOR_HEALTH = 1
