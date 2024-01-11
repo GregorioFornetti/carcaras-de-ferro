@@ -54,7 +54,7 @@ export class EnemyFortaleza extends Enemy {
         }
 
         // Disparo - aqui é somente feito o controle do timer e bool que ativa o disparo no MyRoom
-        if (this.timerShoot <= 0){
+        if (this.timerShoot <= 0 && !this.dead){
             this.timerShoot = (Math.random() * (MAX_SHOOT_TIME - MIN_SHOOT_TIME) + MIN_SHOOT_TIME)
             return {
                 'action': 'SHOOT',

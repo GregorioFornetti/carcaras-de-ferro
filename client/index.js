@@ -12,6 +12,8 @@ import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySoli
 import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
 import { EnemyFortalezaOnAdd, EnemyFortalezaOnRemove } from "./enemies/EnemyFortaleza.js";
+import { EnemyCacadorOnAdd, EnemyCacadorOnRemove } from "./enemies/EnemyCacador.js";
+import { EnemyCruzadorOnAdd, EnemyCruzadorOnRemove } from "./enemies/EnemyCruzador.js";
 //import {CollisorPlayerEnemy,CollisorBulletEnemy,CollisorPlayerBullet} from "./enemies/Collisor.js";
 import { UpdateSprites } from "./updateSprites.js";
 import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
@@ -130,6 +132,13 @@ export class GameScene extends Phaser.Scene {
 
     this.room.state.enemiesFortalezaSchema.onAdd(EnemyFortalezaOnAdd.bind(this));
     this.room.state.enemiesFortalezaSchema.onRemove(EnemyFortalezaOnRemove.bind(this));
+
+    this.room.state.enemiesCacadorSchema.onAdd(EnemyCacadorOnAdd.bind(this));
+    this.room.state.enemiesCacadorSchema.onRemove(EnemyCacadorOnRemove.bind(this));
+
+    this.room.state.enemiesCruzadorSchema.onAdd(EnemyCruzadorOnAdd.bind(this));
+    this.room.state.enemiesCruzadorSchema.onRemove(EnemyCruzadorOnRemove.bind(this));
+
     //** Scroll do Mapa **
     this.room.state.bgSchema.listen(
       "scrollY",
