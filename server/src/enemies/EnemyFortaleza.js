@@ -13,7 +13,8 @@ export class EnemyFortalezaSchema extends schema.Schema {
 
 schema.defineTypes(EnemyFortalezaSchema, {
     x: "number",
-    y: "number"
+    y: "number",
+    health: "number"
 });
 
 
@@ -25,6 +26,7 @@ export class EnemyFortaleza extends Enemy {
 
         enemy.enemyAttributes.y = 0;
         enemy.enemyAttributes.x = (Math.random() * GAME_WIDTH);
+        enemy.enemyAttributes.health = EnemyFortaleza.FORTALEZA_HEALTH;
 
         return [enemy];
 

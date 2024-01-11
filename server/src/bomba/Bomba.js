@@ -16,6 +16,7 @@ schema.defineTypes(BombaSchema, {
   x: "number",
   y: "number",
   tamanho: "number",
+  owner: "string"
 })
 
 export class Bomba {
@@ -38,6 +39,7 @@ export class Bomba {
     bomba.bombaAttributes.x = player.x
     bomba.bombaAttributes.y = player.y
     bomba.bombaAttributes.tamanho = tamanhoBomba
+    bomba.bombaAttributes.owner = playerId
 
     return bomba
   }

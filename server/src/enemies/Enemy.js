@@ -32,6 +32,7 @@ export class Enemy {
         this.width = 32
         this.height = 32
         this.score = 0
+        this.health;
     }
 
 
@@ -40,6 +41,7 @@ export class Enemy {
             Função que será chamada no gameloop do servidor. Principal função para movimentação dos inimigos.
         */
         throw new Error('You have to implement the method update!');
+
     }
 
     hit() {

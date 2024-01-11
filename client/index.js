@@ -21,10 +21,11 @@ import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
 import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 import HUD1 from "./hud1.js";
 import HUD3 from "./hud3.js";
-
+import { createExplosionAnimations, createPlayerAnimations } from "./animations/animation.js"
 
 let roomId = null
 let oldId = null
+
 
 export class GameScene extends Phaser.Scene {
 
@@ -64,6 +65,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('ship_0015', './Artes/Assets/Ships/ship_0015.png');
     this.load.audio('disparo2', './Efeitos/Disparos/Disparo2.wav');
     this.load.audio('explosao', './Efeitos/Explosão/Explosão1.wav');
+    this.load.audio('explosao_bae', './Efeitos/Explosão/nuclear6.mp3');
     this.load.audio('dano', './Efeitos/Dano/Dano2.wav');
 
     this.load.spritesheet('ship_1_animado', './Artes/Assets_Personalizados/Ships/Spritesheets/ship2.png', {
@@ -91,10 +93,24 @@ export class GameScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 48,
     })
+    this.load.spritesheet("explosao_bae", "./Artes/Assets_Personalizados/Ships/Spritesheets/explosao_BAE.png", {
+      frameWidth: 128,
+      frameHeight: 128,
+    })
 
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
+    this.load.spritesheet("bullet_light", "./Artes/Assets_Personalizados/Ships/Spritesheets/muzzle-flashes.png", {
+      frameWidth: 8,
+      frameHeight: 8,
+    })
 
     this.load.image("bomba", "./Artes/Assets/Tiles/tile_0012.png")
+
+    this.load.on('complete', () => {
+      // cria as animações
+      createPlayerAnimations(this.anims);
+      createExplosionAnimations(this.anims);
+    });
   }
 
   /* Cria os objetos do jogo, além de efetivamente conectar na sala do Colyseus
@@ -162,11 +178,12 @@ export class GameScene extends Phaser.Scene {
     const width = GAME_WIDTH;
     const height = GAME_HEIGHT;
     this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
-
+    //this.flashCamera = this.cameras.add(width/2, height/2, width, height);
     // Sons
     this.somDisparoJogador = this.sound.add('disparo2');
 	  this.somDisparoInimigo = this.sound.add('disparo2');
     this.somExplosao = this.sound.add('explosao');
+    this.somExplosaoBAE = this.sound.add('explosao_bae');
     this.somDano = this.sound.add('dano');
     //Eventos Input
     this.input.keyboard.on('keydown-M', () => {
@@ -195,21 +212,17 @@ export class GameScene extends Phaser.Scene {
     
     this.input.keyboard.on('keydown-A', () => {
       this.room.send("LEFT",{pressed:true});
-      this.playerEntities[this.room.sessionId].anims.play(`ship_esquerda_d${this.danoP}`);
     })
     
     this.input.keyboard.on('keyup-A', () => {
       this.room.send("LEFT",{pressed:false});
-      this.playerEntities[this.room.sessionId].anims.playReverse(`ship_esquerda_d${this.danoP}`);
     })
     
     this.input.keyboard.on('keydown-D', () => {
       this.room.send("RIGHT",{pressed:true});
-      this.playerEntities[this.room.sessionId].anims.play(`ship_direita_d${this.danoP}`);
     })
     this.input.keyboard.on('keyup-D', () => {
       this.room.send("RIGHT",{pressed:false});
-      this.playerEntities[this.room.sessionId].anims.playReverse(`ship_direita_d${this.danoP}`);
     })
     this.input.keyboard.on('keydown-ENTER', () => {
       this.room.send("STARTGAME",{});
@@ -231,6 +244,7 @@ export class GameScene extends Phaser.Scene {
 
   update(time, delta) {
     // Sai do loop se a sala não estiver conectada
+     
     if (!this.room) {
       return
     }
@@ -246,12 +260,39 @@ export class GameScene extends Phaser.Scene {
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
         entity.health = health
+
         if (entity.health === 0) {
           entity.anims.play("explosao")
           entity.dead = true
           entity.on('animationcomplete', () => {
             entity.visible = false
           })
+        }
+
+        const threshold = 2;
+        if (entity.x - serverX > threshold) {  // Indo para esquerda
+          let animationKey = `ship_esquerda_d${3-entity.health}_${entity.playerSize}`;
+          if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
+            entity.anims.play(animationKey);
+          }
+          entity.stoped = false
+        } else if (entity.x - serverX < -threshold) { // Indo para direita
+          let animationKey = `ship_direita_d${3-entity.health}_${entity.playerSize}`;
+          if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
+            entity.anims.play(animationKey);
+          }
+          entity.stoped = false
+        } else {
+          if (entity.anims.currentAnim && !entity.stoped) {
+            let animationKey = entity.anims.currentAnim.key;
+            let progress = entity.anims.getProgress();
+            if(progress == 1) {
+              entity.anims.playReverse(animationKey);
+            } else {
+              entity.anims.reverse(animationKey);
+            }
+            entity.stoped = true
+          }
         }
       }
     }

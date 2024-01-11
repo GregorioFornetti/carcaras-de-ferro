@@ -1,3 +1,5 @@
+import { bulletLight } from "../animations/animation.js";
+
 export function BulletOnAdd(bullet, id) {
 	this.bulletsEntities[id] = this.physics.add.sprite(
 		bullet.x,
@@ -11,6 +13,7 @@ export function BulletOnAdd(bullet, id) {
 		this.somDisparoInimigo.play();
 	} else {
 		this.somDisparoJogador.play();
+		bulletLight(this, bullet, id);
 	}
 	this.bulletsEntities[id].setScale(bullet.size)
 

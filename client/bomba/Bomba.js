@@ -13,14 +13,22 @@ export function BombaOnAdd(bomba, id) {
         }
         this.bombasEntities[id].setScale(multiTamanho);
     })
+
+    console.log(bomba.owner)
+    console.log(this.room.sessionId)
+    if (bomba.owner === this.room.sessionId) {
+        console.log('oi')
+        this.events.emit('bombChange', -1)
+    }
 }
 
 
 export function BombaOnRemove(bomba, id) {
+    //animação bae
+    let animation = this.physics.add.sprite(bomba.x, bomba.y-10, "explosao_bomba");
+    animation.anims.play("explosao_bae");
+    this.somExplosaoBAE.play()
+    this.cameras.main.flash(1000);
+
     this.bombasEntities[id].destroy();
-
-    // implementar explosao
-
-
-    this.somExplosao.play()
 }

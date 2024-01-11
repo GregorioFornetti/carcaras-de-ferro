@@ -19,7 +19,8 @@ export class EnemyDesavisadosSchema extends schema.Schema {
 
 schema.defineTypes(EnemyDesavisadosSchema, {
     x: "number",
-    y: "number"
+    y: "number",
+    health: "number"
 });
 
 export class EnemyDesavisados extends Enemy {
@@ -56,7 +57,8 @@ export class EnemyDesavisados extends Enemy {
             const newSpeed = enemy1.speed * -1;
             enemy2.speed = enemy1.speed = newSpeed;
          }
-
+         enemy1.enemyAttributes.health = EnemyDesavisados.DESAVISADOS_HEALTH
+         enemy2.enemyAttributes.health = EnemyDesavisados.DESAVISADOS_HEALTH
 
         return [enemy1, enemy2];
     }

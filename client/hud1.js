@@ -1,15 +1,19 @@
 
-import { GAME_WIDTH } from "./constants.js";
+import { GAME_HEIGHT, GAME_WIDTH, NUM_BOMBAS } from "./constants.js";
 
 import ScoreHUD from "./ScoreHUD.js";
 
 import playerConfigs from "./player/playerConfigs.js";
+
+
 
 export default class HUD1 extends ScoreHUD {
 
     constructor () {
         super({ key: 'HUD1', active: true });
         this.score = 0;
+        this.health = 3;
+        this.bomb = NUM_BOMBAS;     
     }
     
     preload() {
@@ -30,10 +34,18 @@ export default class HUD1 extends ScoreHUD {
         this.load.image('number_7', './Artes/Assets/Tiles/tile_0033.png')
         this.load.image('number_8', './Artes/Assets/Tiles/tile_0034.png')
         this.load.image('number_9', './Artes/Assets/Tiles/tile_0035.png')
+
+        //Carregando sprites de vida
+        this.load.image('coracao_red', './Artes/Assets_Personalizados/Coracoes/coracao_Padrao1.png')
+        this.load.image('coracao_black_up', './Artes/Assets_Personalizados/Coracoes/coracao_Preto_Up1.png')
+        this.load.image('coracao_black_down', './Artes/Assets_Personalizados/Coracoes/coracao_Preto_Down1.png')
+        
+        //Carrgando sprite bomba
+        this.load.image('nuke','./Artes/Assets/Tiles/tile_0013.png')
+
     }
 
     create () {
-
         // Variáveis de configuração
         this.shipScoreGap = 25
         this.scoreNumbersGap = 10
@@ -65,12 +77,31 @@ export default class HUD1 extends ScoreHUD {
                 flow: 'right',
             }
         ]
-
+        this.healthConfig = [
+            {
+                sprite: 'coracao_red',
+                x: 15,
+                y: GAME_HEIGHT-15
+            },
+            {
+                sprite: 'coracao_red',
+                x: 40,
+                y: GAME_HEIGHT-15
+            },
+            {
+                sprite: 'coracao_red',
+                x: 65,
+                y: GAME_HEIGHT-15
+            },
+        ]
+        
         this.currentPlayers = {}
-
+        this.healthImages = []
+        this.healthImages = this.displayHealth()
+        this.displayBombas = this.displayBombas()
+        
         let game = this.scene.get('GameScene');
-
-        game.events.off('newPlayer')  // Para não ficar com vários listeners ao resetar o jogo
+        
         game.events.on('newPlayer', function (id) {
             console.log('NOVO PLAYER')
             console.log(id)
@@ -93,7 +124,7 @@ export default class HUD1 extends ScoreHUD {
                 this.scoreScale,
                 this.scoreNumbersGap
             )
-  
+                
             this.currentPlayers[id].flow = this.scoresConfig[currentPlayerNumber].flow
             this.currentPlayers[id].color = this.scoresConfig[currentPlayerNumber].color
         }, this);
@@ -118,6 +149,81 @@ export default class HUD1 extends ScoreHUD {
                 this.scoreScale,
                 this.scoreNumbersGap
             )
-        })
+        });
+     
+        game.events.on('healthChange', function(healthChange) {
+            if (healthChange == -1) {
+                let playerHealth =this.health;
+                this.healthImages[playerHealth - 1].destroy();
+                this.healthImages[playerHealth - 1] =this.add.image(this.healthConfig[playerHealth-1].x,this.healthConfig[playerHealth-1].y, 'coracao_black_up').setScale(0.5)
+                this.health -= 1;
+            }
+        }, this);
+
+        game.events.on('bombChange', function(bomba) {
+            if (bomba == -1) {
+                this.displayBombas[this.bomb-1].setVisible(false)
+                this.bomb -= 1
+            }
+        }, this);
+
+    }
+
+    displayScore(score, x, y, flow, color) {
+        if (flow === 'left') {
+            return this.displayScoreLeft(score, x, y, color)
+        } else if (flow === 'right') {
+            return this.displayScoreRight(score, x, y, color)
+        }
+    }
+
+    displayScoreLeft(score, x, y, color) {
+        let scoreString = score.toString()
+        let scoreSprites = []
+        let scoreSpritesX = x
+    
+        for (let i = 0; i < scoreString.length; i++) {
+            scoreSprites.push(
+                this.add.image(scoreSpritesX, y, 'number_' + scoreString[i])
+                .setScale(this.scoreScale)
+                .setTint(color)
+            )
+            scoreSpritesX += this.scoreNumbersGap
+        }
+    
+        return scoreSprites
+    }
+    
+
+    displayScoreRight(score, x, y, color) {
+        let scoreString = score.toString()
+        let scoreSprites = []
+        let scoreSpritesX = x
+    
+        for (let i = scoreString.length - 1; i >= 0; i--) {
+            scoreSprites.push(
+                this.add.image(scoreSpritesX, y, 'number_' + scoreString[i])
+                .setScale(this.scoreScale)
+                .setTint(color)
+            )
+            scoreSpritesX -= this.scoreNumbersGap
+        }
+    
+        return scoreSprites
+    }
+
+    displayBombas() {
+        let displayBombas = []
+        for (let i = 0; i < NUM_BOMBAS; i++) {
+            displayBombas.push(this.add.sprite(GAME_WIDTH - 15 - (i * 25), GAME_HEIGHT - 15, 'nuke').setScale(1.5))
+        }
+        return displayBombas
+    }
+
+    displayHealth() {
+        let displayHealth = []
+        for(let i = 0; i < 3; i++) 
+            displayHealth.push(this.add.image(this.healthConfig[i].x, this.healthConfig[i].y, this.healthConfig[i].sprite).setScale(0.5))
+        return displayHealth
     }
 }

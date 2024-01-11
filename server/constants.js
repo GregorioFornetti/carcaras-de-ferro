@@ -3,7 +3,7 @@
 
 export const GAME_WIDTH = 448
 export const GAME_HEIGHT = 512
-
+export const NUM_BOMBAS = 5
 
 // Combatente
 export const COMBATENTE_HEALTH = 4

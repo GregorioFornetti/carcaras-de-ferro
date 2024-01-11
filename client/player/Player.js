@@ -1,7 +1,6 @@
 export function PlayerOnAdd(player, id) {
   this.events.emit('newPlayer', id)
   let playersSize = Object.keys(this.playerEntities).length
-  let danoP = player.dano;
   
   this.playerEntities[id] = this.physics.add.sprite(
     player.x + playersSize * 100,
@@ -78,10 +77,9 @@ export function PlayerOnAdd(player, id) {
 		this.playerEntities[id].setData('serverY', player.y);
     this.playerEntities[id].setData('immortal', player.immortal);
     this.playerEntities[id].setData('health', player.health);
-    var animation = player.currentAnimation;
     
-    /** simulação de dano utilizando keyboard (R) e atributo "dano" do player */
     if(this.playerEntities[id].health !== this.playerEntities[id].data.values.health) {
+      let tweenAnimation = `ship_frente_d${3-this.playerEntities[id].data.values.health}_${playersSize+1}`;
       this.somExplosao.play()
       this.tweens.add({
         targets: this.playerEntities[id],
@@ -89,7 +87,7 @@ export function PlayerOnAdd(player, id) {
         duration: 300,
         repeat: 4,
         yoyo: true,
-        onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(animation); },
+        onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(tweenAnimation); },
         onComplete: function() { this.targets[0].clearTint(); }
       });
 
@@ -101,6 +99,10 @@ export function PlayerOnAdd(player, id) {
 
       if (this.isGameover()) {
         this.events.emit('gameover', this.generateGameoverInfo())
+      }
+
+      if (id === this.room.sessionId) {
+        this.events.emit('healthChange', -1);
       }
     }
 

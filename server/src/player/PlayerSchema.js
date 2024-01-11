@@ -24,7 +24,7 @@ schema.defineTypes(PlayerSchema, {
   currentAnimation: "string",
   immortal: "boolean",
   health: "number",
-  score: "number"
+  score: "number",
 })
 
 export class Player {
