@@ -1,7 +1,7 @@
 import { Enemy } from './Enemy.js';
 import * as schema from "@colyseus/schema";
 
-import {GAME_WIDTH, GAME_HEIGHT, CACADOR_SPEED, CACADOR_HEALTH, CACADOR_SCORE, CACADOR_LIM_PERSUIT} from '../../constants.js';
+import {GAME_WIDTH, GAME_HEIGHT, CACADOR_SPEED, CACADOR_HEALTH, CACADOR_SCORE, CACADOR_LIM_PERSUIT, CACADOR_FIRERATE} from '../../constants.js';
 
 
 export class EnemyCacadorSchema extends schema.Schema {
@@ -40,7 +40,7 @@ export class EnemyCacador extends Enemy {
         enemy.enemyAttributes.angle = 180
 
 
-        console.log("spawn caçador para o player " + randomP)
+        //console.log("spawn caçador para o player " + randomP)
     
         return [enemy]
     }
@@ -54,7 +54,9 @@ export class EnemyCacador extends Enemy {
         this.health = CACADOR_HEALTH
         this.score = CACADOR_SCORE
         this.player = null
+
         this.persuit = true
+        this.timerBullet = 1/CACADOR_FIRERATE
 
     }
 
@@ -83,6 +85,24 @@ export class EnemyCacador extends Enemy {
             //Determina as velocidades
             this.speedY = CACADOR_SPEED * Math.cos(rad)
             this.speedX = CACADOR_SPEED * Math.sin(rad)
+
+            //Disparo
+            if (this.timerBullet <= 0 && !this.dead) {
+                this.timerBullet = 1/CACADOR_FIRERATE
+                return {
+                    'action': 'SHOOT',
+                    'angle': 270,
+                    'rotation': this.enemyAttributes.angle,
+                    'speedY': -this.speedY/25,
+                    'speedX': this.speedX/25,
+                    'offsetX': -5,
+                    'offsetY': -5,
+                    'size': 1,
+                    'entity': this.enemyAttributes,
+                };
+            } else {
+                this.timerBullet -= deltaTime/1000
+            }
             
         }
 
