@@ -180,6 +180,7 @@ export default class HUD3 extends ScoreHUD {
             }
         })
 
+        /*
         game.events.off('current-player-died')
         game.events.on('current-player-died', () => {
             for (let i = 0; i < 3; i++) {
@@ -190,6 +191,7 @@ export default class HUD3 extends ScoreHUD {
                 ).setScale(this.DEATH_HEART_SCALE)
             }
         })
+        */
     }
 
     update (time, delta) {
