@@ -270,7 +270,7 @@ export class GameScene extends Phaser.Scene {
       }
     }        
   }
-}
+} 
 
 // Configurações do Phaser gerais
 const config = {
