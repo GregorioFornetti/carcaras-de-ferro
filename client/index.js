@@ -21,7 +21,7 @@ import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
 import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 import HUD1 from "./hud1.js";
 import HUD3 from "./hud3.js";
-import { createExplosionAnimations, createPlayerAnimations } from "./animations/animation.js"
+import { createAnimations, playerExplosionAnimation, enemyDamageAnimation} from "./animations/animation.js"
 
 let roomId = null
 let oldId = null
@@ -114,8 +114,7 @@ export class GameScene extends Phaser.Scene {
 
     this.load.on('complete', () => {
       // cria as animações
-      createPlayerAnimations(this.anims);
-      createExplosionAnimations(this.anims);
+      createAnimations(this.anims);
     });
   }
 
@@ -268,7 +267,7 @@ export class GameScene extends Phaser.Scene {
         entity.health = health
 
         if (entity.health === 0) {
-          entity.anims.play("explosao")
+          playerExplosionAnimation(this, entity, id)
           entity.dead = true
           entity.on('animationcomplete', () => {
             entity.visible = false
@@ -340,7 +339,7 @@ export class GameScene extends Phaser.Scene {
     }
     return info
   }
-}
+} 
 
 // Configurações do Phaser gerais
 const config = {

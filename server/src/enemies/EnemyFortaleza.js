@@ -26,7 +26,7 @@ export class EnemyFortaleza extends Enemy {
 
         enemy.enemyAttributes.y = 0;
         enemy.enemyAttributes.x = (Math.random() * GAME_WIDTH);
-        enemy.enemyAttributes.health = EnemyFortaleza.FORTALEZA_HEALTH;
+        enemy.enemyAttributes.health = FORTALEZA_HEALTH;
 
         return [enemy];
 
