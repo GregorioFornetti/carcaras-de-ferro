@@ -155,11 +155,11 @@ export class GameScene extends Phaser.Scene {
     this.room.state.enemiesFortalezaSchema.onAdd(EnemyFortalezaOnAdd.bind(this));
     this.room.state.enemiesFortalezaSchema.onRemove(EnemyFortalezaOnRemove.bind(this));
 
-    this.room.state.enemiesCacadorSchema.onAdd(EnemyCacadorOnAdd.bind(this));
-    this.room.state.enemiesCacadorSchema.onRemove(EnemyCacadorOnRemove.bind(this));
+    // this.room.state.enemiesCacadorSchema.onAdd(EnemyCacadorOnAdd.bind(this));
+    // this.room.state.enemiesCacadorSchema.onRemove(EnemyCacadorOnRemove.bind(this));
 
-    this.room.state.enemiesCruzadorSchema.onAdd(EnemyCruzadorOnAdd.bind(this));
-    this.room.state.enemiesCruzadorSchema.onRemove(EnemyCruzadorOnRemove.bind(this));
+    // this.room.state.enemiesCruzadorSchema.onAdd(EnemyCruzadorOnAdd.bind(this));
+    // this.room.state.enemiesCruzadorSchema.onRemove(EnemyCruzadorOnRemove.bind(this));
 
     //** Scroll do Mapa **
     this.room.state.bgSchema.listen(
@@ -274,7 +274,7 @@ export class GameScene extends Phaser.Scene {
             entity.visible = false
           })
         }
-
+        entity.playerSize = Object.keys(this.playerEntities).length
         const threshold = 2;
         if (entity.x - serverX > threshold) {  // Indo para esquerda
           let animationKey = `ship_esquerda_d${3-entity.health}_${entity.playerSize}`;
