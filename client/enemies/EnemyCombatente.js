@@ -3,6 +3,7 @@ import { explosionAnimation } from "../animations/animation.js";
 
 export function EnemyCombatenteOnAdd(enemy, id) {
 	this.enemiesEntities[id] = this.physics.add.sprite(enemy.x, enemy.y, 'ship_0015');
+	this.enemiesEntities[id].angle = 180
 	this.physics.add.existing(this.enemiesEntities[id]);
 
 	enemy.onChange(() => {

@@ -2,8 +2,8 @@ import { GAME_HEIGHT } from "../constants.js";
 import { explosionAnimation } from "../animations/animation.js";
 
 export function EnemySolitarioOnAdd(enemy, id) {
-	this.enemiesEntities[id] = this.physics.add.image(enemy.x, enemy.y, 'ship_0022');
-	//this.enemiesEntities[id] = this.add.rectangle (enemy.x, enemy.y, 32, 32, 0x888888);
+	this.enemiesEntities[id] = this.physics.add.sprite(enemy.x, enemy.y, 'ship_0022', 0);
+	this.enemiesEntities[id].angle = 180
 	this.physics.add.existing(this.enemiesEntities[id]);
 	this.enemiesEntities[id].health = enemy.health;
 

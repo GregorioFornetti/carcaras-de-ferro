@@ -60,9 +60,9 @@ export class GameScene extends Phaser.Scene {
 
     this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.spritesheet('ship_0022', '../Artes/Assets/Ships/ship_0022.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.image('ship_0023', './Artes/Assets/Ships/ship_0023.png');
-    this.load.image('ship_0015', './Artes/Assets/Ships/ship_0015.png');
+    this.load.spritesheet('ship_0022', '../Artes/Assets_Personalizados/Ships/Spritesheets/solitario.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('ship_0023', '../Artes/Assets_Personalizados/Ships/Spritesheets/patrulheiro.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('ship_0015', '../Artes/Assets_Personalizados/Ships/Spritesheets/combatente.png', { frameWidth: 64, frameHeight: 64 });
     this.load.audio('disparo2', './Efeitos/Disparos/Disparo2.wav');
     this.load.audio('explosao', './Efeitos/Explosão/Explosão1.wav');
     this.load.audio('explosao_bae', './Efeitos/Explosão/nuclear6.mp3');
@@ -89,10 +89,16 @@ export class GameScene extends Phaser.Scene {
       frameHeight: 64,
     })
 
-    this.load.spritesheet("ship_19", "./Artes/Assets/Ships/ship_0019.png", {
-      frameWidth: 32,
-      frameHeight: 48,
+    this.load.spritesheet("ship_19", "../Artes/Assets_Personalizados/Ships/Spritesheets/cacador.png", {
+      frameWidth: 64,
+      frameHeight: 64,
     })
+
+    this.load.spritesheet("cruzador", "../Artes/Assets_Personalizados/Ships/Spritesheets/cruzador.png", {
+      frameWidth: 64,
+      frameHeight: 64,
+    })
+
     this.load.spritesheet("explosao_bae", "./Artes/Assets_Personalizados/Ships/Spritesheets/explosao_BAE.png", {
       frameWidth: 128,
       frameHeight: 128,

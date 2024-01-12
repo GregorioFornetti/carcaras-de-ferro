@@ -2,7 +2,7 @@ import { GAME_HEIGHT, GAME_WIDTH } from "../constants.js";
 
 
 export function EnemyCruzadorOnAdd(enemy, id) {
-    this.enemiesEntities[id] = this.physics.add.sprite(enemy.x, enemy.y, 'ship_19');
+    this.enemiesEntities[id] = this.physics.add.sprite(enemy.x, enemy.y, 'cruzador');
     this.enemiesEntities[id].angle = enemy.angle;
 
     enemy.onChange(() => {
