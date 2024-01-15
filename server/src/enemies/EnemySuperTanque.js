@@ -1,20 +1,21 @@
 import { Enemy } from './Enemy.js';
+import { EnemyTanque } from './EnemyTanque.js';
 import * as schema from "@colyseus/schema";
 import { GAME_HEIGHT, GAME_WIDTH } from '../../constants.js';
 
 
-export class EnemyTanqueSchema extends schema.Schema {
+export class EnemySuperTanqueSchema extends schema.Schema {
 
 }
 
-schema.defineTypes(EnemyTanqueSchema, {
+schema.defineTypes(EnemySuperTanqueSchema, {
 	x: "number",
 	y: "number",
 	angle: "number",
 	health: "number",
 });
 
-export class EnemyTanque extends Enemy {
+export class EnemySuperTanque extends Enemy {
 	
 	static map;
 	
@@ -33,7 +34,7 @@ export class EnemyTanque extends Enemy {
 	
 	static spawn(roomState) {	
 		
-		const enemy = new EnemyTanque(roomState);
+		const enemy = new EnemySuperTanque(roomState);
 		
 		let x = Math.round(Math.random() * 27);
 		
@@ -78,13 +79,13 @@ export class EnemyTanque extends Enemy {
 	constructor(roomState) {
 		super();
 		this.room = roomState
-		this.init(roomState.enemiesTanqueSchema, EnemyTanqueSchema);
+		this.init(roomState.enemiesSuperTanqueSchema, EnemySuperTanqueSchema);
 		this.verticalSpeed = this.room.bgSchema.speed * 62;
-		this.health = 3;
-		this.score = 150;
-		this.fireRate = 0.5;
-		this.timerBullet = this.fireRate/1;
-		this.bulletStyle = 0;
+		this.health = 6;
+		this.score = 300;
+		this.fireRate = 1;
+		this.timerBullet = 1/this.fireRate;
+		this.bulletStyle = 1;
 		this.closestPlayer = null;
 	}
 	

@@ -13,6 +13,7 @@ import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/Ene
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
 import { EnemyFortalezaOnAdd, EnemyFortalezaOnRemove } from "./enemies/EnemyFortaleza.js";
 import { EnemyTanqueOnAdd, EnemyTanqueOnRemove } from "./enemies/EnemyTanque.js";
+import { EnemySuperTanqueOnAdd, EnemySuperTanqueOnRemove } from "./enemies/EnemySuperTanque.js";
 //import {CollisorPlayerEnemy,CollisorBulletEnemy,CollisorPlayerBullet} from "./enemies/Collisor.js";
 import { UpdateSprites } from "./updateSprites.js";
 import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
@@ -54,8 +55,12 @@ export class GameScene extends Phaser.Scene {
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('ship_0022', '../Artes/Assets/Ships/ship_0022.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('ship_0023', './Artes/Assets/Ships/ship_0023.png');
+	
+	this.load.image('tile_0017', './Artes/Assets/Tiles/tile_0017.png');
     this.load.image('tile_0029', './Artes/Assets/Tiles/tile_0029.png');
     this.load.image('tile_0030', './Artes/Assets/Tiles/tile_0030.png');
+	this.load.image('tile_0120', './Artes/Assets/Tiles/tile_0120.png');
+	
     this.load.image('ship_0015', './Artes/Assets/Ships/ship_0015.png');
     this.load.audio('disparo2', './Efeitos/Disparos/Disparo2.wav');
     this.load.audio('explosao', './Efeitos/Explosão/Explosão1.wav');
@@ -88,6 +93,7 @@ export class GameScene extends Phaser.Scene {
     })
 
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
+	this.load.image("bullet2", "./Artes/Assets/Tiles/tile_0001.png")
 
     this.load.image("bomba", "./Artes/Assets/Tiles/tile_0012.png")
   }
@@ -111,10 +117,21 @@ export class GameScene extends Phaser.Scene {
 	this.layer = map.createLayer("Ground", tileset, 0, 0);
 	this.layer2 = map.createLayer("Objects", tileset, 0, 0);
 	
-	console.log (map);
-	console.log (tileset);
-	console.log (this.layer);
-	console.log (this.layer2);
+	this.provMap = [];
+	
+	this.provMap[0] = [];
+	this.provMap[1] = [];
+	
+	for (let i = 0; i < 232; i++) {
+		this.provMap[0][i] = [];
+		this.provMap[1][i] = [];
+		for (let j = 0; j < 28; j++) {
+			this.provMap[0][i][j] = map.layers[0].data[i][j].index;
+			this.provMap[1][i][j] = map.layers[1].data[i][j].index;
+		}
+	}
+
+	this.room.send("sendMAP", this.provMap);
 	
     this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
     this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
@@ -133,16 +150,9 @@ export class GameScene extends Phaser.Scene {
     
     this.room.state.enemiesTanqueSchema.onAdd(EnemyTanqueOnAdd.bind(this));
     this.room.state.enemiesTanqueSchema.onRemove(EnemyTanqueOnRemove.bind(this));
-    
-    //** Scroll do Mapa **
-    /*
-	this.room.state.bgSchema.listen(
-      "scrollY",
-      (currentPosition, previousPosition) => {
-        this.bg.setData("scrollY", currentPosition)
-      }
-    )
-	*/
+	
+	this.room.state.enemiesSuperTanqueSchema.onAdd(EnemySuperTanqueOnAdd.bind(this));
+    this.room.state.enemiesSuperTanqueSchema.onRemove(EnemySuperTanqueOnRemove.bind(this));
 
     // Player states changes
     this.room.state.playersSchema.onAdd(PlayerOnAdd.bind(this))
@@ -158,11 +168,10 @@ export class GameScene extends Phaser.Scene {
 
     const width = GAME_WIDTH;
     const height = GAME_HEIGHT;
-    //this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
 
     // Sons
     this.somDisparoJogador = this.sound.add('disparo2');
-	  this.somDisparoInimigo = this.sound.add('disparo2');
+	this.somDisparoInimigo = this.sound.add('disparo2');
     this.somExplosao = this.sound.add('explosao');
     this.somDano = this.sound.add('dano');
     //Eventos Input
@@ -215,35 +224,9 @@ export class GameScene extends Phaser.Scene {
 
   update(time, delta) {
     // Sai do loop se a sala não estiver conectada
-    if (!this.room) {
-      return
-    }
-	
-	
-	if (this.layer.y == 0) {
-		this.layer.y = -3712 + GAME_HEIGHT;
-		this.layer.y += 1;
-		this.layer2.y = -3712 + GAME_HEIGHT;
-		this.layer2.y += 1;
-	} else {
-		this.layer.y += 1;
-		this.layer2.y += 1;
+	if (!this.room) {
+		return
 	}
-	
-	/*
-	
-    const { scrollY } = this.room.state.bgSchema
-    if (scrollY) {
-		this.layer.y = Phaser.Math.Linear(this.layer.y, scrollY, 0.2)
-	}
-	*/
-	
-	/*
-    const { scrollY } = this.room.state.bgSchema
-    if (scrollY) {
-      this.bg.tilePositionY = Phaser.Math.Linear(this.bg.tilePositionY, scrollY, 0.2)
-    }
-	*/
     
     for (let id in this.playerEntities) {
       const entity = this.playerEntities[id];
@@ -267,15 +250,25 @@ export class GameScene extends Phaser.Scene {
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
     }
+	
+	const { scrollY } = this.room.state.bgSchema
+	if (scrollY) {
+		if (this.layer.y > -50 && scrollY < -3712 + 50 + GAME_HEIGHT) 
+			this.layer.y -= 3712 - GAME_HEIGHT;
 
-    for (let id in this.enemiesEntities) {
-      const entity = this.enemiesEntities[id];
-      if (entity !== undefined && entity !== null) {
-        const { serverX, serverY } = entity.data.values;
-        entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
-        entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
-      }
-    }        
+		this.layer.y = Phaser.Math.Linear(this.layer.y, scrollY, 0.2)
+		this.layer2.y = Phaser.Math.Linear(this.layer.y, scrollY, 0.2)
+	}
+	
+	for (let id in this.enemiesEntities) {
+		const entity = this.enemiesEntities[id];
+		if (entity !== undefined && entity !== null) {
+			const { serverX, serverY } = entity.data.values;
+			entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+			entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+		}
+	}
+	
   }
 }
 

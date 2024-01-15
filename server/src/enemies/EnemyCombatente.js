@@ -107,8 +107,8 @@ export class EnemyCombatente extends Enemy {
 					this.timerBullet = Math.random() * (EnemyCombatente.MAX_SHOOT_TIME - EnemyCombatente.MIN_SHOOT_TIME) + EnemyCombatente.MIN_SHOOT_TIME;
 					return {
 						'action': 'SHOOT',
-						'angle': 270,
-						'speedY': 5,
+						'angle': 0,
+						'speedY': -5,
 						'speedX': 0,
 						'offsetX': 0,
 						'offsetY': 20,

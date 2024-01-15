@@ -13,6 +13,7 @@ import { EnemySolitario } from "../enemies/EnemySolitario.js";
 import { EnemyPatrulheiros } from "../enemies/EnemyPatrulheiros.js";
 import { EnemyCombatente } from "../enemies/EnemyCombatente.js";
 import { EnemyTanque } from "../enemies/EnemyTanque.js";
+import { EnemySuperTanque } from "../enemies/EnemySuperTanque.js";
 import { Collisor } from "../collisor/Collissor.js"
 
 import { Spawner } from "../enemies/Spawner.js"
@@ -29,7 +30,7 @@ export class MyRoom extends Room {
   // Aqui será definido os callbacks de eventos da sala
   onCreate(options) {
     this.setState(new MyRoomState())
-
+	
     this.currentPlayers = {}
     this.currentEnemies = {}
     this.currentBullets = {}
@@ -97,9 +98,23 @@ export class MyRoom extends Room {
         }
       }
     })
-
+	
+	this.map = null;
+	
     this.spawnCentral = new Spawner(this.state)
-    
+	
+	this.onMessage("sendMAP", (client, message) => {
+		this.map = message;
+		
+		this.map[2] = new Map();
+		
+		for (let i = 0; i <= 140; i++)
+			this.map[2].set (i, false);
+		
+		this.map[2].set (-1, true);
+		this.map[2].set (51, true);
+		this.map[2].set (57, true);
+	})
 
     // Gera o game loop, atualização de estado automatica a cada deltaTime
     // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
@@ -159,7 +174,7 @@ export class MyRoom extends Room {
    */
   onJoin(client, options) {
     console.log(client.sessionId, "joined!")
-
+	
     // Cria uma instância do jogador, definido em MyRoomState.js
     const player = Player.spawn(this.state, client.sessionId,
       Math.random()*(GAME_WIDTH/2) + 100,
@@ -200,7 +215,15 @@ export class MyRoom extends Room {
 
     //** Movimentação do Mapa */
     this.velocidadeMapa = 1
-    this.state.bgSchema.scrollY -= this.velocidadeMapa
+    //this.state.bgSchema.scrollY -= this.velocidadeMapa
+	
+	if (this.state.bgSchema.scrollY == 0) {
+		this.state.bgSchema.scrollY = -3712 + GAME_HEIGHT;
+		this.state.bgSchema.scrollY += this.velocidadeMapa;
+	} else {
+		this.state.bgSchema.scrollY += this.velocidadeMapa;
+	}
+	
     this.state.bgSchema.speed = this.velocidadeMapa;
 
     if (this.currentEnemies.length != 0) {
@@ -213,10 +236,12 @@ export class MyRoom extends Room {
               this.state, 
               action.entity,
               "SERVER",
-              action.speedX,// * Math.sin((action.angle * Math.PI) / 180),
-              action.speedY,// * Math.sin((action.angle * Math.PI) / 180),
+              action.speedX,
+              action.speedY,
               action.offsetX, 
-              action.offsetY
+              action.offsetY,
+			  action.angle,
+			  action.style
             );
             newBullet.bulletAttributes.size = action.size
             this.currentBullets[newBullet.id] = newBullet;
@@ -264,7 +289,7 @@ export class MyRoom extends Room {
     if (spawn_retorno != null) {
       for (let enemy of spawn_retorno) {
         this.currentEnemies[enemy.id] = enemy
-        if (enemy instanceof EnemyTanque)
+        if (enemy instanceof EnemyTanque || enemy instanceof EnemySuperTanque)
         	this.collisor.registerForCollission(enemy, enemy.enemyAttributes, "tank")
         else
         	this.collisor.registerForCollission(enemy, enemy.enemyAttributes, "enemy")

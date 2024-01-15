@@ -58,8 +58,8 @@ export class EnemyFortaleza extends Enemy {
             this.timerShoot = (Math.random() * (MAX_SHOOT_TIME - MIN_SHOOT_TIME) + MIN_SHOOT_TIME)
             return {
                 'action': 'SHOOT',
-                'angle': 270,
-                'speedY': 5,
+                'angle': 0,
+                'speedY': -5,
                 'speedX': 0,
                 'offsetX': 0,
                 'offsetY': 60,
@@ -69,10 +69,7 @@ export class EnemyFortaleza extends Enemy {
         } else {
             this.timerShoot -= deltaTime/1000
         }
-
-
-
-       
+ 
     }
 
     onNuke() {

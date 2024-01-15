@@ -1,9 +1,19 @@
 export function BulletOnAdd(bullet, id) {
-	this.bulletsEntities[id] = this.physics.add.sprite(
-		bullet.x,
-		bullet.y,
-		"bullet"
-	)
+	
+	if (bullet.style == 0)
+		this.bulletsEntities[id] = this.physics.add.sprite(
+			bullet.x,
+			bullet.y,
+			"bullet"
+		)
+	else
+		this.bulletsEntities[id] = this.physics.add.sprite(
+			bullet.x,
+			bullet.y,
+			"bullet2"
+		)
+
+	this.bulletsEntities[id].angle = bullet.rotation
 	
 	if (bullet.owner !== undefined && bullet.owner == "SERVER") {
 		this.somDisparoInimigo.play();

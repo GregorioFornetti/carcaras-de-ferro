@@ -1,11 +1,11 @@
 import { GAME_HEIGHT } from "../constants.js";
-export function EnemyTanqueOnAdd(enemy, id) {
+export function EnemySuperTanqueOnAdd(enemy, id) {
 	
-	let tank = this.physics.add.image(0, 0, 'tile_0029');
-	let turret = this.physics.add.image(0, 0, 'tile_0030');
-
+	let tank = this.physics.add.image(0, 0, 'tile_0120');
+	let turret = this.physics.add.image(0, 0, 'tile_0017');
+	
 	this.enemiesEntities[id] = this.add.container(enemy.x, enemy.y, [tank, turret]);
-
+	
 	enemy.onChange(() => {
 		this.enemiesEntities[id].setData('serverX', enemy.x);
 		this.enemiesEntities[id].setData('serverY', enemy.y);
@@ -15,7 +15,7 @@ export function EnemyTanqueOnAdd(enemy, id) {
 	})
 }
 
-export function EnemyTanqueOnRemove(enemy, id) {
+export function EnemySuperTanqueOnRemove(enemy, id) {
 	if (enemy.y < GAME_HEIGHT) {
 		this.somExplosao.play();
 		let enemyAnimation = this.physics.add.sprite(enemy.x, enemy.y, "explosao");

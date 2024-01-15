@@ -14,7 +14,7 @@ import { EnemyPatrulheirosSchema } from "../../enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteSchema } from "../../enemies/EnemyCombatente.js";
 import { EnemyFortalezaSchema } from "../../enemies/EnemyFortaleza.js";
 import { EnemyTanqueSchema } from "../../enemies/EnemyTanque.js";
-
+import { EnemySuperTanqueSchema } from "../../enemies/EnemySuperTanque.js";
 
 
 export class MyRoomState extends schema.Schema {
@@ -32,6 +32,7 @@ export class MyRoomState extends schema.Schema {
         this.enemiesCombatenteSchema = new schema.MapSchema();
         this.enemiesFortalezaSchema = new schema.MapSchema();
         this.enemiesTanqueSchema = new schema.MapSchema();
+		this.enemiesSuperTanqueSchema = new schema.MapSchema();
         
     }
 }
@@ -45,6 +46,7 @@ schema.defineTypes(MyRoomState, {
     enemiesCombatenteSchema: { map: EnemyCombatenteSchema },
     enemiesFortalezaSchema: { map: EnemyFortalezaSchema },
     enemiesTanqueSchema: { map: EnemyTanqueSchema },
+	enemiesSuperTanqueSchema: { map: EnemySuperTanqueSchema },
     bulletSchema: { map: BulletSchema },
     bombaSchema: { map: BombaSchema },
     bgSchema: BackgroundSchema
