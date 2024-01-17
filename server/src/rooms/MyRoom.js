@@ -50,10 +50,13 @@ export class MyRoom extends Room {
       if (score) {
         player.score += score
       }
+      // Código a ser removido:
+      /*
       if (enemy.dead) {
         this.collisor.removeForCollission(enemy, "enemy")
         delete this.currentEnemies[enemy.id]
       }
+      */
     })
     this.collisor.registerActionForCollission("player", "enemy", (player, enemy) => {
       let didhit = player.hit()
@@ -66,6 +69,7 @@ export class MyRoom extends Room {
           console.log("player died! :( Removing from collisor")
           this.collisor.removeForCollission(player, "player")
         }
+        
       }  
     })
     this.collisor.registerActionForCollission("player", "bulletEnemy", (player, enemyBullet) => {
@@ -198,6 +202,13 @@ export class MyRoom extends Room {
     this.state.bgSchema.scrollY -= this.velocidadeMapa
 
     if (this.currentEnemies.length != 0) {
+      /* Limpandos os inimigos que morreram */
+      for (let enemyId in this.currentEnemies) {
+        if (this.currentEnemies[enemyId].dead) {
+          this.collisor.removeForCollission(this.currentEnemies[enemyId], "enemy")
+          delete this.currentEnemies[enemyId]
+        }
+      }
       // Loop de atualização automática dos inimigos
       for (const enemyId in this.currentEnemies) {
         let action = this.currentEnemies[enemyId].update(deltaTime)
