@@ -1,5 +1,5 @@
 /** Função que cria todas as animações do jogo */
-import {GAME_HEIGHT, GAME_WIDTH} from "../constants.js";
+import { GAME_HEIGHT, GAME_WIDTH } from "../constants.js";
 export const createAnimations = (anims) => {
     /** Animações da movimentação Player */
     // d0 = sem dano
@@ -86,7 +86,6 @@ export function enemyExplosionAnimation(scene, obj, id) {
 }
 
 export function bulletLight(entity, bullet, id) {
-    console.log(entity.playerEntities[bullet.owner])
     entity.physics.add.sprite(
         bullet.x,
         bullet.y+5,

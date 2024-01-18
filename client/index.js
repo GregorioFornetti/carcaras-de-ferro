@@ -6,22 +6,21 @@ Nenhum estado do jogo é mantido na Cena, apenas os inputs do jogador são envia
 */
 
 //import Phaser from "phaser";
-import { EnemyDesavisadosOnAdd, EnemyDesavisadosOnRemove } from "./enemies/EnemyDesavisados.js";
-import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js";
-import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
-import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
+import { GAME_HEIGHT, GAME_WIDTH } from "./constants.js";
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
+import { EnemyDesavisadosOnAdd, EnemyDesavisadosOnRemove } from "./enemies/EnemyDesavisados.js";
 import { EnemyFortalezaOnAdd, EnemyFortalezaOnRemove } from "./enemies/EnemyFortaleza.js";
-import { EnemyCacadorOnAdd, EnemyCacadorOnRemove } from "./enemies/EnemyCacador.js";
-import { EnemyCruzadorOnAdd, EnemyCruzadorOnRemove } from "./enemies/EnemyCruzador.js";
+import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
+import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
+import { ItemBombOnAdd, ItemBombOnRemove } from "./items/ItemBomb.js";
+import { ItemLifeOnAdd, ItemLifeOnRemove } from "./items/ItemLife.js";
 //import {CollisorPlayerEnemy,CollisorBulletEnemy,CollisorPlayerBullet} from "./enemies/Collisor.js";
-import { UpdateSprites } from "./updateSprites.js";
+import { createAnimations, playerExplosionAnimation } from "./animations/animation.js";
 import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
-import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
-import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
+import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js";
 import HUD1 from "./hud1.js";
 import HUD3 from "./hud3.js";
-import { createAnimations, playerExplosionAnimation, enemyDamageAnimation} from "./animations/animation.js"
+import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js";
 
 let roomId = null
 let oldId = null
@@ -39,6 +38,8 @@ export class GameScene extends Phaser.Scene {
     this.bulletsEntities = {}
   
     this.bombasEntities = {}
+    this.itemsBombEntities = {}
+    this.itemsLifeEntities = {}
 
     //Sons
     this.somDisparoJogador = null;
@@ -112,6 +113,10 @@ export class GameScene extends Phaser.Scene {
 
     this.load.image("bomba", "./Artes/Assets/Tiles/tile_0012.png")
 
+    this.load.image("item_bomb", "./Artes/Assets/Tiles/tile_0025.png")
+
+    this.load.image("item_life", "./Artes/Assets/Tiles/tile_0024.png")
+
     this.load.on('complete', () => {
       // cria as animações
       createAnimations(this.anims);
@@ -179,6 +184,14 @@ export class GameScene extends Phaser.Scene {
     // Bomba states changes
     this.room.state.bombaSchema.onAdd(BombaOnAdd.bind(this))
     this.room.state.bombaSchema.onRemove(BombaOnRemove.bind(this))
+
+     // ItemBomb states changes
+     this.room.state.itemBombSchema.onAdd(ItemBombOnAdd.bind(this))
+     this.room.state.itemBombSchema.onRemove(ItemBombOnRemove.bind(this))
+ 
+     // ItemLife states changes
+     this.room.state.itemLifeSchema.onAdd(ItemLifeOnAdd.bind(this))
+     this.room.state.itemLifeSchema.onRemove(ItemLifeOnRemove.bind(this))
 
     const width = GAME_WIDTH;
     const height = GAME_HEIGHT;
@@ -318,7 +331,26 @@ export class GameScene extends Phaser.Scene {
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
-    }        
+    }
+    
+    for (let id in this.itemsBombEntities) {
+      const entity = this.itemsBombEntities[id];
+      
+      if (entity !== undefined && entity !== null) {
+        const { serverX, serverY } = entity.data.values;
+        entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+        entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+      }
+    }
+
+    for (let id in this.itemsLifeEntities) {
+      const entity = this.itemsLifeEntities[id];
+      if (entity !== undefined && entity !== null) {
+        const { serverX, serverY } = entity.data.values;
+        entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+        entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+      }
+    }
   }
 
   isGameover() {

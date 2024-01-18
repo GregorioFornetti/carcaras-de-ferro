@@ -2,21 +2,16 @@
    o que deve acontecer quando um jogador realizar uma ação
    e como isso deve ser atualizado para todos os outros jogadores
 */
-import { Room, matchMaker} from "@colyseus/core"
-import { MyRoomState } from "./schema/MyRoomState.js"
-import { EnemyDesavisados } from "../enemies/EnemyDesavisados.js"
-import { PlayerSchema, Player } from "../player/PlayerSchema.js"
-import { Bullet, BulletSchema } from "../bullet/Bullet.js"
-import { Bomba, BombaSchema } from "../bomba/Bomba.js";
-import { BackgroundSchema } from "../map/BackgroundSchema.js";
-import { EnemySolitario } from "../enemies/EnemySolitario.js";
-import { EnemyPatrulheiros } from "../enemies/EnemyPatrulheiros.js";
-import { EnemyCombatente } from "../enemies/EnemyCombatente.js";
+import { Room, matchMaker } from "@colyseus/core"
+import { Bullet } from "../bullet/Bullet.js"
 import { Collisor } from "../collisor/Collissor.js"
+import { Player } from "../player/PlayerSchema.js"
+import { MyRoomState } from "./schema/MyRoomState.js"
 
-import { Spawner } from "../enemies/Spawner.js"
 import { GAME_HEIGHT, GAME_WIDTH } from "../../constants.js"
-import { EnemyFortaleza } from "../enemies/EnemyFortaleza.js"
+import { Spawner } from "../enemies/Spawner.js"
+import { ItemBomb } from "../items/ItemBomb.js"
+import { ItemLife } from "../items/ItemLife.js"
 
 export class MyRoom extends Room {
   maxClients = 4
@@ -35,6 +30,8 @@ export class MyRoom extends Room {
     this.currentPlayers = {}
     this.currentEnemies = {}
     this.currentBullets = {}
+    this.currentItemBombs = {}
+    this.currentItemLifes = {}
     this.currentBombas = []
     this.velocidadeMapa = 0;
 
@@ -53,6 +50,15 @@ export class MyRoom extends Room {
       if (enemy.dead) {
         this.collisor.removeForCollission(enemy, "enemy")
         delete this.currentEnemies[enemy.id]
+
+        // Spawnar item aleatório
+        let random = Math.random()
+
+        if (random < 0.5) {
+          this.spawnItem(ItemBomb, this.currentItemBombs, enemy.enemyAttributes.x, enemy.enemyAttributes.y)
+        } else if (random < 1) {
+          this.spawnItem(ItemLife, this.currentItemLifes, enemy.enemyAttributes.x, enemy.enemyAttributes.y)
+        }
       }
     })
     this.collisor.registerActionForCollission("player", "enemy", (player, enemy) => {
@@ -82,8 +88,41 @@ export class MyRoom extends Room {
       }
     })
 
+    this.collisor.registerActionForCollission("player", "ItemLife", (player, item) => {
+      if(player.playerAtributes.health < 3) {
+        item.destroy()
+        this.collisor.removeForCollission(item, "ItemLife")
+        console.log("item id: ", item.id)
+        delete this.currentItemLifes[item.id]
+        player.playerAtributes.health += 1
+        console.log(`player got a life item! Health: ${player.playerAtributes.health}`)
+      }
+    })
+
+    this.collisor.registerActionForCollission("player", "ItemBomb", (player, item) => {
+      if(player.playerAtributes.nBombas < 2) {
+        item.destroy()
+        this.collisor.removeForCollission(item, "ItemBomb")
+        delete this.currentItemBombs[item.id]
+        player.playerAtributes.nBombas += 1
+        
+        console.log(`player got a bomb item! Bombs: ${player.playerAtributes.nBombas}`)
+      }
+    })
+
     this.spawnCentral = new Spawner(this.state)
-    
+
+    // Spawnar item
+    this.spawnItem = (itemClass, currentItems, x, y) => {
+      let item = itemClass.spawn(this.state, x, y)
+      currentItems[item.id] = item
+
+      for (let itemId in currentItems) {
+        const item = currentItems[itemId]
+        this.collisor.registerForCollission(item, item.itemAttributes, itemClass.name)
+      }
+    }
+  
 
     // Gera o game loop, atualização de estado automatica a cada deltaTime
     // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
@@ -250,6 +289,21 @@ export class MyRoom extends Room {
 
       // Remover bomba do array de bombas
       this.currentBombas = this.currentBombas.filter(bomba => !bomba.destroyed)
+    }
+
+    if(this.currentItemBombs.length != 0) {
+      
+      // Loop de atualizacao automatica dos itens bomba
+      for (let item of Object.values(this.currentItemBombs)) {
+        item.update(deltaTime)
+      }
+    }
+
+    if(this.currentItemLifes.length != 0) {
+      // Loop de atualizacao automatica dos itens vida
+      for (let item of Object.values(this.currentItemLifes)) {
+        item.update(deltaTime)
+      }
     }
       
     let spawn_retorno = this.spawnCentral.update(deltaTime);

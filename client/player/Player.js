@@ -80,7 +80,7 @@ export function PlayerOnAdd(player, id) {
     this.playerEntities[id].setData('immortal', player.immortal);
     this.playerEntities[id].setData('health', player.health);
     
-    if(this.playerEntities[id].health !== this.playerEntities[id].data.values.health) {
+    if(this.playerEntities[id].health > this.playerEntities[id].data.values.health) {
       let tweenAnimation = `ship_frente_d${3-this.playerEntities[id].data.values.health}_${playersSize+1}`;
       this.somExplosao.play()
       this.tweens.add({
@@ -106,6 +106,17 @@ export function PlayerOnAdd(player, id) {
       if (id === this.room.sessionId) {
         this.events.emit('healthChange', -1);
       }
+    } else if(this.playerEntities[id].health < this.playerEntities[id].data.values.health) {
+      let tweenAnimation = `ship_frente_d${3-this.playerEntities[id].data.values.health}_${playersSize+1}`;
+      this.tweens.add({
+        targets: this.playerEntities[id],
+        alpha: 1,
+        duration: 300,
+        repeat: 1,
+        yoyo: true,
+        onStart: function() { this.targets[0].setTint(0x52e831); this.targets[0].anims.play(tweenAnimation); },
+        onComplete: function() { this.targets[0].clearTint(); }
+      });  
     }
 
     this.playerEntities[id].score = player.score
@@ -115,7 +126,7 @@ export function PlayerOnAdd(player, id) {
       this.playerEntities[id].setData('immortal', player.immortal);
       this.playerEntities[id].setData('health', player.health);
       
-      if((this.playerEntities[id].health !== this.playerEntities[id].data.values.health) && this.playerEntities[id].data.values.health > 0) {
+      if((this.playerEntities[id].health > this.playerEntities[id].data.values.health) && this.playerEntities[id].data.values.health > 0) {
         playerDamageAnimation.bind(this)(player, id);
       }
     }

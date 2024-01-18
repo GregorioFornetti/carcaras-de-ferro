@@ -157,6 +157,11 @@ export default class HUD1 extends ScoreHUD {
                 this.healthImages[playerHealth - 1].destroy();
                 this.healthImages[playerHealth - 1] =this.add.image(this.healthConfig[playerHealth-1].x,this.healthConfig[playerHealth-1].y, 'coracao_black_up').setScale(0.5)
                 this.health -= 1;
+            } else {
+                let playerHealth = this.health;
+                this.healthImages[playerHealth].destroy();
+                this.healthImages[playerHealth] =this.add.image(this.healthConfig[playerHealth].x,this.healthConfig[playerHealth].y, 'coracao_red').setScale(0.5)
+                this.health += 1;
             }
         }, this);
 
@@ -164,6 +169,9 @@ export default class HUD1 extends ScoreHUD {
             if (bomba == -1) {
                 this.displayBombas[this.bomb-1].setVisible(false)
                 this.bomb -= 1
+            } else {
+                this.displayBombas[this.bomb].setVisible(true)
+                this.bomb += 1
             }
         }, this);
 
