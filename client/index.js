@@ -103,6 +103,10 @@ export class GameScene extends Phaser.Scene {
       frameWidth: 128,
       frameHeight: 128,
     })
+    this.load.spritesheet("fortaleza", "./Artes/Assets_Personalizados/Ships/Spritesheets/fortaleza.png", {
+      frameWidth: 192,
+      frameHeight: 128,
+    })
 
     this.load.image("bullet", "./Artes/Assets/Tiles/tile_0000.png")
     this.load.spritesheet("bullet_light", "./Artes/Assets_Personalizados/Ships/Spritesheets/muzzle-flashes.png", {

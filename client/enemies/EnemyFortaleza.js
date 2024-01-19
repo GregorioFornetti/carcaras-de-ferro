@@ -1,11 +1,11 @@
-import { enemyExplosionAnimation, enemyDamageAnimation } from "../animations/animation.js";
+import { enemyExplosionAnimation, enemyDamageAnimation} from "../animations/animation.js";
 import { GAME_HEIGHT } from "../constants.js";
 const FORTALEZA_SIZE = 3
 
 
 export function EnemyFortalezaOnAdd(enemy, id) {
-    this.enemiesEntities[id] = this.physics.add.sprite(enemy.x, enemy.y, 'ship_19');
-    this.enemiesEntities[id].setScale(FORTALEZA_SIZE);
+    this.enemiesEntities[id] = this.physics.add.sprite(enemy.x, enemy.y, 'fortaleza');
+    this.enemiesEntities[id].anims.play("movimento_fortaleza");
     this.enemiesEntities[id].angle = 180;
     let health = enemy.health;
 

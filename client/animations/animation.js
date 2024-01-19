@@ -65,6 +65,12 @@ export const createAnimations = (anims) => {
         frameRate: 10,
         hideOnComplete: true,
     }); 
+    anims.create({
+        key: "movimento_fortaleza",
+        frames: anims.generateFrameNumbers(`fortaleza`, { start: 0, end: 2 }),
+        frameRate: 10,
+        repeat: -1,
+    });
 };
 
 
@@ -120,6 +126,7 @@ export function playerDamageAnimation(player, id) {
         onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(tweenAnimation); },
         onComplete: function() { this.targets[0].clearTint(); }
     });
+
 }
 
 
