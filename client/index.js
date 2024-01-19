@@ -154,11 +154,11 @@ export class GameScene extends Phaser.Scene {
     this.room.state.enemiesFortalezaSchema.onAdd(EnemyFortalezaOnAdd.bind(this));
     this.room.state.enemiesFortalezaSchema.onRemove(EnemyFortalezaOnRemove.bind(this));
 
-    // this.room.state.enemiesCacadorSchema.onAdd(EnemyCacadorOnAdd.bind(this));
-    // this.room.state.enemiesCacadorSchema.onRemove(EnemyCacadorOnRemove.bind(this));
+    this.room.state.enemiesCacadorSchema.onAdd(EnemyCacadorOnAdd.bind(this));
+    this.room.state.enemiesCacadorSchema.onRemove(EnemyCacadorOnRemove.bind(this));
 
-    // this.room.state.enemiesCruzadorSchema.onAdd(EnemyCruzadorOnAdd.bind(this));
-    // this.room.state.enemiesCruzadorSchema.onRemove(EnemyCruzadorOnRemove.bind(this));
+    this.room.state.enemiesCruzadorSchema.onAdd(EnemyCruzadorOnAdd.bind(this));
+    this.room.state.enemiesCruzadorSchema.onRemove(EnemyCruzadorOnRemove.bind(this));
 
     //** Scroll do Mapa **
     this.room.state.bgSchema.listen(

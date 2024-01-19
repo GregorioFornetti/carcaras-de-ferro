@@ -1,5 +1,5 @@
 
-import { GAME_HEIGHT, GAME_WIDTH, NUM_BOMBAS } from "./constants.js";
+import { GAME_HEIGHT, GAME_WIDTH, NUM_BOMBAS, SCALE_HEART } from "./constants.js";
 
 import ScoreHUD from "./ScoreHUD.js";
 
@@ -80,18 +80,18 @@ export default class HUD1 extends ScoreHUD {
         this.healthConfig = [
             {
                 sprite: 'coracao_red',
-                x: 15,
-                y: GAME_HEIGHT-15
+                x: 20,
+                y: GAME_HEIGHT-25
             },
             {
                 sprite: 'coracao_red',
-                x: 40,
-                y: GAME_HEIGHT-15
+                x: 55,
+                y: GAME_HEIGHT-25
             },
             {
                 sprite: 'coracao_red',
-                x: 65,
-                y: GAME_HEIGHT-15
+                x: 90,
+                y: GAME_HEIGHT-25
             },
         ]
         
@@ -155,7 +155,7 @@ export default class HUD1 extends ScoreHUD {
             if (healthChange == -1) {
                 let playerHealth =this.health;
                 this.healthImages[playerHealth - 1].destroy();
-                this.healthImages[playerHealth - 1] =this.add.image(this.healthConfig[playerHealth-1].x,this.healthConfig[playerHealth-1].y, 'coracao_black_up').setScale(0.5)
+                this.healthImages[playerHealth - 1] =this.add.image(this.healthConfig[playerHealth-1].x,this.healthConfig[playerHealth-1].y, 'coracao_black_up').setScale(SCALE_HEART)
                 this.health -= 1;
             }
         }, this);
@@ -223,7 +223,7 @@ export default class HUD1 extends ScoreHUD {
     displayHealth() {
         let displayHealth = []
         for(let i = 0; i < 3; i++) 
-            displayHealth.push(this.add.image(this.healthConfig[i].x, this.healthConfig[i].y, this.healthConfig[i].sprite).setScale(0.5))
+            displayHealth.push(this.add.image(this.healthConfig[i].x, this.healthConfig[i].y, this.healthConfig[i].sprite).setScale(SCALE_HEART))
         return displayHealth
     }
 }
