@@ -5,7 +5,7 @@ export const createAnimations = (anims) => {
     // d0 = sem dano
     // d1 = tomou 1° dano
     // d2 = tomou 2° dano = explosão
-
+    
     for (let i = 0; i < 3; i++) {
         for (let x = 1; x < 4; x++) {
             const animationKey = `ship_frente_d${i}_${x}`;

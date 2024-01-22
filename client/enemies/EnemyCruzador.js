@@ -1,5 +1,5 @@
 import { GAME_HEIGHT, GAME_WIDTH } from "../constants.js";
-
+import { enemyExplosionAnimation, enemyDamageAnimation} from "../animations/animation.js";
 
 export function EnemyCruzadorOnAdd(enemy, id) {
     this.enemiesEntities[id] = this.physics.add.sprite(enemy.x, enemy.y, 'cruzador');
@@ -13,17 +13,7 @@ export function EnemyCruzadorOnAdd(enemy, id) {
 
 
 export function EnemyCruzadorOnRemove(enemy, id) {
-	if (enemy.y < GAME_HEIGHT-30) {
-		this.somExplosao.play();
-		let enemyAnimation = this.physics.add.sprite(enemy.x, enemy.y, "explosao");
-		enemyAnimation.anims.create({
-			key: "explosao",
-			frames: this.anims.generateFrameNumbers("explosao", { start: 0, end: 7 }),
-			repeat: 0, // Não se repete, reproduz uma vez
-			hideOnComplete: true,
-		  });
-		enemyAnimation.anims.play("explosao");
-	}
+	enemyExplosionAnimation(this, enemy, id);
     this.enemiesEntities[id].destroy();
     delete this.enemiesEntities[id];
 }
