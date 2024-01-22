@@ -11,68 +11,6 @@ export function PlayerOnAdd(player, id) {
     )
   this.playerEntities[id].health = player.health;
   this.playerEntities[id].number = playersSize + 1;
-    
-  /** Animações da movimentação Player */
-  // d0 = sem dano
-  // d1 = tomou 1° dano
-  // d2 = tomou 2° dano
-  this.playerEntities[id].anims.create({
-    key: "ship_frente_d0",
-    frames: [{ key: `ship_${playersSize + 1}_animado`, frame: 0 }],
-    frameRate: 10,
-  });
-  this.playerEntities[id].anims.create({
-    key: "ship_frente_d1",
-    frames: [{ key: `ship_${playersSize + 1}_animado`, frame: 8 }],
-    frameRate: 10,
-  });
-  this.playerEntities[id].anims.create({
-    key: "ship_frente_d2",
-    frames: [{ key: `ship_${playersSize + 1}_animado`, frame: 16 }],
-    frameRate: 10,
-  });
-  this.playerEntities[id].anims.create({
-    key: "ship_direita_d0",
-    frames: this.anims.generateFrameNumbers(`ship_${playersSize + 1}_animado`, { start: 0, end: 3 }),
-    frameRate: 10,
-    repeat: 0, 
-  });
-  this.playerEntities[id].anims.create({
-    key: "ship_direita_d1",
-    frames: this.anims.generateFrameNumbers(`ship_${playersSize + 1}_animado`, { start: 8, end: 11 }),
-    frameRate: 10,
-    repeat: 0, 
-  });
-  this.playerEntities[id].anims.create({
-    key: "ship_direita_d2",
-    frames: this.anims.generateFrameNumbers(`ship_${playersSize + 1}_animado`, { start: 16, end: 19 }),
-    frameRate: 10,
-    repeat: 0, 
-  });
-  this.playerEntities[id].anims.create({
-    key: "ship_esquerda_d0",
-    frames: this.anims.generateFrameNumbers(`ship_${playersSize + 1}_animado`, { start: 4, end: 7 }),
-    frameRate: 10,
-    repeat: 0, 
-  });
-  this.playerEntities[id].anims.create({
-    key: "ship_esquerda_d1",
-    frames: this.anims.generateFrameNumbers(`ship_${playersSize + 1}_animado`, { start: 12, end: 15 }),
-    frameRate: 10,
-    repeat: 0, 
-  });
-  this.playerEntities[id].anims.create({
-    key: "ship_esquerda_d2",
-    frames: this.anims.generateFrameNumbers(`ship_${playersSize + 1}_animado`, { start: 20, end: 23 }),
-    frameRate: 10,
-    repeat: 0, 
-  });
-  this.playerEntities[id].anims.create({
-    key: "explosao",
-    frames: this.anims.generateFrameNumbers("explosao", { start: 0, end: 7 }),
-    frameRate: 20,
-    repeat: 0,
-  });
   
   player.onChange(() => {
     this.playerEntities[id].setData('serverX', player.x);

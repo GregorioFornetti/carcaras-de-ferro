@@ -7,7 +7,7 @@ export const createAnimations = (anims) => {
     // d2 = tomou 2° dano = explosão
     
     for (let i = 0; i < 3; i++) {
-        for (let x = 1; x < 4; x++) {
+        for (let x = 1; x <= 4; x++) {
             const animationKey = `ship_frente_d${i}_${x}`;
             const frameIndex = i * 8;
             anims.create({
@@ -19,7 +19,7 @@ export const createAnimations = (anims) => {
     }
 
     for (let i = 0; i < 3; i++) {
-        for (let x = 1; x < 4; x++) {
+        for (let x = 1; x <= 4; x++) {
             const animationKey = `ship_direita_d${i}_${x}`;
             const frameRange = { start: i * 8, end: i * 8 + 3 };
             anims.create({
@@ -32,7 +32,7 @@ export const createAnimations = (anims) => {
     }
 
     for (let i = 0; i < 3; i++) {
-        for (let x = 1; x < 4; x++) {
+        for (let x = 1; x <= 4; x++) {
             const animationKey = `ship_esquerda_d${i}_${x}`;
             const frameRange = { start: i * 8 + 4, end: i * 8 + 7 };
             anims.create({
