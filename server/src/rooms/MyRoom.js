@@ -9,6 +9,7 @@ import { Player } from "../player/PlayerSchema.js"
 import { MyRoomState } from "./schema/MyRoomState.js"
 
 import { GAME_HEIGHT, GAME_WIDTH } from "../../constants.js"
+import { DifficultySystem } from "../difficulty_system/DifficultySystem.js"
 import { Spawner } from "../enemies/Spawner.js"
 import { ItemBomb } from "../items/ItemBomb.js"
 import { ItemLife } from "../items/ItemLife.js"
@@ -37,6 +38,7 @@ export class MyRoom extends Room {
 
     this.freeze = true
     this.roomOwner = undefined
+    this.difficultySystem = new DifficultySystem();
     this.collisor = new Collisor()
     this.collisor.registerActionForCollission("bullet", "enemy", (bullet, enemy) => {
       bullet.destroy()
@@ -52,13 +54,10 @@ export class MyRoom extends Room {
         delete this.currentEnemies[enemy.id]
 
         // Spawnar item aleatório
-        let random = Math.random()
-
-        if (random < 0.5) {
-          this.spawnItem(ItemBomb, this.currentItemBombs, enemy.enemyAttributes.x, enemy.enemyAttributes.y)
-        } else if (random < 1) {
-          this.spawnItem(ItemLife, this.currentItemLifes, enemy.enemyAttributes.x, enemy.enemyAttributes.y)
-        }
+        const probSpawn = this.difficultySystem.getItemSpawnProbability()
+ 
+        this.spawnItem(probSpawn, 0.5, enemy.enemyAttributes.x, enemy.enemyAttributes.y)
+  
       }
     })
     this.collisor.registerActionForCollission("player", "enemy", (player, enemy) => {
@@ -113,13 +112,25 @@ export class MyRoom extends Room {
     this.spawnCentral = new Spawner(this.state)
 
     // Spawnar item
-    this.spawnItem = (itemClass, currentItems, x, y) => {
-      let item = itemClass.spawn(this.state, x, y)
-      currentItems[item.id] = item
-
-      for (let itemId in currentItems) {
-        const item = currentItems[itemId]
-        this.collisor.registerForCollission(item, item.itemAttributes, itemClass.name)
+    this.spawnItem = (probSpawn, probItems = 0.5, x, y) => {
+      if (Math.random() < probSpawn) { // chance de spawnar item
+        if(Math.random() < probItems) { // chance de spawnar bomba
+          let item = ItemBomb.spawn(this.state, x, y)
+          this.currentItemBombs[item.id] = item
+    
+          for (let itemId in this.currentItemBombs) {
+            const item = this.currentItemBombs[itemId]
+            this.collisor.registerForCollission(item, item.itemAttributes, ItemBomb.name)
+          }
+        } else { // chance de spawnar vida
+          let item = ItemLife.spawn(this.state, x, y)
+          this.currentItemLifes[item.id] = item
+    
+          for (let itemId in this.currentItemLifes) {
+            const item = this.currentItemLifes[itemId]
+            this.collisor.registerForCollission(item, item.itemAttributes, ItemLife.name)
+          }
+        }
       }
     }
   
