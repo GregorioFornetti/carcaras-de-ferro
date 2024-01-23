@@ -33,6 +33,7 @@ export class GameScene extends Phaser.Scene {
     this.client = new Colyseus.Client("http://localhost:8080");
     this.room = null
     this.playerEntities = {}
+    this.playersRoom = [null, null, null, null, null];
     this.bg = null //background (mapa do jogo)
     this.cursorKeys = null
     this.enemiesEntities = {}
@@ -280,13 +281,13 @@ export class GameScene extends Phaser.Scene {
         entity.playerSize = Object.keys(this.playerEntities).length
         const threshold = 2;
         if (entity.x - serverX > threshold) {  // Indo para esquerda
-          let animationKey = `ship_esquerda_d${3-entity.health}_${entity.playerSize}`;
+          let animationKey = `ship_esquerda_d${3-entity.health}_${entity.number}`;
           if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
             entity.anims.play(animationKey);
           }
           entity.stoped = false
         } else if (entity.x - serverX < -threshold) { // Indo para direita
-          let animationKey = `ship_direita_d${3-entity.health}_${entity.playerSize}`;
+          let animationKey = `ship_direita_d${3-entity.health}_${entity.number}`;
           if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
             entity.anims.play(animationKey);
           }

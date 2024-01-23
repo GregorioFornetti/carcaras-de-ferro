@@ -102,7 +102,7 @@ export default class HUD1 extends ScoreHUD {
         
         let game = this.scene.get('GameScene');
         
-        game.events.on('newPlayer', function (id) {
+        game.events.on('newPlayer', function (id, number) {
             console.log('NOVO PLAYER')
             console.log(id)
             const currentPlayerNumber = Object.keys(this.currentPlayers).length
@@ -150,6 +150,11 @@ export default class HUD1 extends ScoreHUD {
                 this.scoreNumbersGap
             )
         });
+
+        game.events.on('playerRemoved', function (id) {
+            delete this.currentPlayers[id];
+            
+        }, this);
      
         game.events.on('healthChange', function(healthChange) {
             if (healthChange == -1) {

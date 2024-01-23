@@ -1,17 +1,24 @@
 import { playerDamageAnimation } from "../animations/animation.js";
 
 export function PlayerOnAdd(player, id) {
-  this.events.emit('newPlayer', id)
-  let playersSize = Object.keys(this.playerEntities).length
-  
+  var number = 0;
+  for(var x = 1; x <= 4; x++) {
+    if(this.playersRoom[x] == null) {
+      number = x;
+      this.playersRoom[x]=id;
+      break;
+    }
+  }
   this.playerEntities[id] = this.physics.add.sprite(
-    player.x + playersSize * 100,
-    player.y + playersSize * 100,
-    `ship_${playersSize + 1}_animado`
-    )
+    player.x + number-1 * 100,
+    player.y + number-1 * 100,
+    `ship_${number}_animado`
+  )
+  this.playerEntities[id].number = x;
+  this.events.emit('newPlayer', id, number)
   this.playerEntities[id].health = player.health;
-  this.playerEntities[id].number = playersSize + 1;
   
+
   player.onChange(() => {
     this.playerEntities[id].setData('serverX', player.x);
 		this.playerEntities[id].setData('serverY', player.y);
@@ -19,17 +26,7 @@ export function PlayerOnAdd(player, id) {
     this.playerEntities[id].setData('health', player.health);
     
     if(this.playerEntities[id].health !== this.playerEntities[id].data.values.health) {
-      let tweenAnimation = `ship_frente_d${3-this.playerEntities[id].data.values.health}_${playersSize+1}`;
-      this.somExplosao.play()
-      this.tweens.add({
-        targets: this.playerEntities[id],
-        alpha: 0,
-        duration: 300,
-        repeat: 4,
-        yoyo: true,
-        onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(tweenAnimation); },
-        onComplete: function() { this.targets[0].clearTint(); }
-      });
+      playerDamageAnimation.bind(this)(player, id);
 
       this.playerEntities[id].health = this.playerEntities[id].data.values.health;
 
@@ -65,12 +62,14 @@ export function PlayerOnAdd(player, id) {
 
 export function PlayerOnRemove(player, id) {
   const entity = this.playerEntities[id]
-
+  this.events.emit('playerRemoved', id);
+  this.playersRoom[this.playerEntities[id].number] = null;
+  entity.destroy();
   if (entity) {
     console.log(`Jogador ${id} desconectado!`)
-
+    
     delete this.playerEntities[id]
-
+  
     document.getElementById(`player-${id}`).remove()
 
     entity.destroy()

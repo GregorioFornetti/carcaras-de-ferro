@@ -115,7 +115,7 @@ export function enemyDamageAnimation(scene, enemy) {
 /** Função que executa a animação do Player ao receber dano (mudança de sprite, som e efeito piscando) */
 export function playerDamageAnimation(player, id) {
     let playersSize = Object.keys(this.playerEntities).length
-    let tweenAnimation = `ship_frente_d${3-this.playerEntities[id].data.values.health}_${playersSize+1}`;
+    let tweenAnimation = `ship_frente_d${3-this.playerEntities[id].data.values.health}_${this.playerEntities[id].number}`;
       this.somDano.play()
       this.tweens.add({
         targets: this.playerEntities[id],
