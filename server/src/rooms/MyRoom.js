@@ -43,46 +43,38 @@ export class MyRoom extends Room {
     this.collisor = new Collisor()
     this.collisor.registerActionForCollission("bullet", "enemy", (bullet, enemy) => {
       bullet.destroy()
-      this.collisor.removeForCollission(bullet, "bullet")
-      delete this.currentBullets[bullet.id]
+      // this.collisor.removeForCollission(bullet, "bullet")
+      // delete this.currentBullets[bullet.id]
       const score = enemy.hit()
       const player = this.state.playersSchema.get(bullet.owner)
       if (score) {
         player.score += score
       }
-      // Código a ser removido:
-      /*
-      if (enemy.dead) {
-        this.collisor.removeForCollission(enemy, "enemy")
-        delete this.currentEnemies[enemy.id]
-      }
-      */
     })
     this.collisor.registerActionForCollission("player", "enemy", (player, enemy) => {
       let didhit = player.hit()
       if (didhit) { // se o player está imortal, não destroi os inimigos na colisão
         enemy.destroy()
-        this.collisor.removeForCollission(enemy, "enemy")
-        delete this.currentEnemies[enemy.id]
-        console.log("player collided with enemy!, health in: ", player.playerAtributes.health)
-        if (player.dead) {
-          console.log("player died! :( Removing from collisor")
-          this.collisor.removeForCollission(player, "player")
-        }
-        
+        // this.collisor.removeForCollission(enemy, "enemy")
+        // delete this.currentEnemies[enemy.id]
+        // console.log("player collided with enemy!, health in: ", player.playerAtributes.health)
+        // if (player.dead) {
+        //   console.log("player died! :( Removing from collisor")
+        //  this.collisor.removeForCollission(player, "player")
+        // }
       }  
     })
     this.collisor.registerActionForCollission("player", "bulletEnemy", (player, enemyBullet) => {
       let didhit = player.hit()
       if (didhit) { // se o player está imortal, não destroi os inimigos na colisão
         enemyBullet.destroy()
-        this.collisor.removeForCollission(enemyBullet, "bulletEnemy")
-        delete this.currentBullets[enemyBullet.id]
-        console.log("player collided with enemy bullet!, health in: ", player.playerAtributes.health)
-        if (player.dead) {
-          console.log("player died! :( Removing from collisor")
-          this.collisor.removeForCollission(player, "player")
-        }
+        // this.collisor.removeForCollission(enemyBullet, "bulletEnemy")
+        // delete this.currentBullets[enemyBullet.id]
+        // console.log("player collided with enemy bullet!, health in: ", player.playerAtributes.health)
+        // if (player.dead) {
+        //  console.log("player died! :( Removing from collisor")
+        //  this.collisor.removeForCollission(player, "player")
+        // }
       }
     })
 
@@ -193,6 +185,14 @@ export class MyRoom extends Room {
     // Update do jogador, levando em conta os inputs
     // E se o player morrer? Alterar no collisor
     for (let player in this.currentPlayers) {
+      // Limpa os jogadores que morreram
+      if (this.currentPlayers[player].dead) {
+        console.log("player died! :( Removing from collisor")
+        this.collisor.removeForCollission(this.currentPlayers[player], "player")
+      }
+    }
+    for (let player in this.currentPlayers) {
+      // Loop de atualização automática dos players
       this.currentPlayers[player].update(deltaTime)
     }
     /* FIM PLAYER */
@@ -233,6 +233,13 @@ export class MyRoom extends Room {
 		}
 
     if (this.currentBullets.length != 0) {
+      /* Limpando as balas que devem ser destruidas */
+      for (let bulletId in this.currentBullets) {
+        if (this.currentBullets[bulletId].destroyed) {
+          this.collisor.removeForCollission(this.currentBullets[bulletId], "bullet")
+          delete this.currentBullets[bulletId]
+        }
+      }
       // Loop de atualização automática das balas
       for (let bullet of Object.values(this.currentBullets)) {
         bullet.update(deltaTime)
