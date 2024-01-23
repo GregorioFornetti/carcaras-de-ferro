@@ -1,4 +1,5 @@
 import * as schema from "@colyseus/schema"
+import { GAME_HEIGHT, GAME_WIDTH } from "../../constants.js"
 
 let bulletId = 0
 
@@ -56,7 +57,13 @@ export class Bullet {
     this.bulletAttributes.y -= this.bulletSpeedY
     this.bulletAttributes.x -= this.bulletSpeedX
 
-    if (this.bulletAttributes.y < -20) {
+
+    if (
+      this.bulletAttributes.x > GAME_WIDTH + this.height ||  // Saiu pela direita
+      this.bulletAttributes.x < 0 - this.height ||  // Saiu pela esquerda
+      this.bulletAttributes.y > GAME_HEIGHT + this.height ||  // Saiu por baixo
+      this.bulletAttributes.y < 0 - this.height  // Saiu por cima
+    ) {
       this.destroy()
     }
   }

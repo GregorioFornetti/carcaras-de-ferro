@@ -43,8 +43,6 @@ export class MyRoom extends Room {
     this.collisor = new Collisor()
     this.collisor.registerActionForCollission("bullet", "enemy", (bullet, enemy) => {
       bullet.destroy()
-      // this.collisor.removeForCollission(bullet, "bullet")
-      // delete this.currentBullets[bullet.id]
       const score = enemy.hit()
       const player = this.state.playersSchema.get(bullet.owner)
       if (score) {
@@ -55,26 +53,12 @@ export class MyRoom extends Room {
       let didhit = player.hit()
       if (didhit) { // se o player está imortal, não destroi os inimigos na colisão
         enemy.destroy()
-        // this.collisor.removeForCollission(enemy, "enemy")
-        // delete this.currentEnemies[enemy.id]
-        // console.log("player collided with enemy!, health in: ", player.playerAtributes.health)
-        // if (player.dead) {
-        //   console.log("player died! :( Removing from collisor")
-        //  this.collisor.removeForCollission(player, "player")
-        // }
       }  
     })
     this.collisor.registerActionForCollission("player", "bulletEnemy", (player, enemyBullet) => {
       let didhit = player.hit()
       if (didhit) { // se o player está imortal, não destroi os inimigos na colisão
         enemyBullet.destroy()
-        // this.collisor.removeForCollission(enemyBullet, "bulletEnemy")
-        // delete this.currentBullets[enemyBullet.id]
-        // console.log("player collided with enemy bullet!, health in: ", player.playerAtributes.health)
-        // if (player.dead) {
-        //  console.log("player died! :( Removing from collisor")
-        //  this.collisor.removeForCollission(player, "player")
-        // }
       }
     })
 
@@ -187,7 +171,6 @@ export class MyRoom extends Room {
     for (let player in this.currentPlayers) {
       // Limpa os jogadores que morreram
       if (this.currentPlayers[player].dead) {
-        console.log("player died! :( Removing from collisor")
         this.collisor.removeForCollission(this.currentPlayers[player], "player")
       }
     }
@@ -236,7 +219,13 @@ export class MyRoom extends Room {
       /* Limpando as balas que devem ser destruidas */
       for (let bulletId in this.currentBullets) {
         if (this.currentBullets[bulletId].destroyed) {
-          this.collisor.removeForCollission(this.currentBullets[bulletId], "bullet")
+          if (this.currentBullets[bulletId].owner === "SERVER") {
+            // Balas de inimigos
+            this.collisor.removeForCollission(this.currentBullets[bulletId], "bulletEnemy")
+          } else {
+            // Balas de players
+            this.collisor.removeForCollission(this.currentBullets[bulletId], "bullet")
+          }
           delete this.currentBullets[bulletId]
         }
       }
