@@ -62,8 +62,10 @@ export function PlayerOnAdd(player, id) {
 
 export function PlayerOnRemove(player, id) {
   const entity = this.playerEntities[id]
-  this.events.emit('playerRemoved', id);
-  this.playersRoom[this.playerEntities[id].number] = null;
+  const number = this.playerEntities[id].number
+  this.events.emit('playerRemoved', id, number);
+  this.playersRoom[number] = null;
+  
   entity.destroy();
   if (entity) {
     console.log(`Jogador ${id} desconectado!`)

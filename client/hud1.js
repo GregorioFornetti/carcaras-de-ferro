@@ -105,8 +105,9 @@ export default class HUD1 extends ScoreHUD {
         game.events.on('newPlayer', function (id, number) {
             console.log('NOVO PLAYER')
             console.log(id)
-            const currentPlayerNumber = Object.keys(this.currentPlayers).length
+            const currentPlayerNumber = number-1;
             this.currentPlayers[id] = {}
+            console.log("tamanho on add:"+Object.keys(this.currentPlayers).length)
 
             this.currentPlayers[id].image = this.add.image(this.scoresConfig[currentPlayerNumber].x, this.scoresConfig[currentPlayerNumber].y, this.scoresConfig[currentPlayerNumber].sprite).setScale(0.75)
 
@@ -152,8 +153,12 @@ export default class HUD1 extends ScoreHUD {
         });
 
         game.events.on('playerRemoved', function (id) {
-            delete this.currentPlayers[id];
-            
+            for (let i = 0; i < this.currentPlayers[id].scoreImages.length; i++) {
+                this.currentPlayers[id].scoreImages[i].destroy()
+            }            
+            this.currentPlayers[id].image.destroy()//.setTint(0xffffff) //set cinza
+            //delete this.currentPlayers[id];
+            console.log("tamanho depois do remove:"+Object.keys(this.currentPlayers).length)
         }, this);
      
         game.events.on('healthChange', function(healthChange) {
