@@ -80,17 +80,17 @@ export default class HUD1 extends ScoreHUD {
         this.healthConfig = [
             {
                 sprite: 'coracao_red',
-                x: 20,
+                x: 25,
                 y: GAME_HEIGHT-25
             },
             {
                 sprite: 'coracao_red',
-                x: 55,
+                x: 62,
                 y: GAME_HEIGHT-25
             },
             {
                 sprite: 'coracao_red',
-                x: 90,
+                x: 99,
                 y: GAME_HEIGHT-25
             },
         ]
@@ -156,9 +156,7 @@ export default class HUD1 extends ScoreHUD {
             for (let i = 0; i < this.currentPlayers[id].scoreImages.length; i++) {
                 this.currentPlayers[id].scoreImages[i].destroy()
             }            
-            this.currentPlayers[id].image.destroy()//.setTint(0xffffff) //set cinza
-            //delete this.currentPlayers[id];
-            console.log("tamanho depois do remove:"+Object.keys(this.currentPlayers).length)
+            this.currentPlayers[id].image.destroy()
         }, this);
      
         game.events.on('healthChange', function(healthChange) {
