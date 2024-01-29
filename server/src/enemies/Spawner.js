@@ -1,16 +1,15 @@
-import { Enemy } from './Enemy.js';
 
-import { EnemySolitario } from "./EnemySolitario.js";
-import { EnemyPatrulheiros } from "./EnemyPatrulheiros.js";
-import { EnemyDesavisados } from "./EnemyDesavisados.js";
-import { EnemyCombatente } from "./EnemyCombatente.js";
-import { EnemyFortaleza } from './EnemyFortaleza.js';
 import { EnemyCacador } from './EnemyCacador.js';
+import { EnemyCombatente } from "./EnemyCombatente.js";
 import { EnemyCruzador } from './EnemyCruzador.js';
+import { EnemyDesavisados } from "./EnemyDesavisados.js";
+import { EnemyFortaleza } from './EnemyFortaleza.js';
+import { EnemyPatrulheiros } from "./EnemyPatrulheiros.js";
+import { EnemySolitario } from "./EnemySolitario.js";
 
 export class Spawner {
 	
-	constructor(roomState) {
+	constructor(roomState, difficultySystem) {
 		this.room = roomState;
 		
 		this.enemies = [];
@@ -26,19 +25,26 @@ export class Spawner {
 		this.spawn_quantities_weights = [1, 1, 1, 1, 1, 1, 1];
 		
 		this.timer = Spawner.MAX_TIME;
+
+		this.difficultySystem = difficultySystem;
 	}
 	
 	static get MAX_TIME() {return 4};
 	//Tempos de spawn aleatórias em um certo range são possívelmente mais satisfatórios.
 	//^^^ Possível alteração a se fazer no futuro.
 	
-	update(deltaTime) {
+	update(deltaTime, time) {
+
 		if (this.timer > 0) {
 			this.timer -= deltaTime / 1000;
 			return null;
 		}
 		
 		this.timer = Spawner.MAX_TIME;
+		this.spawn_quantities_weights = this.difficultySystem.getSpawnQuantities();
+		this.timer = this.difficultySystem.getSpawnTimer();
+		this.enemies = this.difficultySystem.getEnemiesWeights();
+
 		return this.spawn();
 	}
 	

@@ -8,11 +8,12 @@ import { EnemySolitario } from "../enemies/EnemySolitario.js";
 
 export class DifficultySystem {
   constructor() {
-    this.credits = 10;
+    this.credits = 0;
+    this.spawnTimer = 4;
   }
 
   updateCredits(time) {
-    this.credits = time
+    this.credits = Math.log2(time);
   }
 
   update(time) {
@@ -23,13 +24,33 @@ export class DifficultySystem {
     return this.credits;
   }
 
-  getSolitarioWeight() {return 4}
-  getPatrulheirosWeight() {return 3}
-  getDesavisadosWeight() {return 2}
-  getCombatenteWeight() {return 1}
-  getFortalezaWeight() {return 1}
-  getCacadorWeight() {return 1}
-  getCruzadorWeight() {return 1}
+  getSolitarioWeight() {
+    return 4
+  }
+
+  getPatrulheirosWeight() {
+    return 3
+  }
+
+  getDesavisadosWeight() {
+    return 2
+  }
+
+  getCombatenteWeight() {
+    return 1
+  }
+
+  getFortalezaWeight() {
+    return 1
+  }
+
+  getCacadorWeight() {
+    return 1
+  }
+
+  getCruzadorWeight() {
+    return 1
+  }
   
   getEnemiesWeights() {
     this.enemies = [];
@@ -50,7 +71,8 @@ export class DifficultySystem {
   }
 
   getSpawnTimer() {
-    return 0.5;
+    const spawnTime = 4 - Math.floor((this.credits / 15));
+    return spawnTime >= 0.8 ? spawnTime : 0.8;
   }
 
   getMapSpeed() {

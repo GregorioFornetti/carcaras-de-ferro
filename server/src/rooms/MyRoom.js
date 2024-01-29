@@ -17,6 +17,7 @@ import { ItemLife } from "../items/ItemLife.js"
 export class MyRoom extends Room {
   maxClients = 4
   x = 1
+  totalGameTime = 0
 
   isShot = false
 
@@ -109,7 +110,7 @@ export class MyRoom extends Room {
       }
     })
 
-    this.spawnCentral = new Spawner(this.state)
+    this.spawnCentral = new Spawner(this.state, this.difficultySystem)
 
     // Spawnar item
     this.spawnItem = (probSpawn, probItems = 0.5, x, y) => {
@@ -236,6 +237,10 @@ export class MyRoom extends Room {
   // Game loop - essa função será chamada a cada tick ()
   update(deltaTime) {
     if (this.freeze) return
+
+    // Update do sistema de dificuldade
+    this.difficultySystem.update(this.totalGameTime)
+
     // Update do jogador, levando em conta os inputs
     // E se o player morrer? Alterar no collisor
     for (let player in this.currentPlayers) {
@@ -244,7 +249,7 @@ export class MyRoom extends Room {
     /* FIM PLAYER */
 
     //** Movimentação do Mapa */
-    this.velocidadeMapa = 1
+    this.velocidadeMapa = this.difficultySystem.getMapSpeed()
     this.state.bgSchema.scrollY -= this.velocidadeMapa
 
     if (this.currentEnemies.length != 0) {
@@ -317,7 +322,7 @@ export class MyRoom extends Room {
       }
     }
       
-    let spawn_retorno = this.spawnCentral.update(deltaTime);
+    let spawn_retorno = this.spawnCentral.update(deltaTime, this.totalGameTime);
     if (spawn_retorno != null) {
       for (let enemy of spawn_retorno) {
         this.currentEnemies[enemy.id] = enemy
@@ -327,5 +332,8 @@ export class MyRoom extends Room {
   
     // Aplica os efeitos de colisões de objetos, se existirem 
     this.collisor.update()
+    
+    // Atualiza o tempo de jogo
+    this.totalGameTime += deltaTime
   }
 }

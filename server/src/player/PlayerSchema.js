@@ -13,7 +13,7 @@ export class PlayerSchema extends schema.Schema {
     this.currentAnimation = "ship_frente_d0";
     this.score = 0
     this.immortal = false
-    this.health = 3
+    this.health = 50
   }
 }
 
