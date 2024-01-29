@@ -21,6 +21,7 @@ import { PlayerOnAdd, PlayerOnRemove } from "./player/Player.js"
 import { BulletOnAdd, BulletOnRemove } from "./bullet/Bullet.js"
 import HUD1 from "./hud1.js";
 import HUD3 from "./hud3.js";
+import HUDSTART from "./hudStart.js";
 import { createAnimations, playerExplosionAnimation, enemyDamageAnimation} from "./animations/animation.js"
 
 let roomId = null
@@ -137,7 +138,6 @@ export class GameScene extends Phaser.Scene {
         oldId = this.room.sessionId
       }
       console.log(`Conectado com sucesso com id de cliente {${this.room.sessionId}}`);
-
     } catch (e) {
       console.error(e);
     }
@@ -361,7 +361,7 @@ const config = {
   scale: {
     mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
   },
-  scene: [GameScene, HUD1, HUD3],
+  scene: [HUDSTART, GameScene, HUD1, HUD3],
 }
 
 // Inicializa o Phaser

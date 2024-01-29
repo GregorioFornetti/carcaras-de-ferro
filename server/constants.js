@@ -23,7 +23,7 @@ export const COMBATENTE_HORIZONTAL_MOVEMENT_SIZE = 128
 // Fortaleza
 export const FORTALEZA_HEALTH = 12
 export const FORTALEZA_HEIGHT = 84
-export const FORTALEZA_WIDTH = 96
+export const FORTALEZA_WIDTH = 128
 export const FORTALEZA_SCORE = 800
 export const FORTALEZA_SPEED = 50
 
