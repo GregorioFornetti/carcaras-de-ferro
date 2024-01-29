@@ -40,7 +40,6 @@ export class Spawner {
 			return null;
 		}
 		
-		this.timer = Spawner.MAX_TIME;
 		this.spawn_quantities_weights = this.difficultySystem.getSpawnQuantities();
 		this.timer = this.difficultySystem.getSpawnTimer();
 		this.enemies = this.difficultySystem.getEnemiesWeights();

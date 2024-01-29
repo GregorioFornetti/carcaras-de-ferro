@@ -10,6 +10,7 @@ export class DifficultySystem {
   constructor() {
     this.credits = 0;
     this.spawnTimer = 4;
+    this.itemSpawnProbability = 0.5;
   }
 
   updateCredits(time) {
@@ -67,7 +68,25 @@ export class DifficultySystem {
   }
 
   getSpawnQuantities() {
-    return [1, 1, 1, 1, 1, 1, 1];
+    let spawnQuantities = [1, 1, 1, 1, 1, 1, 1];
+    let totalWeight = 0;
+   
+    // Calculate total weight
+    for (let i = 0; i < spawnQuantities.length; i++) {
+       totalWeight += spawnQuantities[i];
+    }
+   
+    // Adjust weights based on the number of credits earned
+    for (let i = 0; i < spawnQuantities.length; i++) {
+       spawnQuantities[i] = spawnQuantities[i] * (1 - (this.credits / totalWeight));
+    }
+   
+    // Normalize weights to sum to 1
+    for (let i = 0; i < spawnQuantities.length; i++) {
+       spawnQuantities[i] = spawnQuantities[i] / totalWeight;
+    }
+   
+    return spawnQuantities;
   }
 
   getSpawnTimer() {
@@ -76,10 +95,29 @@ export class DifficultySystem {
   }
 
   getMapSpeed() {
-    return 1;
+    const mapSpeed = 1 + (this.credits / 10);
+    
+    if(mapSpeed < 1) {
+      return 1;
+    } else if(mapSpeed > 4) { // Velocidade máxima do mapa
+      return 5;
+    } else {
+      return mapSpeed;
+    }
+
   }
 
   getItemSpawnProbability() {
-    return 0.4;
+    if (this.credits < 0) {
+      this.itemSpawnProbability = this.itemSpawnProbability;
+    } else {
+      if(this.itemSpawnProbability <= 0.15) {
+        this.itemSpawnProbability = 0.15;
+      } else {
+        this.itemSpawnProbability -= this.credits / (500 * 500);
+      }
+    }
+     
+    return this.itemSpawnProbability;
   }
 }
