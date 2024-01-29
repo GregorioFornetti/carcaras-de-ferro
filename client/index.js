@@ -32,6 +32,8 @@ export class GameScene extends Phaser.Scene {
   init() {
     this.client = new Colyseus.Client("http://localhost:8080");
     this.room = null
+    this.currentPlayer = null
+    this.remoteRef = null
     this.playerEntities = {}
     this.bg = null //background (mapa do jogo)
     this.cursorKeys = null
