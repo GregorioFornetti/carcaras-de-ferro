@@ -104,7 +104,7 @@ export class EnemySuperTanque extends Enemy {
 			this.destroy();
 		}
 		
-		if (this.timerBullet <= 0) {
+		if (this.timerBullet <= 0 && !this.dead) {
 
 			this.timerBullet = 1/this.fireRate;
 			
