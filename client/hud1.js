@@ -107,7 +107,6 @@ export default class HUD1 extends ScoreHUD {
             console.log(id)
             const currentPlayerNumber = number-1;
             this.currentPlayers[id] = {}
-            console.log("tamanho on add:"+Object.keys(this.currentPlayers).length)
 
             this.currentPlayers[id].image = this.add.image(this.scoresConfig[currentPlayerNumber].x, this.scoresConfig[currentPlayerNumber].y, this.scoresConfig[currentPlayerNumber].sprite).setScale(0.75)
 

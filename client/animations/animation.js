@@ -83,8 +83,9 @@ export function playerExplosionAnimation(scene, obj, id) {
 }
 /** Função que executa a animação de explosão enemy (health == 0)*/
 export function enemyExplosionAnimation(scene, obj, id) {
-    //if(obj.health == 0) {
-    if(obj.y < GAME_HEIGHT && obj.x < GAME_WIDTH - 10) {
+    const toleranciaBorda = 20
+    //se está na parte interna da tela, anima explosão
+    if(obj.y > 0 && obj.y < GAME_HEIGHT - toleranciaBorda && obj.x > 0 && obj.x < GAME_WIDTH - toleranciaBorda) {
         let animation = scene.physics.add.sprite(obj.x, obj.y, "explosao");
         scene.somExplosao.play();
         animation.anims.play("explosao");
