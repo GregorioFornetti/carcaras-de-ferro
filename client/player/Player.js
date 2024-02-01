@@ -78,6 +78,15 @@ export function PlayerOnAdd(player, id) {
   // Se esse é o player do cliente
   if (id === this.room.sessionId) {
     this.currentPlayer = this.playerEntities[id]
+    // PARA DEBUG
+    /*
+    this.remoteRef = this.physics.add.image(player.x, player.y, 'ship_0012');
+    this.remoteRef.setStrokeStyle(1, 0xff0000)
+    player.onChange(() => {
+      this.remoteRef.x = player.x;
+      this.remoteRef.y = player.y;
+    });
+    */
   } else {
     player.onChange(() => {
     this.playerEntities[id].setData('serverX', player.x);

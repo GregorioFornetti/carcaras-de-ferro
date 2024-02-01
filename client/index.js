@@ -6,6 +6,7 @@ Nenhum estado do jogo é mantido na Cena, apenas os inputs do jogador são envia
 */
 
 //import Phaser from "phaser";
+//import { GAME_HEIGHT, GAME_WIDTH } from "./constants.js";
 import { EnemyDesavisadosOnAdd, EnemyDesavisadosOnRemove } from "./enemies/EnemyDesavisados.js";
 import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js";
 import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
@@ -32,13 +33,15 @@ export class GameScene extends Phaser.Scene {
   init() {
     this.client = new Colyseus.Client("http://localhost:8080");
     this.room = null
+    this.remoteRef = null
     this.currentPlayer = null
-    this.inputPayload = {
-      left: false,
+    this.movement = {
+      up: false, 
+      down: false, 
+      left: false, 
       right: false,
-      up: false,
-      down: false,
-  };
+    }
+    this.speedPlayer = 3
 
     this.playerEntities = {}
     this.bg = null //background (mapa do jogo)
@@ -64,8 +67,6 @@ export class GameScene extends Phaser.Scene {
   // Carrega os assets a serem utilizados no jogo
   // Aqui serão carregadas as imagens, sons, etc.
   preload() {
-    //this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE,M,E,R,ENTER") //simulação - > E (explosão), R (Dano)
-    this.cursorKeys = this.input.keyboard.createCursorKeys();
 
     this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
@@ -209,33 +210,41 @@ export class GameScene extends Phaser.Scene {
     })
     
     this.input.keyboard.on('keydown-W', () => {
+      this.movement.up = true
       this.room.send("UP",{pressed:true});
     })
 
     this.input.keyboard.on('keyup-W', () => {
+      this.movement.up = false
       this.room.send("UP",{pressed:false});
     })
 
     this.input.keyboard.on('keydown-S', () => {
+      this.movement.down = true
       this.room.send("DOWN",{pressed:true});
     })
     
     this.input.keyboard.on('keyup-S', () => {
+      this.movement.down = false
       this.room.send("DOWN",{pressed:false});
     })
     
     this.input.keyboard.on('keydown-A', () => {
+      this.movement.left = true
       this.room.send("LEFT",{pressed:true});
     })
     
     this.input.keyboard.on('keyup-A', () => {
+      this.movement.left = false
       this.room.send("LEFT",{pressed:false});
     })
     
     this.input.keyboard.on('keydown-D', () => {
+      this.movement.right = true
       this.room.send("RIGHT",{pressed:true});
     })
     this.input.keyboard.on('keyup-D', () => {
+      this.movement.right = false
       this.room.send("RIGHT",{pressed:false});
     })
     this.input.keyboard.on('keydown-ENTER', () => {
@@ -264,23 +273,30 @@ export class GameScene extends Phaser.Scene {
     }
 
     if (!this.currentPlayer) { return; }
-    const speed = 3
-    this.inputPayload.left = this.cursorKeys.left.isDown;
-    this.inputPayload.right = this.cursorKeys.right.isDown;
-    this.inputPayload.up = this.cursorKeys.up.isDown;
-    this.inputPayload.down = this.cursorKeys.down.isDown;
-    console.log(this.inputPayload)
-
-    if (this.inputPayload.left) {
-      this.currentPlayer.x -= speed;
-    } else if (this.inputPayload.right) {
-      this.currentPlayer.x += speed;
+    const MIN_X = 0
+    const MAX_X = GAME_WIDTH
+    const MIN_Y = 0
+    const MAX_Y = GAME_HEIGHT
+    if (this.movement.left) {
+      this.currentPlayer.x -= this.speedPlayer;
+    } else if (this.movement.right) {
+      this.currentPlayer.x += this.speedPlayer;
     }
-
-    if (this.inputPayload.up) {
-      this.currentPlayer.y -= speed;
-    } else if (this.inputPayload.down) {
-      this.currentPlayer.y += speed;
+    if (this.movement.up) {
+      this.currentPlayer.y -= this.speedPlayer;
+    } else if (this.movement.down) {
+      this.currentPlayer.y += this.speedPlayer;
+    }
+    
+    if (this.movement.left) {
+      this.currentPlayer.x = Math.max(this.currentPlayer.x - this.speedPlayer, MIN_X)
+    } else if (this.movement.right) {
+      this.currentPlayer.x = Math.min(this.currentPlayer.x + this.speedPlayer, MAX_X)
+    }
+    if (this.movement.up) { 
+      this.currentPlayer.y = Math.max(this.currentPlayer.y - this.speedPlayer, MIN_Y)
+    } else if (this.movement.down) { 
+      this.currentPlayer.y = Math.min(this.currentPlayer.y + this.speedPlayer, MAX_Y)
     }
 
     const { scrollY } = this.room.state.bgSchema
