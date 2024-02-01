@@ -1,0 +1,6 @@
+O quadro possui dimensões:
+
+Width: 320px
+Height: 160px
+
+As dimensões do quadro foram selecionadas considerando a intenção de incorporar detalhes adicionais à logo posteriormente.
