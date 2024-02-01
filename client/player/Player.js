@@ -30,8 +30,8 @@ export function PlayerOnAdd(player, id) {
 
       this.playerEntities[id].health = this.playerEntities[id].data.values.health;
 
-      if (this.playerEntities[id].health === 0 && id === this.room.sessionId) {
-        this.events.emit('current-player-died')
+      if (this.playerEntities[id].health === 0) {
+        this.events.emit('current-player-died', id)
       }
 
       if (this.isGameover()) {

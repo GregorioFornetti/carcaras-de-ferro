@@ -158,6 +158,10 @@ export default class HUD1 extends ScoreHUD {
             }            
             this.currentPlayers[id].image.destroy()
         }, this);
+        
+        game.events.on('current-player-died', function (id) {
+            this.currentPlayers[id].image.setTint(0x515151)
+        }, this)
      
         game.events.on('healthChange', function(healthChange) {
             if (healthChange == -1) {
