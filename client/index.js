@@ -33,7 +33,13 @@ export class GameScene extends Phaser.Scene {
     this.client = new Colyseus.Client("http://localhost:8080");
     this.room = null
     this.currentPlayer = null
-    this.remoteRef = null
+    this.inputPayload = {
+      left: false,
+      right: false,
+      up: false,
+      down: false,
+  };
+
     this.playerEntities = {}
     this.bg = null //background (mapa do jogo)
     this.cursorKeys = null
@@ -58,7 +64,8 @@ export class GameScene extends Phaser.Scene {
   // Carrega os assets a serem utilizados no jogo
   // Aqui serão carregadas as imagens, sons, etc.
   preload() {
-    this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE,M,E,R,ENTER") //simulação - > E (explosão), R (Dano)
+    //this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE,M,E,R,ENTER") //simulação - > E (explosão), R (Dano)
+    this.cursorKeys = this.input.keyboard.createCursorKeys();
 
     this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
@@ -255,12 +262,35 @@ export class GameScene extends Phaser.Scene {
     if (!this.room) {
       return
     }
+
+    if (!this.currentPlayer) { return; }
+    const speed = 3
+    this.inputPayload.left = this.cursorKeys.left.isDown;
+    this.inputPayload.right = this.cursorKeys.right.isDown;
+    this.inputPayload.up = this.cursorKeys.up.isDown;
+    this.inputPayload.down = this.cursorKeys.down.isDown;
+    console.log(this.inputPayload)
+
+    if (this.inputPayload.left) {
+      this.currentPlayer.x -= speed;
+    } else if (this.inputPayload.right) {
+      this.currentPlayer.x += speed;
+    }
+
+    if (this.inputPayload.up) {
+      this.currentPlayer.y -= speed;
+    } else if (this.inputPayload.down) {
+      this.currentPlayer.y += speed;
+    }
+
     const { scrollY } = this.room.state.bgSchema
     if (scrollY) {
       this.bg.tilePositionY = Phaser.Math.Linear(this.bg.tilePositionY, scrollY, 0.2)
     }
     
     for (let id in this.playerEntities) {
+      if(id === this.room.sessionId) continue //pula interpolacao linear do player atual
+
       const entity = this.playerEntities[id];
       if (entity !== undefined && entity !== null && !entity.dead) {
         const { serverX, serverY, health } = entity.data.values;
