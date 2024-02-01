@@ -129,7 +129,7 @@ export default class HUD1 extends ScoreHUD {
             this.currentPlayers[id].flow = this.scoresConfig[currentPlayerNumber].flow
             this.currentPlayers[id].color = this.scoresConfig[currentPlayerNumber].color
         }, this);
-
+        
         game.events.off('playerDied')  // Para não ficar com vários listeners ao resetar o jogo
         game.events.on('playerScoreChange', (id, score) => {
             this.currentPlayers[id].score = score

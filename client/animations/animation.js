@@ -114,18 +114,19 @@ export function enemyDamageAnimation(scene, enemy) {
 }
 /** Função que executa a animação do Player ao receber dano (mudança de sprite, som e efeito piscando) */
 export function playerDamageAnimation(player, id) {
-    let playersSize = Object.keys(this.playerEntities).length
-    let tweenAnimation = `ship_frente_d${3-this.playerEntities[id].data.values.health}_${this.playerEntities[id].number}`;
-      this.somDano.play()
-      this.tweens.add({
-        targets: this.playerEntities[id],
-        alpha: 0,
-        duration: 300,
-        repeat: 4,
-        yoyo: true,
-        onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(tweenAnimation); },
-        onComplete: function() { this.targets[0].clearTint(); }
-    });
+    if(this.playerEntities[id].data.values.health > 0) {
+        let tweenAnimation = `ship_frente_d${3-this.playerEntities[id].data.values.health}_${this.playerEntities[id].number}`;
+          this.somDano.play()
+        this.tweens.add({
+            targets: this.playerEntities[id],
+            alpha: 0,
+            duration: 300,
+            repeat: 4,
+            yoyo: true,
+            onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(tweenAnimation); },
+            onComplete: function() { this.targets[0].clearTint(); }
+        });
+    }
 
 }
 
