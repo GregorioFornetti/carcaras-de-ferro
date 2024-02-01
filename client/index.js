@@ -32,6 +32,8 @@ export class GameScene extends Phaser.Scene {
 
   init() {
     this.client = new Colyseus.Client("http://localhost:8080");
+    this.elapsedTime = 0;
+    this.fixedTimeStep = 1000 / 60; 
     this.room = null
     this.remoteRef = null
     this.currentPlayer = null
@@ -265,9 +267,9 @@ export class GameScene extends Phaser.Scene {
     })
   }
 
-  update(time, delta) {
+  fixedTick() {
     // Sai do loop se a sala não estiver conectada
-     
+
     if (!this.room) {
       return
     }
@@ -287,15 +289,15 @@ export class GameScene extends Phaser.Scene {
     } else if (this.movement.down) {
       this.currentPlayer.y += this.speedPlayer;
     }
-    
+
     if (this.movement.left) {
       this.currentPlayer.x = Math.max(this.currentPlayer.x - this.speedPlayer, MIN_X)
     } else if (this.movement.right) {
       this.currentPlayer.x = Math.min(this.currentPlayer.x + this.speedPlayer, MAX_X)
     }
-    if (this.movement.up) { 
+    if (this.movement.up) {
       this.currentPlayer.y = Math.max(this.currentPlayer.y - this.speedPlayer, MIN_Y)
-    } else if (this.movement.down) { 
+    } else if (this.movement.down) {
       this.currentPlayer.y = Math.min(this.currentPlayer.y + this.speedPlayer, MAX_Y)
     }
 
@@ -303,9 +305,9 @@ export class GameScene extends Phaser.Scene {
     if (scrollY) {
       this.bg.tilePositionY = Phaser.Math.Linear(this.bg.tilePositionY, scrollY, 0.2)
     }
-    
+
     for (let id in this.playerEntities) {
-      if(id === this.room.sessionId) continue //pula interpolacao linear do player atual
+      if (id === this.room.sessionId) continue //pula interpolacao linear do player atual
 
       const entity = this.playerEntities[id];
       if (entity !== undefined && entity !== null && !entity.dead) {
@@ -324,13 +326,13 @@ export class GameScene extends Phaser.Scene {
         entity.playerSize = Object.keys(this.playerEntities).length
         const threshold = 2;
         if (entity.x - serverX > threshold) {  // Indo para esquerda
-          let animationKey = `ship_esquerda_d${3-entity.health}_${entity.playerSize}`;
+          let animationKey = `ship_esquerda_d${3 - entity.health}_${entity.playerSize}`;
           if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
             entity.anims.play(animationKey);
           }
           entity.stoped = false
         } else if (entity.x - serverX < -threshold) { // Indo para direita
-          let animationKey = `ship_direita_d${3-entity.health}_${entity.playerSize}`;
+          let animationKey = `ship_direita_d${3 - entity.health}_${entity.playerSize}`;
           if (!entity.anims.currentAnim || entity.stoped || entity.anims.currentAnim.key !== animationKey) {
             entity.anims.play(animationKey);
           }
@@ -339,7 +341,7 @@ export class GameScene extends Phaser.Scene {
           if (entity.anims.currentAnim && !entity.stoped) {
             let animationKey = entity.anims.currentAnim.key;
             let progress = entity.anims.getProgress();
-            if(progress == 1) {
+            if (progress == 1) {
               entity.anims.playReverse(animationKey);
             } else {
               entity.anims.reverse(animationKey);
@@ -366,7 +368,7 @@ export class GameScene extends Phaser.Scene {
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
-    }        
+    }
   }
 
   isGameover() {
@@ -378,12 +380,24 @@ export class GameScene extends Phaser.Scene {
     return true
   }
 
+  update(time, delta) {
+    if (!this.currentPlayer) { return; }
+
+    this.elapsedTime += delta;
+    while (this.elapsedTime >= this.fixedTimeStep) {
+        this.elapsedTime -= this.fixedTimeStep;
+        this.fixedTick(time, this.fixedTimeStep);
+    }
+  }
+    
+
   generateGameoverInfo() {
     const info = {}
     for (let id in this.playerEntities) {
       info[`player_${this.playerEntities[id].number}`] = {
         'score': this.playerEntities[id].score,
       }
+      
     }
     return info
   }
