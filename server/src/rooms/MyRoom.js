@@ -97,38 +97,38 @@ export class MyRoom extends Room {
 
     this.onMessage("UP", (client, message) => {
       if (this.currentPlayers[client.sessionId].dead || this.freeze) return
-      this.currentPlayers[client.sessionId].setMovement("up", message.pressed)
+      const input = {type: "up", value: message}
+      this.currentPlayers[client.sessionId].inputQueue.push(input)
     })
 
     this.onMessage("DOWN", (client, message) => {
       if (this.currentPlayers[client.sessionId].dead || this.freeze) return
-      this.currentPlayers[client.sessionId].setMovement("down", message.pressed)
+      const input = {type: "down", value: message}
+      this.currentPlayers[client.sessionId].inputQueue.push(input)
     })
 
     this.onMessage("LEFT", (client, message) => {
       if (this.currentPlayers[client.sessionId].dead || this.freeze) return
-      this.currentPlayers[client.sessionId].setMovement("left", message.pressed)
+      const input = {type: "left", value: message}
+      this.currentPlayers[client.sessionId].inputQueue.push(input)
     })
 
     this.onMessage("RIGHT", (client, message) => {
       if (this.currentPlayers[client.sessionId].dead || this.freeze) return
-      this.currentPlayers[client.sessionId].setMovement("right", message.pressed)
+      const input = {type: "right", value: message}
+      this.currentPlayers[client.sessionId].inputQueue.push(input)
     })
     
     this.onMessage("FIRE", (client, message) => {
       if (this.currentPlayers[client.sessionId].dead || this.freeze) return
-      let newBullet = this.currentPlayers[client.sessionId].fire();
-      this.currentBullets[newBullet.id] = newBullet
-      this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
+      const input = {type: "fire", value: message}
+      this.currentPlayers[client.sessionId].inputQueue.push(input)
     })
 
     this.onMessage("NUKE", (client, message) => {
       if (this.currentPlayers[client.sessionId].dead || this.freeze) return
-      let newBomba = this.currentPlayers[client.sessionId].nuke();
-      if (newBomba !== undefined) {
-        this.currentBombas = this.currentBombas.concat(newBomba)
-        this.timerBomba = this.tempoVidaBomba //inicia o timer
-      }
+      const input = {type: "nuke", value: message}
+      this.currentPlayers[client.sessionId].inputQueue.push(input)
     })
 
     this.onMessage("STARTGAME", (client, message) => {
@@ -188,9 +188,31 @@ export class MyRoom extends Room {
     if (this.freeze) return
     // Update do jogador, levando em conta os inputs
     // E se o player morrer? Alterar no collisor
+
     for (let player in this.currentPlayers) {
+      //tirando inputs da fila e realizando ação
+      let input = null
+      while (input = this.currentPlayers[player].inputQueue.shift()) {
+        if (input.type == "up" || input.type == "down" || input.type == "left" || input.type == "right") {
+          this.currentPlayers[player].setMovement(input.type, input.value.pressed)
+        } else if (input.type == "fire") {
+          let newBullet = this.currentPlayers[player].fire();
+          this.currentBullets[newBullet.id] = newBullet
+          this.collisor.registerForCollission(newBullet,newBullet.bulletAttributes,"bullet")
+        } else if (input.type == "nuke") {
+          let newBomba = this.currentPlayers[player].nuke();
+          if (newBomba !== undefined) {
+            this.currentBombas = this.currentBombas.concat(newBomba)
+            this.timerBomba = this.tempoVidaBomba //inicia o timer
+          }
+        }
+      }
+      
+      //chama update do player
       this.currentPlayers[player].update(deltaTime)
     }
+
+
     /* FIM PLAYER */
 
     //** Movimentação do Mapa */

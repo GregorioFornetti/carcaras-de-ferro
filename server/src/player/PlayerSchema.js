@@ -38,6 +38,7 @@ export class Player {
     this.playersState = playersState
     this.id = sessionId
     this.playersState.set(this.id, this.playerAtributes)
+    this.inputQueue = []
 
     this.movement = {
       up: false, 
