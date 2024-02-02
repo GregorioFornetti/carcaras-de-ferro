@@ -267,7 +267,7 @@ export class GameScene extends Phaser.Scene {
     })
   }
 
-  fixedTick() {
+  fixedTick(time, delta) {
     // Sai do loop se a sala não estiver conectada
 
     if (!this.room) {
@@ -280,14 +280,14 @@ export class GameScene extends Phaser.Scene {
     const MIN_Y = 0
     const MAX_Y = GAME_HEIGHT
     if (this.movement.left) {
-      this.currentPlayer.x -= this.speedPlayer;
+      this.currentPlayer.x -= this.speedPlayer * (delta / 1000);
     } else if (this.movement.right) {
-      this.currentPlayer.x += this.speedPlayer;
+      this.currentPlayer.x += this.speedPlayer * (delta / 1000);
     }
     if (this.movement.up) {
-      this.currentPlayer.y -= this.speedPlayer;
+      this.currentPlayer.y -= this.speedPlayer * (delta / 1000);
     } else if (this.movement.down) {
-      this.currentPlayer.y += this.speedPlayer;
+      this.currentPlayer.y += this.speedPlayer * (delta / 1000);
     }
 
     if (this.movement.left) {
