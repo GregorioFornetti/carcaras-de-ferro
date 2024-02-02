@@ -21,6 +21,7 @@ export default class HUDSTART extends Phaser.Scene {
     
     preload() {
         this.load.video("menu_video","../Artes/menu_video/menu_video.webm");
+        this.load.image("logo","../Artes/Assets_Personalizados/Logos/logoCarcaras_1.png")
         //this.load.image("logo","../Artes/<CAMINHO_LOGO>")
     }
 
@@ -29,7 +30,7 @@ export default class HUDSTART extends Phaser.Scene {
         // retâgulo preto semi-transparente para escurer o vídeo de background
         const background = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000);
         // stub do logo, depois que pronto precisa colocar aqui 
-        const logo_stub = this.add.rectangle(225, 100, GAME_WIDTH/2, 50, 0x0303fc);
+        const logo_stub = this.add.image(225, 100, "logo");
         background.setOrigin(0, 0);
         background.alpha = 0.75;
         background_video.setOrigin(0,0);
