@@ -31,6 +31,7 @@ export class MyRoom extends Room {
       this.oldOwner = options['oldOwner']
     }
     this.setState(new MyRoomState())
+    this.fixedTimeStep = 1000 / 60
 
     this.currentPlayers = {}
     this.currentEnemies = {}
@@ -87,7 +88,15 @@ export class MyRoom extends Room {
 
     // Gera o game loop, atualização de estado automatica a cada deltaTime
     // https://docs.colyseus.io/server/room/#setsimulationinterval-callback-milliseconds166
-    this.setSimulationInterval((deltaTime) => this.update(deltaTime))
+    let elapsedTime = 0;
+    this.setSimulationInterval((deltaTime) => {
+      elapsedTime += deltaTime;
+
+      while (elapsedTime >= this.fixedTimeStep) {
+          elapsedTime -= this.fixedTimeStep;
+          this.fixedUpdate(this.fixedTimeStep);
+      }
+  });
 
     //this.currentEnemies = this.currentEnemies.concat(EnemyDesavisados.spawn(this.state));
     this.onMessage("pressedKeys", (client, message) => {
@@ -184,7 +193,7 @@ export class MyRoom extends Room {
   }
 
   // Game loop - essa função será chamada a cada tick ()
-  update(deltaTime) {
+  fixedUpdate(deltaTime) {
     if (this.freeze) return
     // Update do jogador, levando em conta os inputs
     // E se o player morrer? Alterar no collisor

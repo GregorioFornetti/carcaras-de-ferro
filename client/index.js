@@ -32,6 +32,8 @@ export class GameScene extends Phaser.Scene {
   init() {
     this.client = new Colyseus.Client("http://localhost:8080");
     this.room = null
+    this.elapsedTime = 0;
+    this.fixedTimeStep = 1000 / 60;
     this.playerEntities = {}
     this.bg = null //background (mapa do jogo)
     this.cursorKeys = null
@@ -251,7 +253,8 @@ export class GameScene extends Phaser.Scene {
     })
   }
 
-  update(time, delta) {
+  //Aqui fica o antigo update, loop do client aqui
+  fixedTick(time, delta) {
     // Sai do loop se a sala não estiver conectada
      
     if (!this.room) {
@@ -323,6 +326,18 @@ export class GameScene extends Phaser.Scene {
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
     }        
+  }
+
+  update(time, delta) {
+    if (!this.room) {
+      return
+    }
+
+    this.elapsedTime += delta;
+    while (this.elapsedTime >= this.fixedTimeStep) {
+        this.elapsedTime -= this.fixedTimeStep;
+        this.fixedTick(time, this.fixedTimeStep);
+    }
   }
 
   isGameover() {
