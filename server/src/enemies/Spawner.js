@@ -15,11 +15,11 @@ export class Spawner {
 		
 		this.enemies = [];
 		
-		this.enemies.push ({"enemy": EnemySolitario, "weight": 0});
-		this.enemies.push ({"enemy": EnemyPatrulheiros, "weight": 0});
-		this.enemies.push ({"enemy": EnemyDesavisados, "weight": 1});
-		this.enemies.push ({"enemy": EnemyCombatente, "weight": 0});
-		this.enemies.push ({"enemy": EnemyFortaleza, "weight": 0});
+		this.enemies.push ({"enemy": EnemySolitario, "weight": 4});
+		this.enemies.push ({"enemy": EnemyPatrulheiros, "weight": 3});
+		this.enemies.push ({"enemy": EnemyDesavisados, "weight": 2});
+		this.enemies.push ({"enemy": EnemyCombatente, "weight": 1});
+		this.enemies.push ({"enemy": EnemyFortaleza, "weight": 1});
 		this.enemies.push ({"enemy": EnemyCacador, "weight": 1});
 		this.enemies.push ({"enemy": EnemyCruzador, "weight": 1});
 		
