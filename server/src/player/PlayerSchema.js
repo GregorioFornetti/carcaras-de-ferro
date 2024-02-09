@@ -1,7 +1,7 @@
 import * as schema from "@colyseus/schema"
 import { Bullet, BulletSchema } from "../bullet/Bullet.js"
 import {Bomba } from "../bomba/Bomba.js"
-import { GAME_HEIGHT, GAME_WIDTH } from "../../constants.js"
+import { GAME_HEIGHT, GAME_WIDTH, DEBUG_IMMORTAL } from "../../constants.js"
 
 export class PlayerSchema extends schema.Schema {
   constructor() {
@@ -12,7 +12,7 @@ export class PlayerSchema extends schema.Schema {
     this.nBombas = 2
     this.currentAnimation = "ship_frente_d0";
     this.score = 0
-    this.immortal = false
+    this.immortal = false | DEBUG_IMMORTAL
     this.health = 3
   }
 }

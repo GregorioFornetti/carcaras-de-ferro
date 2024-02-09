@@ -67,10 +67,9 @@ export class EnemyCruzador extends Enemy {
             if (this.goingRight) {
                 return {
                     'action': 'SHOOT',
-                    'angle': 270,
-                    'rotation': 135,
-                    'speedY': 10,
-                    'speedX': 10,
+                    'angle': 135,
+                    'speedY': -10,
+                    'speedX': -10,
                     'offsetX': -5,
                     'offsetY': -5,
                     'size': 1,
@@ -79,10 +78,9 @@ export class EnemyCruzador extends Enemy {
             } else {
                 return {
                     'action': 'SHOOT',
-                    'angle': 270,
-                    'rotation': -135,
-                    'speedY': 10,
-                    'speedX': -10,
+                    'angle': -135,
+                    'speedY': -10,
+                    'speedX': 10,
                     'offsetX': 5,
                     'offsetY': -5,
                     'size': 1,

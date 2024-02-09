@@ -50,7 +50,7 @@ export const PATRULHEIRO_SCORE = 100
 export const PATRULHEIRO_SPEED = 50
 
 //Caçador
-export const CACADOR_HEALTH = 1
+export const CACADOR_HEALTH = 2
 export const CACADOR_HEIGHT = 32
 export const CACADOR_WIDTH = 32
 export const CACADOR_SCORE = 500
@@ -58,9 +58,12 @@ export const CACADOR_SPEED = 350
 export const CACADOR_LIM_PERSUIT = 120
 
 //Cruzador
-export const CRUZADOR_HEALTH = 1
+export const CRUZADOR_HEALTH = 2
 export const CRUZADOR_WIDTH = 32
 export const CRUZADOR_HEIGHT = 32
 export const CRUZADOR_SCORE = 100
 export const CRUZADOR_SPEED = 250
 export const CRUZADOR_FIRERATE = 2
+
+//constantes auxiliares de Debug
+export const DEBUG_IMMORTAL = false

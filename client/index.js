@@ -14,6 +14,8 @@ import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCo
 import { EnemyFortalezaOnAdd, EnemyFortalezaOnRemove } from "./enemies/EnemyFortaleza.js";
 import { EnemyCacadorOnAdd, EnemyCacadorOnRemove } from "./enemies/EnemyCacador.js";
 import { EnemyCruzadorOnAdd, EnemyCruzadorOnRemove } from "./enemies/EnemyCruzador.js";
+import { EnemyTanqueOnAdd, EnemyTanqueOnRemove } from "./enemies/EnemyTanque.js";
+import { EnemySuperTanqueOnAdd, EnemySuperTanqueOnRemove } from "./enemies/EnemySuperTanque.js";
 //import {CollisorPlayerEnemy,CollisorBulletEnemy,CollisorPlayerBullet} from "./enemies/Collisor.js";
 import { UpdateSprites } from "./updateSprites.js";
 import { BombaOnAdd, BombaOnRemove } from "./bomba/Bomba.js";
@@ -35,7 +37,6 @@ export class GameScene extends Phaser.Scene {
     this.room = null
     this.playerEntities = {}
     this.playersRoom = [null, null, null, null, null];
-    this.bg = null //background (mapa do jogo)
     this.cursorKeys = null
     this.enemiesEntities = {}
     this.bulletsEntities = {}
@@ -59,12 +60,19 @@ export class GameScene extends Phaser.Scene {
   // Aqui serão carregadas as imagens, sons, etc.
   preload() {
     this.cursorKeys = this.input.keyboard.addKeys("W,A,S,D,SPACE,M,E,R,ENTER") //simulação - > E (explosão), R (Dano)
-
-    this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
+	
+	this.load.image("tiles","./Artes/Mapas/Stub/tsx/tiles_packed.png");
+    this.load.tilemapTiledJSON('myMap',"./Artes/Mapas/Stub/export/map.json");
+	
+    //this.load.image('myMap', './Artes/Mapas/Stub/export/map.png' )
     this.load.spritesheet('ship_0012', '../Artes/Assets/Ships/ship_0012.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('ship_0022', '../Artes/Assets_Personalizados/Ships/Spritesheets/solitario.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('ship_0023', '../Artes/Assets_Personalizados/Ships/Spritesheets/patrulheiro.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('ship_0015', '../Artes/Assets_Personalizados/Ships/Spritesheets/combatente.png', { frameWidth: 64, frameHeight: 64 });
+	  this.load.image('tile_0017', './Artes/Assets/Tiles/tile_0017.png');
+    this.load.image('tile_0029', './Artes/Assets/Tiles/tile_0029.png');
+    this.load.image('tile_0030', './Artes/Assets/Tiles/tile_0030.png');
+	  this.load.image('tile_0120', './Artes/Assets/Tiles/tile_0120.png');
     this.load.audio('disparo2', './Efeitos/Disparos/Disparo2.wav');
     this.load.audio('explosao', './Efeitos/Explosão/Explosão1.wav');
     this.load.audio('explosao_bae', './Efeitos/Explosão/nuclear6.mp3');
@@ -115,6 +123,7 @@ export class GameScene extends Phaser.Scene {
       frameWidth: 8,
       frameHeight: 8,
     })
+	  this.load.image("bullet2", "./Artes/Assets/Tiles/tile_0001.png")
 
     this.load.image("bomba", "./Artes/Assets/Tiles/tile_0012.png")
 
@@ -143,7 +152,27 @@ export class GameScene extends Phaser.Scene {
       console.error(e);
     }
     
-		
+	const map = this.make.tilemap({ key: "myMap", tileWidth: 16, tileHeight: 16});
+	const tileset = map.addTilesetImage("tiles_packed","tiles");
+	this.layer = map.createLayer("Ground", tileset, 0, 0);
+	this.layer2 = map.createLayer("Objects", tileset, 0, 0);
+	
+	this.provMap = [];
+	
+	this.provMap[0] = [];
+	this.provMap[1] = [];
+	
+	for (let i = 0; i < 232; i++) {
+		this.provMap[0][i] = [];
+		this.provMap[1][i] = [];
+		for (let j = 0; j < 28; j++) {
+			this.provMap[0][i][j] = map.layers[0].data[i][j].index;
+			this.provMap[1][i][j] = map.layers[1].data[i][j].index;
+		}
+	}
+
+	this.room.send("sendMAP", this.provMap);
+	
     this.room.state.enemiesSolitarioSchema.onAdd(EnemySolitarioOnAdd.bind(this))
     this.room.state.enemiesSolitarioSchema.onRemove(EnemySolitarioOnRemove.bind(this))
 
@@ -165,13 +194,13 @@ export class GameScene extends Phaser.Scene {
     this.room.state.enemiesCruzadorSchema.onAdd(EnemyCruzadorOnAdd.bind(this));
     this.room.state.enemiesCruzadorSchema.onRemove(EnemyCruzadorOnRemove.bind(this));
 
-    //** Scroll do Mapa **
-    this.room.state.bgSchema.listen(
-      "scrollY",
-      (currentPosition, previousPosition) => {
-        this.bg.setData("scrollY", currentPosition)
-      }
-    )
+
+    
+    this.room.state.enemiesTanqueSchema.onAdd(EnemyTanqueOnAdd.bind(this));
+    this.room.state.enemiesTanqueSchema.onRemove(EnemyTanqueOnRemove.bind(this));
+	
+	  this.room.state.enemiesSuperTanqueSchema.onAdd(EnemySuperTanqueOnAdd.bind(this));
+    this.room.state.enemiesSuperTanqueSchema.onRemove(EnemySuperTanqueOnRemove.bind(this));
 
     // Player states changes
     this.room.state.playersSchema.onAdd(PlayerOnAdd.bind(this))
@@ -187,8 +216,6 @@ export class GameScene extends Phaser.Scene {
 
     const width = GAME_WIDTH;
     const height = GAME_HEIGHT;
-    this.bg = this.add.tileSprite(width/2, height/2, width, height, 'myMap'); //tileSprite para movimentacao
-    //this.flashCamera = this.cameras.add(width/2, height/2, width, height);
     // Sons
     this.somDisparoJogador = this.sound.add('disparo2');
 	  this.somDisparoInimigo = this.sound.add('disparo2');
@@ -254,14 +281,9 @@ export class GameScene extends Phaser.Scene {
 
   update(time, delta) {
     // Sai do loop se a sala não estiver conectada
-     
-    if (!this.room) {
-      return
-    }
-    const { scrollY } = this.room.state.bgSchema
-    if (scrollY) {
-      this.bg.tilePositionY = Phaser.Math.Linear(this.bg.tilePositionY, scrollY, 0.2)
-    }
+	  if (!this.room) {
+		  return
+	  }
     
     for (let id in this.playerEntities) {
       const entity = this.playerEntities[id];
@@ -317,15 +339,25 @@ export class GameScene extends Phaser.Scene {
         entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
       }
     }
+	
+	const { scrollY } = this.room.state.bgSchema
+	if (scrollY) {
+		if (this.layer.y > -50 && scrollY < -3712 + 50 + GAME_HEIGHT) 
+			this.layer.y -= 3712 - GAME_HEIGHT;
 
-    for (let id in this.enemiesEntities) {
-      const entity = this.enemiesEntities[id];
-      if (entity !== undefined && entity !== null) {
-        const { serverX, serverY } = entity.data.values;
-        entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
-        entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
-      }
-    }        
+		this.layer.y = Phaser.Math.Linear(this.layer.y, scrollY, 0.2)
+		this.layer2.y = Phaser.Math.Linear(this.layer.y, scrollY, 0.2)
+	}
+	
+	for (let id in this.enemiesEntities) {
+		const entity = this.enemiesEntities[id];
+		if (entity !== undefined && entity !== null) {
+			const { serverX, serverY } = entity.data.values;
+			entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
+			entity.y = Phaser.Math.Linear(entity.y, serverY, 0.2);
+		}
+	}
+	
   }
 
   isGameover() {

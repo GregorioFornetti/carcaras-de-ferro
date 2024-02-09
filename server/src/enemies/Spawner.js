@@ -7,6 +7,8 @@ import { EnemyCombatente } from "./EnemyCombatente.js";
 import { EnemyFortaleza } from './EnemyFortaleza.js';
 import { EnemyCacador } from './EnemyCacador.js';
 import { EnemyCruzador } from './EnemyCruzador.js';
+import { EnemyTanque } from './EnemyTanque.js';
+import { EnemySuperTanque } from './EnemySuperTanque.js';
 
 export class Spawner {
 	
@@ -22,6 +24,8 @@ export class Spawner {
 		this.enemies.push ({"enemy": EnemyFortaleza, "weight": 1});
 		this.enemies.push ({"enemy": EnemyCacador, "weight": 1});
 		this.enemies.push ({"enemy": EnemyCruzador, "weight": 1});
+		this.enemies.push ({"enemy": EnemyTanque, "weight": 2});
+		this.enemies.push ({"enemy": EnemySuperTanque, "weight": 1});
 		
 		this.spawn_quantities_weights = [1, 1, 1, 1, 1, 1, 1];
 		
