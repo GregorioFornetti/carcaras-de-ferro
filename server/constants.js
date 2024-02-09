@@ -1,5 +1,6 @@
 // IMPORTANTE: SEMPRE QUE ATUALIZAR ALGO AQUI, TAMBÉM ATUALIZE O MESMO NO CLIENT
 // o arquivo de constantes do servidor está disponível em: client/constants.js
+export const MAX_SERVER_ROOMS = 25; // quantidade máxima de salas criadas
 
 export const GAME_WIDTH = 448
 export const GAME_HEIGHT = 512
@@ -23,7 +24,7 @@ export const COMBATENTE_HORIZONTAL_MOVEMENT_SIZE = 128
 // Fortaleza
 export const FORTALEZA_HEALTH = 12
 export const FORTALEZA_HEIGHT = 84
-export const FORTALEZA_WIDTH = 96
+export const FORTALEZA_WIDTH = 128
 export const FORTALEZA_SCORE = 800
 export const FORTALEZA_SPEED = 50
 

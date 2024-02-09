@@ -10,7 +10,7 @@ import playerConfigs from "./player/playerConfigs.js";
 export default class HUD1 extends ScoreHUD {
 
     constructor () {
-        super({ key: 'HUD1', active: true });
+        super({ key: 'HUD1', active: false});
         this.score = 0;
         this.health = 3;
         this.bomb = NUM_BOMBAS;     
