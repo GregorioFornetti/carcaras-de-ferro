@@ -7,7 +7,7 @@ Nenhum estado do jogo é mantido na Cena, apenas os inputs do jogador são envia
 
 //import Phaser from "phaser";
 import { EnemyDesavisadosOnAdd, EnemyDesavisadosOnRemove } from "./enemies/EnemyDesavisados.js";
-import { GAME_WIDTH, GAME_HEIGHT } from "./constants.js";
+import { GAME_WIDTH, GAME_HEIGHT,DOMAIN } from "./constants.js";
 import { EnemySolitarioOnAdd, EnemySolitarioOnRemove } from "./enemies/EnemySolitario.js";
 import { EnemyPatrulheirosOnAdd, EnemyPatrulheirosOnRemove } from "./enemies/EnemyPatrulheiros.js";
 import { EnemyCombatenteOnAdd, EnemyCombatenteOnRemove } from "./enemies/EnemyCombatente.js";
@@ -31,7 +31,7 @@ let oldId = null
 export class GameScene extends Phaser.Scene {
 
   init() {
-    this.client = new Colyseus.Client("http://localhost:8080");
+    this.client = new Colyseus.Client(DOMAIN);
     this.room = null
     this.playerEntities = {}
     this.playersRoom = [null, null, null, null, null];
@@ -353,7 +353,7 @@ const config = {
   type: Phaser.AUTO,
   width: GAME_WIDTH, // Largura do TileMap
   height: GAME_HEIGHT, //ajusta altura da cena para 80% do interior da janela do browser
-  backgroundColor: "#b6d53c",
+  backgroundColor: "#000000",
   parent: "phaser-example",
   physics: {
     default: "arcade",
