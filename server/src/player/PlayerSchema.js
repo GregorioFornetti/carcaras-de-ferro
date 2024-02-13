@@ -1,7 +1,8 @@
 import * as schema from "@colyseus/schema"
 import { Bullet, BulletSchema } from "../bullet/Bullet.js"
 import {Bomba } from "../bomba/Bomba.js"
-import { GAME_HEIGHT, GAME_WIDTH, DEBUG_IMMORTAL } from "../../constants.js"
+import {GAME_HEIGHT, GAME_WIDTH, DEBUG_IMMORTAL, NUM_BOMBS, HEALTH,PLAYER_SPEED,
+  PLAYER_WIDTH,PLAYER_HEIGHT,PLAYER_IMMORTAL_TIMER} from "../../constants.js"
 
 export class PlayerSchema extends schema.Schema {
   constructor() {
@@ -9,11 +10,10 @@ export class PlayerSchema extends schema.Schema {
 
     this.x = 50
     this.y = 50
-    this.nBombas = 2
-    this.currentAnimation = "ship_frente_d0";
+    this.nBombas = NUM_BOMBS
     this.score = 0
     this.immortal = false | DEBUG_IMMORTAL
-    this.health = 3
+    this.health = HEALTH
   }
 }
 
@@ -21,7 +21,6 @@ schema.defineTypes(PlayerSchema, {
   x: "number",
   y: "number",
   nBombas: "number",
-  currentAnimation: "string",
   immortal: "boolean",
   health: "number",
   score: "number",
@@ -45,10 +44,10 @@ export class Player {
       left: false, 
       right: false,
     }
-    this.width = 32
-    this.height = 32
+    this.width = PLAYER_WIDTH
+    this.height = PLAYER_HEIGHT
     this.dead = false
-    this.speed = 3
+    this.speed = PLAYER_SPEED
   }
 
   static spawn(roomState, sessionId, spawnX=50, spawnY=50) {
@@ -83,7 +82,7 @@ export class Player {
     this.playerAtributes.health -= hitdamage
     setTimeout(() => {
       this.playerAtributes.immortal = false
-    }, 3000)
+    }, PLAYER_IMMORTAL_TIMER * 1000)
     if (this.playerAtributes.health === 0) {
       this.dead = true
     }
@@ -115,16 +114,17 @@ export class Player {
     const MAX_X = GAME_WIDTH
     const MIN_Y = 0
     const MAX_Y = GAME_HEIGHT
+    const MARGIN = 22
 
     if (this.movement.left) {
-      this.playerAtributes.x = Math.max(this.playerAtributes.x - this.speed, MIN_X)
+      this.playerAtributes.x = Math.max(this.playerAtributes.x - this.speed, MIN_X+MARGIN)
     } else if (this.movement.right) {
-      this.playerAtributes.x = Math.min(this.playerAtributes.x + this.speed, MAX_X)
+      this.playerAtributes.x = Math.min(this.playerAtributes.x + this.speed, MAX_X-MARGIN)
     }
     if (this.movement.up) { 
-      this.playerAtributes.y = Math.max(this.playerAtributes.y - this.speed, MIN_Y)
+      this.playerAtributes.y = Math.max(this.playerAtributes.y - this.speed, MIN_Y+MARGIN)
     } else if (this.movement.down) { 
-      this.playerAtributes.y = Math.min(this.playerAtributes.y + this.speed, MAX_Y)
+      this.playerAtributes.y = Math.min(this.playerAtributes.y + this.speed, MAX_Y-MARGIN)
     }
   }
 }

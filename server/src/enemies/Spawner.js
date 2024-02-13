@@ -1,4 +1,8 @@
 import { Enemy } from './Enemy.js';
+import {SPAWNER_INIT_TIMER,SPAWN_WEIGHT_SOLITARIO,SPAWN_WEIGHT_PATRULHEIROS,
+	SPAWN_WEIGHT_DESAVISADOS,SPAWN_WEIGHT_COMBATENTE,SPAWN_WEIGHT_FORTALEZA,
+	SPAWN_WEIGHT_CACADOR,SPAWN_WEIGHT_CRUZADOR,SPAWN_WEIGHT_TANQUE,
+	SPAWN_WEIGHT_SUPER_TANQUE,SPAWN_NUMBER_WEIGHTS} from "../../constants.js"
 
 import { EnemySolitario } from "./EnemySolitario.js";
 import { EnemyPatrulheiros } from "./EnemyPatrulheiros.js";
@@ -17,32 +21,28 @@ export class Spawner {
 		
 		this.enemies = [];
 		
-		this.enemies.push ({"enemy": EnemySolitario, "weight": 4});
-		this.enemies.push ({"enemy": EnemyPatrulheiros, "weight": 3});
-		this.enemies.push ({"enemy": EnemyDesavisados, "weight": 2});
-		this.enemies.push ({"enemy": EnemyCombatente, "weight": 1});
-		this.enemies.push ({"enemy": EnemyFortaleza, "weight": 1});
-		this.enemies.push ({"enemy": EnemyCacador, "weight": 1});
-		this.enemies.push ({"enemy": EnemyCruzador, "weight": 1});
-		this.enemies.push ({"enemy": EnemyTanque, "weight": 2});
-		this.enemies.push ({"enemy": EnemySuperTanque, "weight": 1});
+		this.enemies.push ({"enemy": EnemySolitario, "weight": SPAWN_WEIGHT_SOLITARIO});
+		this.enemies.push ({"enemy": EnemyPatrulheiros, "weight": SPAWN_WEIGHT_PATRULHEIROS});
+		this.enemies.push ({"enemy": EnemyDesavisados, "weight": SPAWN_WEIGHT_DESAVISADOS});
+		this.enemies.push ({"enemy": EnemyCombatente, "weight": SPAWN_WEIGHT_COMBATENTE});
+		this.enemies.push ({"enemy": EnemyFortaleza, "weight": SPAWN_WEIGHT_FORTALEZA});
+		this.enemies.push ({"enemy": EnemyCacador, "weight": SPAWN_WEIGHT_CACADOR});
+		this.enemies.push ({"enemy": EnemyCruzador, "weight": SPAWN_WEIGHT_CRUZADOR});
+		this.enemies.push ({"enemy": EnemyTanque, "weight": SPAWN_WEIGHT_TANQUE});
+		this.enemies.push ({"enemy": EnemySuperTanque, "weight": SPAWN_WEIGHT_SUPER_TANQUE});
 		
-		this.spawn_quantities_weights = [1, 1, 1, 1, 1, 1, 1];
+		this.spawn_quantities_weights = SPAWN_NUMBER_WEIGHTS;
 		
-		this.timer = Spawner.MAX_TIME;
+		this.timer = SPAWNER_INIT_TIMER;
 	}
-	
-	static get MAX_TIME() {return 4};
-	//Tempos de spawn aleatórias em um certo range são possívelmente mais satisfatórios.
-	//^^^ Possível alteração a se fazer no futuro.
-	
+		
 	update(deltaTime) {
 		if (this.timer > 0) {
 			this.timer -= deltaTime / 1000;
 			return null;
 		}
 		
-		this.timer = Spawner.MAX_TIME;
+		this.timer = SPAWNER_INIT_TIMER;
 		return this.spawn();
 	}
 	

@@ -1,5 +1,7 @@
+import { BOMB_INIT_SIZE,BOMB_SHRINK_SPEED } from "../constants.js";
+
 export function BombaOnAdd(bomba, id) {
-    let multiTamanho = 2;
+    let multiTamanho = BOMB_INIT_SIZE;
 
     this.bombasEntities[id] = this.physics.add.sprite(bomba.x, bomba.y, 'bomba');
     this.bombasEntities[id].setScale(multiTamanho);
@@ -7,9 +9,9 @@ export function BombaOnAdd(bomba, id) {
     bomba.onChange(() => {
         this.bombasEntities[id].y = bomba.y;
         this.bombasEntities[id].tamanho = bomba.tamanho;
-        multiTamanho = multiTamanho - 0.06;
-        if (multiTamanho < 0.05){
-            multiTamanho = 0.05;
+        multiTamanho = multiTamanho - BOMB_SHRINK_SPEED;
+        if (multiTamanho < BOMB_SHRINK_SPEED){
+            multiTamanho = BOMB_SHRINK_SPEED;
         }
         this.bombasEntities[id].setScale(multiTamanho);
     })

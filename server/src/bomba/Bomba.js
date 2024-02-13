@@ -1,10 +1,5 @@
 import * as schema from "@colyseus/schema"
-import {GAME_WIDTH, GAME_HEIGHT} from '../../constants.js';
-
-const speedY = 1
-const speedTamanho = 1
-const tamanhoBomba = 30
-
+import {GAME_WIDTH, GAME_HEIGHT, BOMB_SPEED_Y,BOMB_SHRINK_SPEED,BOMB_INIT_SIZE,BOMB_DETONATE_TIMER} from '../../constants.js';
 
 let bombaId = 0
 
@@ -31,14 +26,14 @@ export class Bomba {
     this.bombaState.set(this.id, this.bombaAttributes)
     this.destroyed = false
     this.owner = playerId
-    this.timeToExplode = 2  // Em segundos
+    this.timeToExplode = BOMB_DETONATE_TIMER  
   }
 
   static spawn(roomState, player, playerId) {
     const bomba = new Bomba(roomState, playerId)
     bomba.bombaAttributes.x = player.x
     bomba.bombaAttributes.y = player.y
-    bomba.bombaAttributes.tamanho = tamanhoBomba
+    bomba.bombaAttributes.tamanho = BOMB_INIT_SIZE
     bomba.bombaAttributes.owner = playerId
 
     return bomba
@@ -46,11 +41,11 @@ export class Bomba {
 
   update(deltaTime) {
     
+    this.bombaAttributes.tamanho -= BOMB_SHRINK_SPEED
     this.timeToExplode -= deltaTime / 1000
-    this.bombaAttributes.y += speedY
+    this.bombaAttributes.y += BOMB_SPEED_Y
     if (this.bombaAttributes.y > GAME_HEIGHT)
       this.bombaAttributes.y = GAME_HEIGHT
-    this.bombaAttributes.tamanho -= speedTamanho
     
   }
 
