@@ -1,0 +1,6 @@
+# Remove os arquivos de dependências
+node_modules
+server/node_modules
+
+#Remove cache vscode
+.vscode/
