@@ -16,7 +16,7 @@ export const PLAYER_IMMORTAL_TIMER = 4
 export const HEALTH = 3
 export const PLAYER_SPEED = 4
 export const PLAYER_WIDTH = 28
-export const PLAYER_HEIGHT = 28
+export const PLAYER_HEIGHT = 28
 
 // Bomba
 export const BOMB_SPEED_Y = 1
@@ -25,18 +25,18 @@ export const BOMB_INIT_SIZE = 2
 export const BOMB_DETONATE_TIMER = 0.5 // Em segundos
 
 //Spawner
-export const SPAWNER_INIT_TIMER = 2.5
+export const SPAWNER_INIT_TIMER = 2
 export const SPAWN_WEIGHT_SOLITARIO = 100
-export const SPAWN_WEIGHT_PATRULHEIROS = 80
-export const SPAWN_WEIGHT_DESAVISADOS = 75
-export const SPAWN_WEIGHT_COMBATENTE = 65
-export const SPAWN_WEIGHT_FORTALEZA = 20
-export const SPAWN_WEIGHT_CACADOR = 35
-export const SPAWN_WEIGHT_CRUZADOR = 40
-export const SPAWN_WEIGHT_TANQUE = 40
-export const SPAWN_WEIGHT_SUPER_TANQUE = 15
+export const SPAWN_WEIGHT_PATRULHEIROS = 90
+export const SPAWN_WEIGHT_DESAVISADOS = 65
+export const SPAWN_WEIGHT_COMBATENTE = 45
+export const SPAWN_WEIGHT_FORTALEZA = 15
+export const SPAWN_WEIGHT_CACADOR = 30
+export const SPAWN_WEIGHT_CRUZADOR = 35
+export const SPAWN_WEIGHT_TANQUE = 30
+export const SPAWN_WEIGHT_SUPER_TANQUE = 5
 // vetor, cada posição i indica o peso de spawnar exatamente i inimigos na rodada
-export const SPAWN_NUMBER_WEIGHTS = [2, 4, 5, 6, 4, 2, 1]; 
+export const SPAWN_NUMBER_WEIGHTS = [20, 15, 10, 5, 3, 2, 1]; 
 
 
 // Combatente

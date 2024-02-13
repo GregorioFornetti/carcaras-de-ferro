@@ -20,7 +20,7 @@ export default class HUDSTART extends Phaser.Scene {
     }
     
     preload() {
-        this.load.video("menu_video","../Artes/menu_video/menu_video.webm");
+        this.load.video("menu_video","../Artes/menu_video/menu_video.mp4");
         this.load.image("logo","../Artes/Assets_Personalizados/Logos/logoCarcaras_1_semBackground.png")
         //this.load.image("logo","../Artes/<CAMINHO_LOGO>")
     }
