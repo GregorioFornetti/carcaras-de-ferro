@@ -4,3 +4,7 @@ server/node_modules
 
 #Remove cache vscode
 .vscode/
+
+#Remove package-lock e package do node no diretório raiz
+package.json
+package-lock.json
