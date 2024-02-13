@@ -39,9 +39,6 @@ export class EnemyCacador extends Enemy {
         enemy.enemyAttributes.health = CACADOR_HEALTH
         enemy.enemyAttributes.angle = 180
 
-
-        console.log("spawn caçador para o player " + randomP)
-    
         return [enemy]
     }
 
@@ -62,7 +59,6 @@ export class EnemyCacador extends Enemy {
 
         if (this.enemyAttributes.y > GAME_HEIGHT) {
             this.destroy();
-            //console.log("cacador destruido")
         }
         
         //Verifica limite vertical
@@ -78,7 +74,6 @@ export class EnemyCacador extends Enemy {
             if (this.enemyAttributes.angle < 0)
                 this.enemyAttributes.angle += 360;
 
-            //console.log(", " + this.enemyAttributes.angle)
 
             //Determina as velocidades
             this.speedY = CACADOR_SPEED * Math.cos(rad)

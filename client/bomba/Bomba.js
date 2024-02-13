@@ -14,10 +14,7 @@ export function BombaOnAdd(bomba, id) {
         this.bombasEntities[id].setScale(multiTamanho);
     })
 
-    console.log(bomba.owner)
-    console.log(this.room.sessionId)
     if (bomba.owner === this.room.sessionId) {
-        console.log('oi')
         this.events.emit('bombChange', -1)
     }
 }

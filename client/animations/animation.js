@@ -93,7 +93,6 @@ export function enemyExplosionAnimation(scene, obj, id) {
 }
 
 export function bulletLight(entity, bullet, id) {
-    console.log(entity.playerEntities[bullet.owner])
     entity.physics.add.sprite(
         bullet.x,
         bullet.y+5,

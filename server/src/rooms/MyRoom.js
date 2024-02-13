@@ -79,9 +79,7 @@ export class MyRoom extends Room {
         enemy.destroy()
         this.collisor.removeForCollission(enemy, "enemy")
         delete this.currentEnemies[enemy.id]
-        console.log("player collided with enemy!, health in: ", player.playerAtributes.health)
         if (player.dead) {
-          console.log("player died! :( Removing from collisor")
           this.collisor.removeForCollission(player, "player")
         }
       }  
@@ -92,9 +90,7 @@ export class MyRoom extends Room {
         enemyBullet.destroy()
         this.collisor.removeForCollission(enemyBullet, "bulletEnemy")
         delete this.currentBullets[enemyBullet.id]
-        console.log("player collided with enemy bullet!, health in: ", player.playerAtributes.health)
         if (player.dead) {
-          console.log("player died! :( Removing from collisor")
           this.collisor.removeForCollission(player, "player")
         }
       }

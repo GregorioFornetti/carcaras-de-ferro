@@ -16,11 +16,8 @@ export class EnemySolitario extends Enemy {
 
 	static spawn(roomState) {	
 		const enemy = new EnemySolitario(roomState);
-		//console.log (this.game);
 		enemy.enemyAttributes.y = -SOLITARIO_HEIGHT/2;
 		enemy.enemyAttributes.x = Math.floor(Math.random() * (GAME_WIDTH - SOLITARIO_WIDTH)) + SOLITARIO_WIDTH/2;
-		//DEBUGING
-		//enemy.enemyAttributes.x = Math.floor(1 * (GAME_WIDTH - EnemySolitario.WIDTH)) + EnemySolitario.WIDTH/2;
 		enemy.enemyAttributes.health = SOLITARIO_HEALTH;
 		return [enemy];
 	}

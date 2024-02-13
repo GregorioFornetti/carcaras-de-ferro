@@ -17,17 +17,6 @@ export default config.default({
   },
 
   initializeExpress: (app) => {
-    /**
-     * Playground. útil para debugar a sala. Basta acessar no navegador http://localhost:2567/playground
-     */
-    if (process.env.NODE_ENV !== "production") {
-      app.use("/playground", playground)
-    }
-
-    /**
-     * Monitor das salas do Colyseus. Basta acessar no navegador http://localhost:2567/colyseus
-     */
-    app.get("/colyseus", monitor())
     app.use("/Artes", express.static("./../Artes"))
     app.use("/Efeitos", express.static("./../Efeitos"))
     app.use("/", express.static("./../client"))
