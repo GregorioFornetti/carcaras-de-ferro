@@ -74,54 +74,100 @@ export function PlayerOnAdd(player, id) {
     repeat: 0,
   });
   
-  player.onChange(() => {
-    this.playerEntities[id].setData('serverX', player.x);
-		this.playerEntities[id].setData('serverY', player.y);
-    this.playerEntities[id].setData('immortal', player.immortal);
-    this.playerEntities[id].setData('health', player.health);
-    
-    if(this.playerEntities[id].health !== this.playerEntities[id].data.values.health) {
-      let tweenAnimation = `ship_frente_d${3-this.playerEntities[id].data.values.health}_${playersSize+1}`;
-      this.somExplosao.play()
-      this.tweens.add({
-        targets: this.playerEntities[id],
-        alpha: 0,
-        duration: 300,
-        repeat: 4,
-        yoyo: true,
-        onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(tweenAnimation); },
-        onComplete: function() { this.targets[0].clearTint(); }
-      });
-
-      this.playerEntities[id].health = this.playerEntities[id].data.values.health;
-
-      if (this.playerEntities[id].health === 0 && id === this.room.sessionId) {
-        this.events.emit('current-player-died')
+  if (id === this.room.sessionId) {
+    this.currentPlayer = this.playerEntities[id];
+    player.onChange(() => {
+      this.playerEntities[id].setData('immortal', player.immortal);
+      this.playerEntities[id].setData('health', player.health);
+      if(this.playerEntities[id].health !== this.playerEntities[id].data.values.health) {
+        let tweenAnimation = `ship_frente_d${3-this.playerEntities[id].data.values.health}_${playersSize+1}`;
+        this.somExplosao.play()
+        this.tweens.add({
+          targets: this.playerEntities[id],
+          alpha: 0,
+          duration: 300,
+          repeat: 4,
+          yoyo: true,
+          onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(tweenAnimation); },
+          onComplete: function() { this.targets[0].clearTint(); }
+        });
+  
+        this.playerEntities[id].health = this.playerEntities[id].data.values.health;
+  
+        if (this.playerEntities[id].health === 0 && id === this.room.sessionId) {
+          this.events.emit('current-player-died')
+        }
+  
+        if (this.isGameover()) {
+          this.events.emit('gameover', this.generateGameoverInfo())
+        }
+  
+        if (id === this.room.sessionId) {
+          this.events.emit('healthChange', -1);
+        }
       }
-
-      if (this.isGameover()) {
-        this.events.emit('gameover', this.generateGameoverInfo())
+  
+      this.playerEntities[id].score = player.score
+      if (this.playerEntities[id]) {
+        this.playerEntities[id].setData('immortal', player.immortal);
+        this.playerEntities[id].setData('health', player.health);
+        if((this.playerEntities[id].health !== this.playerEntities[id].data.values.health) && this.playerEntities[id].data.values.health > 0) {
+          playerDamageAnimation.bind(this)(player, id);
+        }
       }
-
-      if (id === this.room.sessionId) {
-        this.events.emit('healthChange', -1);
-      }
-    }
-
-    this.playerEntities[id].score = player.score
-    if (this.playerEntities[id]) {
+  
+      this.events.emit('playerScoreChange', id, player.score)
+    })
+  } else {
+    player.onChange(() => {
       this.playerEntities[id].setData('serverX', player.x);
       this.playerEntities[id].setData('serverY', player.y);
       this.playerEntities[id].setData('immortal', player.immortal);
       this.playerEntities[id].setData('health', player.health);
       
-      if((this.playerEntities[id].health !== this.playerEntities[id].data.values.health) && this.playerEntities[id].data.values.health > 0) {
-        playerDamageAnimation.bind(this)(player, id);
-      }
-    }
+      if(this.playerEntities[id].health !== this.playerEntities[id].data.values.health) {
+        let tweenAnimation = `ship_frente_d${3-this.playerEntities[id].data.values.health}_${playersSize+1}`;
+        this.somExplosao.play()
+        this.tweens.add({
+          targets: this.playerEntities[id],
+          alpha: 0,
+          duration: 300,
+          repeat: 4,
+          yoyo: true,
+          onStart: function() { this.targets[0].setTint(0xff0000); this.targets[0].anims.play(tweenAnimation); },
+          onComplete: function() { this.targets[0].clearTint(); }
+        });
 
-    this.events.emit('playerScoreChange', id, player.score)
-  })
+        this.playerEntities[id].health = this.playerEntities[id].data.values.health;
+
+        if (this.playerEntities[id].health === 0 && id === this.room.sessionId) {
+          this.events.emit('current-player-died')
+        }
+
+        if (this.isGameover()) {
+          this.events.emit('gameover', this.generateGameoverInfo())
+        }
+
+        if (id === this.room.sessionId) {
+          this.events.emit('healthChange', -1);
+        }
+      }
+
+      this.playerEntities[id].score = player.score
+      if (this.playerEntities[id]) {
+        this.playerEntities[id].setData('serverX', player.x);
+        this.playerEntities[id].setData('serverY', player.y);
+        this.playerEntities[id].setData('immortal', player.immortal);
+        this.playerEntities[id].setData('health', player.health);
+        
+        if((this.playerEntities[id].health !== this.playerEntities[id].data.values.health) && this.playerEntities[id].data.values.health > 0) {
+          playerDamageAnimation.bind(this)(player, id);
+        }
+      }
+
+      this.events.emit('playerScoreChange', id, player.score)
+    })
+  }
 }
 
 

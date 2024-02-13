@@ -32,6 +32,14 @@ export class GameScene extends Phaser.Scene {
   init() {
     this.client = new Colyseus.Client("http://localhost:8080");
     this.room = null
+    this.currentPlayer = null
+    this.movement = {
+      up: false, 
+      down: false, 
+      left: false, 
+      right: false,
+    }
+    this.speedPlayer = 3
     this.elapsedTime = 0;
     this.fixedTimeStep = 1000 / 60;
     this.playerEntities = {}
@@ -206,33 +214,41 @@ export class GameScene extends Phaser.Scene {
     })
     
     this.input.keyboard.on('keydown-W', () => {
+      this.movement.up = true
       this.room.send("UP",{pressed:true});
     })
 
     this.input.keyboard.on('keyup-W', () => {
+      this.movement.up = false
       this.room.send("UP",{pressed:false});
     })
 
     this.input.keyboard.on('keydown-S', () => {
+      this.movement.down = true
       this.room.send("DOWN",{pressed:true});
     })
     
     this.input.keyboard.on('keyup-S', () => {
+      this.movement.down = false
       this.room.send("DOWN",{pressed:false});
     })
     
     this.input.keyboard.on('keydown-A', () => {
+      this.movement.left = true
       this.room.send("LEFT",{pressed:true});
     })
     
     this.input.keyboard.on('keyup-A', () => {
+      this.movement.left = false
       this.room.send("LEFT",{pressed:false});
     })
     
     this.input.keyboard.on('keydown-D', () => {
+      this.movement.right = true
       this.room.send("RIGHT",{pressed:true});
     })
     this.input.keyboard.on('keyup-D', () => {
+      this.movement.right = false
       this.room.send("RIGHT",{pressed:false});
     })
     this.input.keyboard.on('keydown-ENTER', () => {
@@ -260,6 +276,33 @@ export class GameScene extends Phaser.Scene {
     if (!this.room) {
       return
     }
+
+    const MIN_X = 0
+    const MAX_X = GAME_WIDTH
+    const MIN_Y = 0
+    const MAX_Y = GAME_HEIGHT
+    if (this.movement.left) {
+      this.currentPlayer.x -= this.speedPlayer * (delta / 1000);
+    } else if (this.movement.right) {
+      this.currentPlayer.x += this.speedPlayer * (delta / 1000);
+    }
+    if (this.movement.up) {
+      this.currentPlayer.y -= this.speedPlayer * (delta / 1000);
+    } else if (this.movement.down) {
+      this.currentPlayer.y += this.speedPlayer * (delta / 1000);
+    }
+
+    if (this.movement.left) {
+      this.currentPlayer.x = Math.max(this.currentPlayer.x - this.speedPlayer, MIN_X)
+    } else if (this.movement.right) {
+      this.currentPlayer.x = Math.min(this.currentPlayer.x + this.speedPlayer, MAX_X)
+    }
+    if (this.movement.up) {
+      this.currentPlayer.y = Math.max(this.currentPlayer.y - this.speedPlayer, MIN_Y)
+    } else if (this.movement.down) {
+      this.currentPlayer.y = Math.min(this.currentPlayer.y + this.speedPlayer, MAX_Y)
+    }
+
     const { scrollY } = this.room.state.bgSchema
     if (scrollY) {
       this.bg.tilePositionY = Phaser.Math.Linear(this.bg.tilePositionY, scrollY, 0.2)
@@ -267,6 +310,7 @@ export class GameScene extends Phaser.Scene {
     
     for (let id in this.playerEntities) {
       const entity = this.playerEntities[id];
+      if (id === this.room.sessionId) continue;
       if (entity !== undefined && entity !== null && !entity.dead) {
         const { serverX, serverY, health } = entity.data.values;
         entity.x = Phaser.Math.Linear(entity.x, serverX, 0.2);
