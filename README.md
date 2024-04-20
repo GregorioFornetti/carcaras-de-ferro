@@ -2,7 +2,7 @@
 
 Estão tentando dominar Fernando de Noronha! Uma poderosa gangue armada conseguiu muito dinheiro no jogo do bixo e está aumentando seu controle por todos os cantos do país. A ABIN detectou um iminente ataque a Fernando de Noronha: os criminosos querem tomar a ilha e montar sua base de operações! Você faz parte do esquadrão de Elite da FAB chamado “Carcarás de Ferro”, a tropa aérea treinada para deter os bixeiros. O dia da invasão chegou, e você deverá lutar contra hordas ininterruptas de aeronaves inimigas.
  
-O game é do gênero Shoot ‘em Up, em que o jogador controla uma aeronave e deve enfrentar diversas naves e tanques inimigos. O jogo, ainda, é do tipo “endless”, que só acaba quando o jogador morrer, ficando progressivamente mais difícil conforme o tempo passa. O objetivo é simplesmente alcançar o maior placar, como nos clássicos arcades. É um game feito para navegador web que pode ser jogado em modo multiplayer com outros jogadores. Feito para navegador com Phaser.Js e Multiplayer suportado pelo Colyseus.
+O game é do gênero Shoot ‘em Up, em que o jogador controla uma aeronave e deve enfrentar diversas naves e tanques inimigos. O jogo, ainda, é do tipo “endless”, que só acaba quando o jogador morrer. O objetivo é simplesmente alcançar o maior placar, como nos clássicos arcades. É um game feito para navegador web que pode ser jogado em modo multiplayer com outros jogadores. Feito para navegador com Phaser.Js e Multiplayer suportado pelo Colyseus.
 
 Duas partes compõem esse projeto
 * cliente: responsável pela renderização do jogo no navegador do jogador
@@ -52,3 +52,21 @@ npm start
 Ao colocar o servidor no ar, ele também hospedará o frontend na [porta 8080](http://localhost:8080/). Sempre que alterar algo no frontend será necessário dar F5 para verificar as alterações.
 
 Caso prefira, é possivel colocar no ar o frontend usando a extensão [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer). É preciso colocar no ar apenas o arquivo `client/index.html`. Usando essa extensão, não é necessário dar F5 toda hora, ele fará isso automaticamente sempre que algo for alterado no código do frontend.
+
+### Execução rápida com docker compose
+A forma mais fácil de executar o game com o mínimo de instalações é com o Docker Compose. Siga o passo-a-passo no site oficial para [instalar o docker em seu computador](https://docs.docker.com/get-docker/)
+
+Depois disso, basta executar:
+```bash
+docker compose up #talvez seja necessário sudo no Linux
+```
+Pronto! Abra o navegador e digite [http://localhost:8080](http://localhost:8080), o jogo já estará funcionando
+
+### Multiplayer
+Esse game foi feito pensando no multiplayer, mas para isso, você terá que de alguma forma ser "atingível" na internet para que os outros possam se conectar ao seu computador. A forma mais simples é com um proxy reverso como o Ngrok. Crie uma conta, instale o utilitário e execute:
+
+```bash
+ngrok tcp 8080
+```
+Os seus amigos poderão se conectar ao seu computador diretamente pela URL mostrada pelo Ngrok.
+
